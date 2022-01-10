@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring</artifactId>
+    <name>spring</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <artifactId>bourbon</artifactId>
+        <groupId>com.github.bourbon</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modules>
+        <module>spring-aop</module>
+        <module>spring-beans</module>
+        <module>spring-boot</module>
+        <module>spring-boot-autoconfigure</module>
+        <module>spring-cache</module>
+        <module>spring-context</module>
+        <module>spring-core</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-cache</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
