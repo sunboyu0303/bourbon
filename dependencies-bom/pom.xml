@@ -46,6 +46,8 @@
         <hibernate-validator.version>7.0.2.Final</hibernate-validator.version>
 
         <hessian.version>4.0.65</hessian.version>
+
+        <java-sizeof.version>0.0.5</java-sizeof.version>
     </properties>
 
     <dependencyManagement>
@@ -254,6 +256,13 @@
                 <groupId>com.caucho</groupId>
                 <artifactId>hessian</artifactId>
                 <version>${hessian.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.carrotsearch/java-sizeof -->
+            <dependency>
+                <groupId>com.carrotsearch</groupId>
+                <artifactId>java-sizeof</artifactId>
+                <version>${java-sizeof.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

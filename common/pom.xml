@@ -72,6 +72,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.carrotsearch</groupId>
+            <artifactId>java-sizeof</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

@@ -25,13 +25,13 @@ public class DefaultMonitor {
         try {
             return callable.call();
         } finally {
-            LOGGER.info("@AllArguments获取所有参数：" + ListUtils.newArrayList(args));
-            LOGGER.info("@Super父类对象结果：" + parentObj);
-            LOGGER.info("@Origin方法名称：" + method.getName());
-            LOGGER.info("@Origin入参个数：" + method.getParameterCount());
-            LOGGER.info("@Origin入参类型：" + ListUtils.newArrayList(method.getParameterTypes()));
-            LOGGER.info("@Origin出参类型：" + method.getReturnType());
-            LOGGER.info("方法耗时：" + (Clock.currentTimeMillis() - start) + " ms");
+            LOGGER.info("@AllArguments获取所有参数：{}", ListUtils.newArrayList(args));
+            LOGGER.info("@Super父类对象结果：{}", parentObj);
+            LOGGER.info("@Origin方法名称：{}", method.getName());
+            LOGGER.info("@Origin入参个数：{}", method.getParameterCount());
+            LOGGER.info("@Origin入参类型：{}", ListUtils.newArrayList(method.getParameterTypes()));
+            LOGGER.info("@Origin出参类型：{}", method.getReturnType());
+            LOGGER.info("方法耗时：{} ms", Clock.currentTimeMillis() - start);
         }
     }
 }
