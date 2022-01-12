@@ -1,0 +1,5 @@
+random=com.github.bourbon.base.loadbalance.impl.RandomLoadBalance
+round-robin=com.github.bourbon.base.loadbalance.impl.RoundRobinLoadBalance
+consistent-hash=com.github.bourbon.base.loadbalance.impl.ConsistentHashLoadBalance
+shortest-response=com.github.bourbon.base.loadbalance.impl.ShortestResponseLoadBalance
+least-active=com.github.bourbon.base.loadbalance.impl.LeastActiveLoadBalance
