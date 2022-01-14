@@ -1,0 +1,3 @@
+native-java=com.github.bourbon.serialization.nativejava.NativeJavaSerialization
+java=com.github.bourbon.serialization.java.JavaSerialization
+compacted-java=com.github.bourbon.serialization.java.CompactedJavaSerialization

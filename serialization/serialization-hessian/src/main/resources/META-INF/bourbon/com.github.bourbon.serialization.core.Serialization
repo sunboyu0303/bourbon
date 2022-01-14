@@ -1,0 +1,2 @@
+hessian2=com.github.bourbon.serialization.hessian.Hessian2Serialization
+hessian=com.github.bourbon.serialization.hessian.HessianSerialization
