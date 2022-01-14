@@ -16,16 +16,10 @@ import java.util.function.Supplier;
  * @date 2021/11/13 23:54
  */
 public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>> {
-    private final Map<K, V> cache;
+
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public SimpleCache() {
-        this(MapUtils.newHashMap());
-    }
-
-    public SimpleCache(Map<K, V> initMap) {
-        cache = initMap;
-    }
+    private final Map<K, V> cache = MapUtils.newHashMap();
 
     public V get(K k) {
         lock.readLock().lock();
