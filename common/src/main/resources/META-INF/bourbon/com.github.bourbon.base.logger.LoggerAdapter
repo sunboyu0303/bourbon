@@ -1,0 +1,5 @@
+log4j2=com.github.bourbon.common.logger.log4j2.Log4j2LoggerAdapter
+logback=com.github.bourbon.common.logger.logback.LogbackLoggerAdapter
+log4j=com.github.bourbon.common.logger.log4j.Log4jLoggerAdapter
+slf4j=com.github.bourbon.common.logger.slf4j.Slf4jLoggerAdapter
+jdk=com.github.bourbon.common.logger.jdk.JdkLoggerAdapter

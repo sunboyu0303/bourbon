@@ -1,0 +1,1 @@
+caffeine=com.github.bourbon.cache.caffeine.support.CaffeineCacheAdapter

@@ -1,0 +1,1 @@
+ehcache=com.github.bourbon.cache.ehcache.support.EhcacheAdapter

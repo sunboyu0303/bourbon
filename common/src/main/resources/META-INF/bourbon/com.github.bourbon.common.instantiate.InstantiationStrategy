@@ -1,0 +1,2 @@
+simple=com.github.bourbon.common.instantiate.support.SimpleInstantiationStrategy
+cglib=com.github.bourbon.common.instantiate.support.CglibSubclassingInstantiationStrategy
