@@ -1,6 +1,6 @@
 package com.github.bourbon.base.utils;
 
-import com.github.bourbon.base.lang.NamedThreadFactory;
+import com.github.bourbon.base.utils.concurrent.NamedThreadFactory;
 import com.github.bourbon.base.utils.timer.HashedWheelTimer;
 import com.github.bourbon.base.utils.timer.Timeout;
 import com.github.bourbon.base.utils.timer.Timer;

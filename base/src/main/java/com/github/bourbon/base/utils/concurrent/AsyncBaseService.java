@@ -1,4 +1,4 @@
-package com.github.bourbon.base.async;
+package com.github.bourbon.base.utils.concurrent;
 
 import com.github.bourbon.base.utils.FutureTimeoutUtils;
 

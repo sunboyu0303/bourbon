@@ -1,6 +1,7 @@
 package com.github.bourbon.base.lang;
 
 import com.github.bourbon.base.threadpool.dynamic.ExecutorFactory;
+import com.github.bourbon.base.utils.concurrent.NamedThreadFactory;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
