@@ -1,8 +1,10 @@
 package com.github.bourbon.springframework.core.annotation;
 
+import com.github.bourbon.base.utils.ClassUtils;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.core.type.AnnotationMetadata;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -13,6 +15,10 @@ import java.lang.reflect.AnnotatedElement;
  * @date 2021/12/16 17:03
  */
 public interface AnnotationHelperUtils {
+
+    static <T extends Annotation> T getAnnotation(AnnotationMetadata metadata, Class<T> annotationType) {
+        return getAnnotation(ClassUtils.forName(metadata.getClassName()), annotationType);
+    }
 
     static <T extends Annotation> T getAnnotation(AnnotatedElement element, Class<T> annotationType) {
         return AnnotatedElementUtils.findMergedAnnotation(element, annotationType);
