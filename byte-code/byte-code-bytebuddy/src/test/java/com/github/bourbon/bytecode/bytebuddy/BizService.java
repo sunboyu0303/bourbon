@@ -4,7 +4,6 @@ import com.github.bourbon.base.logger.Logger;
 import com.github.bourbon.base.logger.LoggerFactory;
 import com.github.bourbon.base.utils.TimeUnitUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,7 +16,7 @@ public class BizService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Map<String, UserInfo> map = new HashMap<>();
+    private Map<String, UserInfo> map = MapUtils.newHashMap();
 
     public boolean create(UserInfo userInfo) {
         if (map.containsKey(userInfo.getName())) {

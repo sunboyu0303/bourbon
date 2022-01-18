@@ -39,7 +39,7 @@ class ImportAutoConfigurationImportSelector extends AutoConfigurationImportSelec
 
     @Override
     protected List<String> getCandidateConfigurations(AnnotationMetadata metadata, AnnotationAttributes attributes) {
-        List<String> candidates = new ArrayList<>();
+        List<String> candidates = ListUtils.newArrayList();
         getAnnotations(metadata).forEach((source, annotations) -> collectCandidateConfigurations(source, annotations, candidates));
         return candidates;
     }
@@ -82,7 +82,7 @@ class ImportAutoConfigurationImportSelector extends AutoConfigurationImportSelec
 
     protected final Map<Class<?>, List<Annotation>> getAnnotations(AnnotationMetadata metadata) {
         MultiValueMap<Class<?>, Annotation> annotations = new LinkedMultiValueMap<>();
-        collectAnnotations(ClassUtils.resolveClassName(metadata.getClassName()), annotations, new HashSet<>());
+        collectAnnotations(ClassUtils.resolveClassName(metadata.getClassName()), annotations, SetUtils.newHashSet());
         return Collections.unmodifiableMap(annotations);
     }
 

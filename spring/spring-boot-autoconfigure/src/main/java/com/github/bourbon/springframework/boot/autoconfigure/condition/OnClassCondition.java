@@ -87,7 +87,7 @@ class OnClassCondition extends FilteringSpringBootCondition implements Condition
         if (attributes == null) {
             return null;
         }
-        List<String> candidates = new ArrayList<>();
+        List<String> candidates = ListUtils.newArrayList();
         addAll(candidates, attributes.get("value"));
         addAll(candidates, attributes.get("name"));
         return candidates;

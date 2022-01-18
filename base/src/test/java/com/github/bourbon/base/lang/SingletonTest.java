@@ -14,7 +14,7 @@ public class SingletonTest {
 
     @Test
     public void test() {
-        List<String> list = new ArrayList<>();
+        List<String> list = ListUtils.newArrayList();
         list.add("1");
         org.junit.Assert.assertNull(Singleton.get(ArrayList.class));
         Singleton.put(list);

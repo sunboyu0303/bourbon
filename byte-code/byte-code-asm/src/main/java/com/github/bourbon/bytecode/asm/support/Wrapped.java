@@ -10,7 +10,6 @@ import org.objectweb.asm.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -316,8 +315,8 @@ public class Wrapped<T> implements Opcodes {
                 .setMethodName(method.getName())
                 .setMethodType(Type.getType(method).toString());
 
-        List<String> parameterTypeDescList = new ArrayList<>();
-        List<String> parameterTypeInternalNameList = new ArrayList<>();
+        List<String> parameterTypeDescList = ListUtils.newArrayList();
+        List<String> parameterTypeInternalNameList = ListUtils.newArrayList();
         for (Class<?> parameterType : method.getParameterTypes()) {
             parameterTypeDescList.add(Type.getType(parameterType).toString());
             parameterTypeInternalNameList.add(Type.getInternalName(parameterType));
@@ -326,8 +325,8 @@ public class Wrapped<T> implements Opcodes {
                 .setParameterTypeInternalNameList(parameterTypeInternalNameList)
                 .setReturnTypeInternalName(Type.getInternalName(method.getReturnType()))
                 .setReturnType(Type.getType(method.getReturnType()).toString());
-        List<String> exceptionTypeDescList = new ArrayList<>();
-        List<String> exceptionTypeInternalNameList = new ArrayList<>();
+        List<String> exceptionTypeDescList = ListUtils.newArrayList();
+        List<String> exceptionTypeInternalNameList = ListUtils.newArrayList();
         for (Class<?> exceptionType : method.getExceptionTypes()) {
             exceptionTypeDescList.add(Type.getType(exceptionType).toString());
             exceptionTypeInternalNameList.add(Type.getInternalName(exceptionType));

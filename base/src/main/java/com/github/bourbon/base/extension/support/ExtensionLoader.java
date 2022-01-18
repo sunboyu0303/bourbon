@@ -158,7 +158,7 @@ public class ExtensionLoader<T> {
     private Map<String, Class<?>> loadExtensionClasses() {
         cacheDefaultExtensionName();
         String[] paths = {"META-INF/services/", "META-INF/bourbon/"};
-        Map<String, Class<?>> extensionClasses = new HashMap<>();
+        Map<String, Class<?>> extensionClasses = MapUtils.newHashMap();
         Arrays.stream(paths).forEach(path -> loadDirectory(extensionClasses, path));
         return extensionClasses;
     }

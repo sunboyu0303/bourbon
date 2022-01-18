@@ -37,14 +37,14 @@ class OnPropertyCondition extends SpringBootCondition implements Condition {
     }
 
     private List<AnnotationAttributes> annotationAttributesFromMultiValueMap(MultiValueMap<String, Object> multiValueMap) {
-        List<Map<String, Object>> maps = new ArrayList<>();
+        List<Map<String, Object>> maps = ListUtils.newArrayList();
         multiValueMap.forEach((key, value) -> {
             for (int i = 0; i < value.size(); i++) {
                 Map<String, Object> map;
                 if (i < maps.size()) {
                     map = maps.get(i);
                 } else {
-                    map = new HashMap<>();
+                    map = MapUtils.newHashMap();
                     maps.add(map);
                 }
                 map.put(key, value.get(i));

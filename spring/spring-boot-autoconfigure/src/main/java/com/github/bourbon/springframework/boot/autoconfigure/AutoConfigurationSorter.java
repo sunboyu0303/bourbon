@@ -72,7 +72,7 @@ class AutoConfigurationSorter {
 
     private static class AutoConfigurationClasses {
 
-        private final Map<String, AutoConfigurationClass> classes = new HashMap<>();
+        private final Map<String, AutoConfigurationClass> classes = MapUtils.newHashMap();
 
         AutoConfigurationClasses(MetadataReaderFactory metadataReaderFactory, AutoConfigurationMetadata autoConfigurationMetadata, Collection<String> classNames) {
             addToClasses(metadataReaderFactory, autoConfigurationMetadata, classNames, true);

@@ -440,7 +440,7 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
     }
 
     private static List<Character> getInvalidChars(Elements elements, int index) {
-        List<Character> invalidChars = new ArrayList<>();
+        List<Character> invalidChars = ListUtils.newArrayList();
         for (int charIndex = 0; charIndex < elements.getLength(index); charIndex++) {
             char ch = elements.charAt(index, charIndex);
             if (!ElementsParser.isValidChar(ch, charIndex)) {

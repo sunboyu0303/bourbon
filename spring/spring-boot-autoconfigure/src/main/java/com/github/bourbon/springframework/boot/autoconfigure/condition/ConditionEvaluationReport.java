@@ -32,9 +32,9 @@ public final class ConditionEvaluationReport {
 
     private ConditionEvaluationReport parent;
 
-    private final List<String> exclusions = new ArrayList<>();
+    private final List<String> exclusions = ListUtils.newArrayList();
 
-    private final Set<String> unconditionalClasses = new HashSet<>();
+    private final Set<String> unconditionalClasses = SetUtils.newHashSet();
 
     private ConditionEvaluationReport() {
     }
@@ -80,7 +80,7 @@ public final class ConditionEvaluationReport {
     }
 
     public Set<String> getUnconditionalClasses() {
-        Set<String> filtered = new HashSet<>(unconditionalClasses);
+        Set<String> filtered = SetUtils.newHashSet(unconditionalClasses);
         filtered.removeAll(exclusions);
         return Collections.unmodifiableSet(filtered);
     }

@@ -6,7 +6,6 @@ import com.github.bourbon.base.lang.Assert;
 import com.github.bourbon.base.utils.ArrayUtils;
 import com.github.bourbon.base.utils.BooleanUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -74,12 +73,12 @@ public final class MessageFormatter {
                         i = j + 1;
                     } else {
                         sbuf.append(messagePattern, i, j - 1);
-                        deeplyAppendParameter(sbuf, argArray[L], new HashMap<>());
+                        deeplyAppendParameter(sbuf, argArray[L], MapUtils.newHashMap());
                         i = j + 2;
                     }
                 } else {
                     sbuf.append(messagePattern, i, j);
-                    deeplyAppendParameter(sbuf, argArray[L], new HashMap<>());
+                    deeplyAppendParameter(sbuf, argArray[L], MapUtils.newHashMap());
                     i = j + 2;
                 }
             }

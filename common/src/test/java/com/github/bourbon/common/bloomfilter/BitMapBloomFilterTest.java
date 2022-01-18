@@ -6,7 +6,6 @@ import com.github.bourbon.base.logger.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class BitMapBloomFilterTest {
         endTime = System.nanoTime();
         logger.info("程序运行时间：{} 纳秒", (endTime - startTime));
 
-        List<Integer> list = new ArrayList<>(1000);
+        List<Integer> list = ListUtils.newArrayList(1000);
         for (int i = size + 10000; i < size + 20000; i++) {
             if (bloomFilter.contains("" + i)) {
                 list.add(i);

@@ -106,7 +106,7 @@ class ConfigurationPropertiesBinder {
     }
 
     private List<Validator> getValidators(Bindable<?> target) {
-        List<Validator> validators = new ArrayList<>(3);
+        List<Validator> validators = ListUtils.newArrayList(3);
         if (configurationPropertiesValidator != null) {
             validators.add(configurationPropertiesValidator);
         }

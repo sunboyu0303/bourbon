@@ -274,9 +274,9 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 
     private static class AutoConfigurationGroup implements DeferredImportSelector.Group, BeanClassLoaderAware, BeanFactoryAware, ResourceLoaderAware {
 
-        private final Map<String, AnnotationMetadata> entries = new LinkedHashMap<>();
+        private final Map<String, AnnotationMetadata> entries = MapUtils.newLinkedHashMap();
 
-        private final List<AutoConfigurationEntry> autoConfigurationEntries = new ArrayList<>();
+        private final List<AutoConfigurationEntry> autoConfigurationEntries = ListUtils.newArrayList();
 
         private ClassLoader beanClassLoader;
 

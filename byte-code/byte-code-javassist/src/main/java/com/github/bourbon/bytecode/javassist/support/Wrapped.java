@@ -31,8 +31,8 @@ public class Wrapped<T> {
                 LocalVariableAttribute attr = (LocalVariableAttribute) ctMethod.getMethodInfo().getCodeAttribute().getAttribute(LocalVariableAttribute.tag);
                 CtClass[] parameterTypes = ctMethod.getParameterTypes();
 
-                List<String> parameterNameList = new ArrayList<>();
-                List<String> parameterTypeList = new ArrayList<>();
+                List<String> parameterNameList = ListUtils.newArrayList();
+                List<String> parameterTypeList = ListUtils.newArrayList();
                 for (int i = 0; i < parameterTypes.length; i++) {
                     parameterNameList.add(attr.variableName((i + 1)));
                     parameterTypeList.add(parameterTypes[i].getName());

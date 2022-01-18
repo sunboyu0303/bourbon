@@ -546,19 +546,19 @@ class OnBeanCondition extends FilteringSpringBootCondition implements Configurat
 
     private static final class MatchResult {
 
-        private final Map<String, Collection<String>> matchedAnnotations = new HashMap<>();
+        private final Map<String, Collection<String>> matchedAnnotations = MapUtils.newHashMap();
 
-        private final List<String> matchedNames = new ArrayList<>();
+        private final List<String> matchedNames = ListUtils.newArrayList();
 
-        private final Map<String, Collection<String>> matchedTypes = new HashMap<>();
+        private final Map<String, Collection<String>> matchedTypes = MapUtils.newHashMap();
 
-        private final List<String> unmatchedAnnotations = new ArrayList<>();
+        private final List<String> unmatchedAnnotations = ListUtils.newArrayList();
 
-        private final List<String> unmatchedNames = new ArrayList<>();
+        private final List<String> unmatchedNames = ListUtils.newArrayList();
 
-        private final List<String> unmatchedTypes = new ArrayList<>();
+        private final List<String> unmatchedTypes = ListUtils.newArrayList();
 
-        private final Set<String> namesOfAllMatches = new HashSet<>();
+        private final Set<String> namesOfAllMatches = SetUtils.newHashSet();
 
         private void recordMatchedName(String name) {
             matchedNames.add(name);
