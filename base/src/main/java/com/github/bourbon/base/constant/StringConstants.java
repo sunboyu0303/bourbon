@@ -107,6 +107,10 @@ public final class StringConstants {
      */
     public static final String EQUAL = valueOf(CharConstants.EQUAL);
     /**
+     * {@code " = "}
+     */
+    public static final String SPACE_EQUAL_SPACE = SPACE + EQUAL + SPACE;
+    /**
      * {@code "&"}
      */
     public static final String AND = valueOf(CharConstants.AND);
@@ -174,6 +178,14 @@ public final class StringConstants {
      * {@code "'"}
      */
     public static final String SINGLE_QUOTE = valueOf(CharConstants.SINGLE_QUOTE);
+    /**
+     * {@code "+"}
+     */
+    public static final String PLUS = valueOf(CharConstants.PLUS);
+    /**
+     * {@code " + "}
+     */
+    public static final String SPACE_PLUS_SPACE = SPACE + PLUS + SPACE;
     /**
      * {@code "' "}
      */
