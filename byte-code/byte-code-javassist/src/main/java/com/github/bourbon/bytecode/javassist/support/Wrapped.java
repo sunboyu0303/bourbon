@@ -1,6 +1,7 @@
 package com.github.bourbon.bytecode.javassist.support;
 
 import com.github.bourbon.base.constant.StringConstants;
+import com.github.bourbon.base.utils.ListUtils;
 import com.github.bourbon.bytecode.core.utils.ClassUtils;
 import javassist.ClassPool;
 import javassist.CtClass;

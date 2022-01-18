@@ -86,7 +86,7 @@ class ImportAutoConfigurationImportSelector extends AutoConfigurationImportSelec
         return Collections.unmodifiableMap(annotations);
     }
 
-    private void collectAnnotations(Class<?> source, MultiValueMap<Class<?>, Annotation> annotations, HashSet<Class<?>> seen) {
+    private void collectAnnotations(Class<?> source, MultiValueMap<Class<?>, Annotation> annotations, Set<Class<?>> seen) {
         if (source != null && seen.add(source)) {
             for (Annotation annotation : source.getDeclaredAnnotations()) {
                 if (!AnnotationUtils.isInJavaLangAnnotationPackage(annotation)) {

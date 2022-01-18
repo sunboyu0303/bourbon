@@ -1,6 +1,7 @@
 package com.github.bourbon.springframework.boot.context.properties;
 
 import com.github.bourbon.base.utils.BooleanUtils;
+import com.github.bourbon.base.utils.ListUtils;
 import com.github.bourbon.base.utils.ObjectUtils;
 import com.github.bourbon.springframework.boot.context.properties.bind.*;
 import com.github.bourbon.springframework.boot.context.properties.bind.handler.IgnoreErrorsBindHandler;

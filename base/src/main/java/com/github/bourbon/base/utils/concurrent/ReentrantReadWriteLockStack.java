@@ -17,8 +17,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public void push(E e) {
-        writeLock.lock();
         try {
+            writeLock.lock();
             super.push(e);
         } finally {
             writeLock.unlock();
@@ -27,8 +27,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public E pop() {
-        writeLock.lock();
         try {
+            writeLock.lock();
             return super.pop();
         } finally {
             writeLock.unlock();
@@ -37,8 +37,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public E peek() {
-        readLock.lock();
         try {
+            readLock.lock();
             return super.peek();
         } finally {
             readLock.unlock();
@@ -47,8 +47,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public E get(int index) {
-        readLock.lock();
         try {
+            readLock.lock();
             return super.get(index);
         } finally {
             readLock.unlock();
@@ -57,8 +57,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public E set(int index, E value) {
-        writeLock.lock();
         try {
+            writeLock.lock();
             return super.set(index, value);
         } finally {
             writeLock.unlock();
@@ -67,8 +67,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public E remove(int index) {
-        writeLock.lock();
         try {
+            writeLock.lock();
             return super.remove(index);
         } finally {
             writeLock.unlock();
@@ -77,8 +77,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public int size() {
-        readLock.lock();
         try {
+            readLock.lock();
             return super.size();
         } finally {
             readLock.unlock();
@@ -87,8 +87,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public boolean isEmpty() {
-        readLock.lock();
         try {
+            readLock.lock();
             return super.isEmpty();
         } finally {
             readLock.unlock();
@@ -97,8 +97,8 @@ public class ReentrantReadWriteLockStack<E> extends Stack<E> {
 
     @Override
     public void clear() {
-        writeLock.lock();
         try {
+            writeLock.lock();
             super.clear();
         } finally {
             writeLock.unlock();

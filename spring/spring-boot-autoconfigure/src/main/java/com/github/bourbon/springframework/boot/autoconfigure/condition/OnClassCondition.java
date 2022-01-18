@@ -6,6 +6,7 @@ import com.github.bourbon.base.logger.LoggerFactory;
 import com.github.bourbon.base.system.SystemInfo;
 import com.github.bourbon.base.utils.BooleanUtils;
 import com.github.bourbon.base.utils.CharSequenceUtils;
+import com.github.bourbon.base.utils.ListUtils;
 import com.github.bourbon.springframework.boot.autoconfigure.AutoConfigurationMetadata;
 import org.springframework.context.annotation.Condition;
 import org.springframework.core.type.AnnotatedTypeMetadata;

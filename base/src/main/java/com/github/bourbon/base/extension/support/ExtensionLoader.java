@@ -75,8 +75,8 @@ public class ExtensionLoader<T> {
         }
         final Holder<Object> holder = cachedInstances.computeIfAbsent(name, o -> Holder.nullOf());
         if (holder.get() == null) {
-            holder.lock();
             try {
+                holder.lock();
                 if (holder.get() == null) {
                     holder.set(createExtension(name));
                 }

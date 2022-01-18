@@ -25,8 +25,8 @@ public final class ThreadPoolExecutorFactory {
 
     public static ThreadPoolExecutor register(String tenantId, String group, ThreadPoolExecutor executor) {
         Holder<ConcurrentMap<String, Set<ThreadPoolExecutor>>> holder = resourcesManager.computeIfAbsent(tenantId, o -> Holder.of(new ConcurrentHashMap<>()));
-        holder.lock();
         try {
+            holder.lock();
             holder.get().computeIfAbsent(group, o -> new ConcurrentHashSet<>()).add(executor);
         } finally {
             holder.unlock();

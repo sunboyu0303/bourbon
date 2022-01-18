@@ -18,15 +18,17 @@ import java.util.function.Supplier;
 public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>> {
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
+    private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
 
     private final Map<K, V> cache = MapUtils.newHashMap();
 
     public V get(K k) {
-        lock.readLock().lock();
         try {
+            readLock.lock();
             return cache.get(k);
         } finally {
-            lock.readLock().unlock();
+            readLock.unlock();
         }
     }
 
@@ -37,53 +39,53 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>> {
     public V get(K k, Predicate<V> p, Supplier<V> s) {
         V v = get(k);
         if (ObjectUtils.isNull(v) && ObjectUtils.nonNull(s)) {
-            lock.writeLock().lock();
             try {
+                writeLock.lock();
                 v = cache.get(k);
                 if (ObjectUtils.isNull(v) || ObjectUtils.nonNull(p) && !p.test(v)) {
                     v = s.get();
                     put(k, v);
                 }
             } finally {
-                lock.writeLock().unlock();
+                writeLock.unlock();
             }
         }
         return v;
     }
 
     public V put(K key, V value) {
-        lock.writeLock().lock();
         try {
+            writeLock.lock();
             return cache.put(key, value);
         } finally {
-            lock.writeLock().unlock();
+            writeLock.unlock();
         }
     }
 
     public V computeIfAbsent(K key, Function<K, V> f) {
-        lock.writeLock().lock();
         try {
+            writeLock.lock();
             return cache.computeIfAbsent(key, f);
         } finally {
-            lock.writeLock().unlock();
+            writeLock.unlock();
         }
     }
 
     public V remove(K key) {
-        lock.writeLock().lock();
         try {
+            writeLock.lock();
             return cache.remove(key);
         } finally {
-            lock.writeLock().unlock();
+            writeLock.unlock();
         }
     }
 
     public void clear() {
-        lock.writeLock().lock();
         try {
+            writeLock.lock();
             cache.clear();
         } finally {
-            lock.writeLock().unlock();
+            writeLock.unlock();
         }
     }
 
