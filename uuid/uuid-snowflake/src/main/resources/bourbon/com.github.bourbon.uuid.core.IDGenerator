@@ -1,0 +1,3 @@
+snowflake=com.github.bourbon.uuid.snowflake.SnowflakeIDGenerator
+snowflake-ring-buffer=com.github.bourbon.uuid.snowflake.SnowflakeRingBufferIDGenerator
+twitter-snowflake=com.github.bourbon.uuid.snowflake.TwitterSnowflakeIDGenerator
