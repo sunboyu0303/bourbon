@@ -32,7 +32,7 @@ public class InternalThreadLocalTest {
             }
         }, "internalThread_no_set").start();
 
-        TimeUnitUtils.sleepSeconds(3L);
+        TimeUnitUtils.sleepMilliSeconds(100L);
 
         Assert.assertNull(internalThreadLocal.get());
     }
