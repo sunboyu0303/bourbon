@@ -1,0 +1,9 @@
+com.github.bourbon.springframework.boot.autoconfigure.EnableAutoConfiguration=
+
+com.github.bourbon.springframework.boot.autoconfigure.AutoConfigurationImportFilter=\
+com.github.bourbon.springframework.boot.autoconfigure.condition.OnBeanCondition,\
+com.github.bourbon.springframework.boot.autoconfigure.condition.OnClassCondition,\
+com.github.bourbon.springframework.boot.autoconfigure.condition.OnWebApplicationCondition
+
+com.github.bourbon.springframework.boot.autoconfigure.AutoConfigurationImportListener=\
+com.github.bourbon.springframework.boot.autoconfigure.condition.ConditionEvaluationReportAutoConfigurationImportListener
