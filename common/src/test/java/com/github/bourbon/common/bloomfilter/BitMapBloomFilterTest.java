@@ -3,6 +3,7 @@ package com.github.bourbon.common.bloomfilter;
 import com.github.bourbon.base.bloomfilter.BloomFilter;
 import com.github.bourbon.base.logger.Logger;
 import com.github.bourbon.base.logger.LoggerFactory;
+import com.github.bourbon.base.utils.ListUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
