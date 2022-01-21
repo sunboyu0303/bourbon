@@ -32,8 +32,9 @@ public final class WindowWrap<T> extends MutableObject<T> {
         return windowStart;
     }
 
-    public void resetTo(long startTime) {
+    public WindowWrap<T> resetTo(long startTime) {
         this.windowStart = startTime;
+        return this;
     }
 
     public boolean isTimeInWindow(long timeMillis) {

@@ -19,6 +19,10 @@ public final class ThreadPoolExecutorFactory {
         return register(group, new ThreadPoolExecutor(corePoolSize, corePoolSize, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), threadFactory));
     }
 
+    public static ThreadPoolExecutor newFixedThreadPool(String group, int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+        return register(group, new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler));
+    }
+
     public static ThreadPoolExecutor register(String group, ThreadPoolExecutor executor) {
         return register(DEFAULT_NAMESPACE, group, executor);
     }
