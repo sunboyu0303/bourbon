@@ -25,6 +25,7 @@
         <module>common</module>
         <module>config</module>
         <module>dependencies-bom</module>
+        <module>mybatis-plus</module>
         <module>rpc</module>
         <module>serialization</module>
         <module>spring</module>
@@ -72,6 +73,12 @@
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
