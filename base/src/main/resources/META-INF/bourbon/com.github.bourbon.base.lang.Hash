@@ -1,0 +1,14 @@
+abs-bkdr=com.github.bourbon.base.hash.AbsBKDRHash
+ap=com.github.bourbon.base.hash.APHash
+bernstein=com.github.bourbon.base.hash.BernsteinHash
+bkdr=com.github.bourbon.base.hash.BKDRHash
+crc32=com.github.bourbon.base.hash.CRC32Hash
+dek=com.github.bourbon.base.hash.DEKHash
+djb=com.github.bourbon.base.hash.DJBHash
+elf=com.github.bourbon.base.hash.ELFHash
+fnv=com.github.bourbon.base.hash.FNVHash
+js=com.github.bourbon.base.hash.JSHash
+one-by-one=com.github.bourbon.base.hash.OneByOneHash
+pjw=com.github.bourbon.base.hash.PJWHash
+rs=com.github.bourbon.base.hash.RSHash
+sdbm=com.github.bourbon.base.hash.SDBMHash

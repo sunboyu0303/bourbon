@@ -1,11 +1,10 @@
 package com.github.bourbon.base.bloomfilter;
 
-import com.github.bourbon.base.utils.HashUtils;
-import com.github.bourbon.base.utils.ListUtils;
+import com.github.bourbon.base.extension.model.ScopeModelUtils;
+import com.github.bourbon.base.lang.Hash;
 import com.github.bourbon.base.utils.PrimitiveArrayUtils;
-import com.github.bourbon.base.utils.function.IntFunc;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author sunboyu
@@ -14,16 +13,13 @@ import java.util.List;
  */
 public interface BloomFilter {
 
-    List<IntFunc<String>> INT_FUNC_LIST = ListUtils.unmodifiableList(ListUtils.newArrayList(
-            HashUtils::getRSHash, HashUtils::getJSHash, HashUtils::getELFHash, s -> HashUtils.getBKDRHash(s, HashUtils.BKDREnum.B),
-            HashUtils::getAPHash, HashUtils::getDJBHash, HashUtils::getSDBMHash, HashUtils::getPJWHash
-    ));
+    Set<Hash> HASH_SET = ScopeModelUtils.getExtensionLoader(Hash.class).getSupportedExtensionInstances();
 
     boolean contains(String key);
 
     boolean add(String key);
 
     static int[] createHashes(String s) {
-        return PrimitiveArrayUtils.unWrap(INT_FUNC_LIST.stream().map(f -> Math.abs(f.apply(s))).toArray(Integer[]::new));
+        return PrimitiveArrayUtils.unWrap(HASH_SET.stream().map(f -> Math.abs(f.getHash(s))).toArray(Integer[]::new));
     }
 }
