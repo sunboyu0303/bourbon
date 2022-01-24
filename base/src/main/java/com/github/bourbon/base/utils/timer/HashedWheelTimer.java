@@ -473,7 +473,6 @@ public class HashedWheelTimer implements Timer {
             if (timeout.next != null) {
                 timeout.next.prev = timeout.prev;
             }
-
             if (timeout == head) {
                 if (timeout == tail) {
                     tail = null;

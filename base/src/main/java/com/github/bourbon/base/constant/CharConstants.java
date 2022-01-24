@@ -43,6 +43,7 @@ public final class CharConstants {
     public static final char PLUS = '+';
     public static final char POUND = '#';
     public static final char DOLLAR = '$';
+    public static final char ARRAY_SEPARATOR = '|';
 
     public static final char LEFT_BRACES = '{';
     public static final char RIGHT_BRACES = '}';

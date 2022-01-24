@@ -11,10 +11,14 @@ public final class StringConstants {
     public static final String NULL = "null";
     public static final String EMPTY = "";
     public static final String[] EMPTY_STRING_ARRAY = {};
-    public static final String SPACE = " ";
+    public static final String SPACE = valueOf(CharConstants.SPACE);
     public static final String JAR = ".jar";
     public static final String WAR = ".war";
     public static final String CLASS_FILE_SUFFIX = ".class";
+    /**
+     * {@code "\r\n"}
+     */
+    public static final String NEWLINE = valueOf(CharConstants.CR) + valueOf(CharConstants.LF);
     /**
      * {@code "@"}
      */

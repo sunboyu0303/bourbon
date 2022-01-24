@@ -17,6 +17,6 @@ public interface CacheAspect {
     ExtensionLoader<CacheAdapter> loader = ScopeModelUtils.getExtensionLoader(CacheAdapter.class);
 
     static String getKey(Method m) {
-        return m.getDeclaringClass().getName() + StringConstants.DOLLAR + m.getName();
+        return m.getDeclaringClass().getName() + StringConstants.DOLLAR + m.getName() + StringConstants.DOLLAR + m.toString();
     }
 }

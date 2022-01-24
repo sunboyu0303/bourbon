@@ -25,7 +25,7 @@ import java.util.function.Function;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class OHCCacheAspect implements EhcacheCacheAspect {
 
-    private Map<String, Cache<MutableObject, MutableObject>> map = MapUtils.newConcurrentHashMap();
+    private Map<Method, Cache<MutableObject, MutableObject>> map = MapUtils.newConcurrentHashMap();
 
     @Around("@annotation(cache)")
     public Object around(ProceedingJoinPoint pjp, OHCCache cache) throws Throwable {
@@ -43,20 +43,18 @@ public class OHCCacheAspect implements EhcacheCacheAspect {
     }
 
     Cache<MutableObject, MutableObject> getCache(Method method, OHCCache cache, Function<MutableObject, MutableObject> f) {
-        return map.computeIfAbsent(CacheAspect.getKey(method),
-                k -> cacheAdapter.getCache(new CacheParamInfo<MutableObject, MutableObject>()
-                        .setTimeUnit(cache.timeUnit())
-                        .setThreadPoolSize(cache.threadPoolSize())
-                        .setUniqueIdentifier(k)
-                        .setApplyCache(cache::applyCache)
-                        .setCallBack(f)
-                        .setKeyType(MutableObject.class)
-                        .setMemoryUnit(cache.memoryUnit())
-                        .setMemorySize(cache.memorySize())
-                        .setOhcDuration(cache.ohcDuration())
-                        .setTimeout(cache.timeout())
-                        .setEmptyTimeout(cache.emptyTimeout())
-                )
-        );
+        return map.computeIfAbsent(method, k -> cacheAdapter.getCache(new CacheParamInfo<MutableObject, MutableObject>()
+                .setTimeUnit(cache.timeUnit())
+                .setThreadPoolSize(cache.threadPoolSize())
+                .setUniqueIdentifier(CacheAspect.getKey(k))
+                .setApplyCache(cache::applyCache)
+                .setCallBack(f)
+                .setKeyType(MutableObject.class)
+                .setMemoryUnit(cache.memoryUnit())
+                .setMemorySize(cache.memorySize())
+                .setOhcDuration(cache.ohcDuration())
+                .setTimeout(cache.timeout())
+                .setEmptyTimeout(cache.emptyTimeout())
+        ));
     }
 }

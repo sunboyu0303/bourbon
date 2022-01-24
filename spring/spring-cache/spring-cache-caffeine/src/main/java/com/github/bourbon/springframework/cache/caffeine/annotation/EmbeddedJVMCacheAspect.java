@@ -26,7 +26,7 @@ import java.util.function.Function;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class EmbeddedJVMCacheAspect extends AbstractCacheEmbeddedValueConverter implements CaffeineCacheAspect {
 
-    private final Map<String, Cache<Object, Object>> map = MapUtils.newConcurrentHashMap();
+    private final Map<Method, Cache<Object, Object>> map = MapUtils.newConcurrentHashMap();
 
     @Around("@annotation(cache)")
     public Object around(ProceedingJoinPoint pjp, EmbeddedJVMCache cache) throws Throwable {
@@ -44,18 +44,16 @@ public class EmbeddedJVMCacheAspect extends AbstractCacheEmbeddedValueConverter 
     }
 
     Cache<Object, Object> getCache(Method method, EmbeddedJVMCache cache, Function<Object, Object> f) {
-        return map.computeIfAbsent(CacheAspect.getKey(method),
-                k -> cacheAdapter.getCache(new CacheParamInfo<>()
-                        .setMaximumSize(getLong(cache.maximumSize()))
-                        .setJvmDuration(getLong(cache.jvmDuration()))
-                        .setInitialCapacity(getInteger(cache.initialCapacity()))
-                        .setTimeUnit(TimeUnitUtils.getTimeUnit(getEmbeddedValue(cache.timeUnit())))
-                        .setAsync(getBoolean(cache.async()))
-                        .setThreadPoolSize(getInteger(cache.threadPoolSize()))
-                        .setUniqueIdentifier(k)
-                        .setApplyCache(() -> getBoolean(cache.applyCache()))
-                        .setCallBack(f)
-                )
-        );
+        return map.computeIfAbsent(method, k -> cacheAdapter.getCache(new CacheParamInfo<>()
+                .setMaximumSize(getLong(cache.maximumSize()))
+                .setJvmDuration(getLong(cache.jvmDuration()))
+                .setInitialCapacity(getInteger(cache.initialCapacity()))
+                .setTimeUnit(TimeUnitUtils.getTimeUnit(getEmbeddedValue(cache.timeUnit())))
+                .setAsync(getBoolean(cache.async()))
+                .setThreadPoolSize(getInteger(cache.threadPoolSize()))
+                .setUniqueIdentifier(CacheAspect.getKey(k))
+                .setApplyCache(() -> getBoolean(cache.applyCache()))
+                .setCallBack(f)
+        ));
     }
 }

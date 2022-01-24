@@ -28,7 +28,7 @@ import java.util.function.Function;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class EmbeddedJVMAndOHCCacheAspect extends AbstractCacheEmbeddedValueConverter implements MultiCacheAspect {
 
-    private final Map<String, Cache<MutableObject, MutableObject>> map = MapUtils.newConcurrentHashMap();
+    private final Map<Method, Cache<MutableObject, MutableObject>> map = MapUtils.newConcurrentHashMap();
 
     @Around("@annotation(cache)")
     public Object around(ProceedingJoinPoint pjp, EmbeddedJVMAndOHCCache cache) throws Throwable {
@@ -46,24 +46,22 @@ public class EmbeddedJVMAndOHCCacheAspect extends AbstractCacheEmbeddedValueConv
     }
 
     Cache<MutableObject, MutableObject> getCache(Method method, EmbeddedJVMAndOHCCache cache, Function<MutableObject, MutableObject> f) {
-        return map.computeIfAbsent(CacheAspect.getKey(method),
-                k -> cacheAdapter.getCache(new CacheParamInfo<MutableObject, MutableObject>()
-                        .setMaximumSize(getLong(cache.maximumSize()))
-                        .setJvmDuration(getLong(cache.jvmDuration()))
-                        .setInitialCapacity(getInteger(cache.initialCapacity()))
-                        .setTimeUnit(TimeUnitUtils.getTimeUnit(getEmbeddedValue(cache.timeUnit())))
-                        .setAsync(getBoolean(cache.async()))
-                        .setThreadPoolSize(getInteger(cache.threadPoolSize()))
-                        .setUniqueIdentifier(k)
-                        .setApplyCache(() -> getBoolean(cache.applyCache()))
-                        .setCallBack(f)
-                        .setKeyType(MutableObject.class)
-                        .setMemoryUnit(MemoryUnit.getMemoryUnit(getEmbeddedValue(cache.memoryUnit())))
-                        .setMemorySize(getLong(cache.memorySize()))
-                        .setOhcDuration(getLong(cache.ohcDuration()))
-                        .setTimeout(getLong(cache.timeout()))
-                        .setEmptyTimeout(getLong(cache.emptyTimeout()))
-                )
-        );
+        return map.computeIfAbsent(method, k -> cacheAdapter.getCache(new CacheParamInfo<MutableObject, MutableObject>()
+                .setMaximumSize(getLong(cache.maximumSize()))
+                .setJvmDuration(getLong(cache.jvmDuration()))
+                .setInitialCapacity(getInteger(cache.initialCapacity()))
+                .setTimeUnit(TimeUnitUtils.getTimeUnit(getEmbeddedValue(cache.timeUnit())))
+                .setAsync(getBoolean(cache.async()))
+                .setThreadPoolSize(getInteger(cache.threadPoolSize()))
+                .setUniqueIdentifier(CacheAspect.getKey(k))
+                .setApplyCache(() -> getBoolean(cache.applyCache()))
+                .setCallBack(f)
+                .setKeyType(MutableObject.class)
+                .setMemoryUnit(MemoryUnit.getMemoryUnit(getEmbeddedValue(cache.memoryUnit())))
+                .setMemorySize(getLong(cache.memorySize()))
+                .setOhcDuration(getLong(cache.ohcDuration()))
+                .setTimeout(getLong(cache.timeout()))
+                .setEmptyTimeout(getLong(cache.emptyTimeout()))
+        ));
     }
 }

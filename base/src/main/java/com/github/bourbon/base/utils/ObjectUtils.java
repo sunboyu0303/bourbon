@@ -105,6 +105,10 @@ public interface ObjectUtils {
         return nonNull(t) ? f.apply(t) : r;
     }
 
+    static <T, R> R defaultSupplierIfNull(T t, Function<T, R> f) {
+        return defaultSupplierIfNull(t, f, () -> null);
+    }
+
     static <T, R> R defaultSupplierIfNull(T t, Function<T, R> f, Supplier<R> s) {
         return nonNull(t) ? f.apply(t) : s.get();
     }

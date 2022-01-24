@@ -24,7 +24,7 @@ import java.util.function.Function;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class JVMCacheAspect implements CaffeineCacheAspect {
 
-    private final Map<String, Cache<Object, Object>> map = MapUtils.newConcurrentHashMap();
+    private final Map<Method, Cache<Object, Object>> map = MapUtils.newConcurrentHashMap();
 
     @Around("@annotation(cache)")
     public Object around(ProceedingJoinPoint pjp, JVMCache cache) throws Throwable {
@@ -42,18 +42,16 @@ public class JVMCacheAspect implements CaffeineCacheAspect {
     }
 
     Cache<Object, Object> getCache(Method method, JVMCache cache, Function<Object, Object> f) {
-        return map.computeIfAbsent(CacheAspect.getKey(method),
-                k -> cacheAdapter.getCache(new CacheParamInfo<>()
-                        .setMaximumSize(cache.maximumSize())
-                        .setJvmDuration(cache.jvmDuration())
-                        .setInitialCapacity(cache.initialCapacity())
-                        .setTimeUnit(cache.timeUnit())
-                        .setAsync(cache.async())
-                        .setThreadPoolSize(cache.threadPoolSize())
-                        .setUniqueIdentifier(k)
-                        .setApplyCache(cache::applyCache)
-                        .setCallBack(f)
-                )
-        );
+        return map.computeIfAbsent(method, k -> cacheAdapter.getCache(new CacheParamInfo<>()
+                .setMaximumSize(cache.maximumSize())
+                .setJvmDuration(cache.jvmDuration())
+                .setInitialCapacity(cache.initialCapacity())
+                .setTimeUnit(cache.timeUnit())
+                .setAsync(cache.async())
+                .setThreadPoolSize(cache.threadPoolSize())
+                .setUniqueIdentifier(CacheAspect.getKey(k))
+                .setApplyCache(cache::applyCache)
+                .setCallBack(f)
+        ));
     }
 }

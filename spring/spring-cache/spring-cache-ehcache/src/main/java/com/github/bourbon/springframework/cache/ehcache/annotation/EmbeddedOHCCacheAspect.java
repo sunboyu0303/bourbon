@@ -28,7 +28,7 @@ import java.util.function.Function;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class EmbeddedOHCCacheAspect extends AbstractCacheEmbeddedValueConverter implements EhcacheCacheAspect {
 
-    private Map<String, Cache<MutableObject, MutableObject>> map = MapUtils.newConcurrentHashMap();
+    private Map<Method, Cache<MutableObject, MutableObject>> map = MapUtils.newConcurrentHashMap();
 
     @Around("@annotation(cache)")
     public Object around(ProceedingJoinPoint pjp, EmbeddedOHCCache cache) throws Throwable {
@@ -46,19 +46,18 @@ public class EmbeddedOHCCacheAspect extends AbstractCacheEmbeddedValueConverter 
     }
 
     Cache<MutableObject, MutableObject> getCache(Method method, EmbeddedOHCCache cache, Function<MutableObject, MutableObject> f) {
-        return map.computeIfAbsent(CacheAspect.getKey(method),
-                k -> cacheAdapter.getCache(new CacheParamInfo<MutableObject, MutableObject>()
-                        .setTimeUnit(TimeUnitUtils.getTimeUnit(getEmbeddedValue(cache.timeUnit())))
-                        .setThreadPoolSize(getInteger(cache.threadPoolSize()))
-                        .setUniqueIdentifier(k)
-                        .setApplyCache(() -> getBoolean(cache.applyCache()))
-                        .setCallBack(f)
-                        .setKeyType(MutableObject.class)
-                        .setMemoryUnit(MemoryUnit.getMemoryUnit(getEmbeddedValue(cache.memoryUnit())))
-                        .setMemorySize(getLong(cache.memorySize()))
-                        .setOhcDuration(getLong(cache.ohcDuration()))
-                        .setTimeout(getLong(cache.timeout()))
-                        .setEmptyTimeout(getLong(cache.emptyTimeout()))
-                ));
+        return map.computeIfAbsent(method, k -> cacheAdapter.getCache(new CacheParamInfo<MutableObject, MutableObject>()
+                .setTimeUnit(TimeUnitUtils.getTimeUnit(getEmbeddedValue(cache.timeUnit())))
+                .setThreadPoolSize(getInteger(cache.threadPoolSize()))
+                .setUniqueIdentifier(CacheAspect.getKey(k))
+                .setApplyCache(() -> getBoolean(cache.applyCache()))
+                .setCallBack(f)
+                .setKeyType(MutableObject.class)
+                .setMemoryUnit(MemoryUnit.getMemoryUnit(getEmbeddedValue(cache.memoryUnit())))
+                .setMemorySize(getLong(cache.memorySize()))
+                .setOhcDuration(getLong(cache.ohcDuration()))
+                .setTimeout(getLong(cache.timeout()))
+                .setEmptyTimeout(getLong(cache.emptyTimeout()))
+        ));
     }
 }
