@@ -31,6 +31,7 @@
         <module>spring</module>
         <module>spring-boot-starter</module>
         <module>tiny-spring</module>
+        <module>tracer</module>
         <module>ump</module>
         <module>uuid</module>
     </modules>
@@ -108,6 +109,12 @@
             <dependency>
                 <groupId>com.github.bourbon</groupId>
                 <artifactId>tiny-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>tracer</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
