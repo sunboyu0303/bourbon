@@ -17,7 +17,7 @@ public class AppInfo {
     private final String appName;
 
     AppInfo() {
-        properties = PropertiesUtils.getProperties(AppInfo.class.getClassLoader(), "META-INF/app.properties");
+        properties = PropertiesUtils.getProperties(AppInfo.class.getClassLoader(), "app.properties");
         appId = initAppId();
         appName = initAppName();
     }

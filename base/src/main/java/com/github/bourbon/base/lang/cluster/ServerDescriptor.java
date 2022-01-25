@@ -1,5 +1,7 @@
 package com.github.bourbon.base.lang.cluster;
 
+import com.github.bourbon.base.appender.builder.JsonStringBuilder;
+
 /**
  * @author sunboyu
  * @version 1.0
@@ -36,5 +38,16 @@ public class ServerDescriptor {
     public ServerDescriptor setType(String type) {
         this.type = type;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new JsonStringBuilder(true)
+                .appendBegin()
+                .append("host", host)
+                .append("port", port)
+                .append("type", type)
+                .appendEnd()
+                .toString();
     }
 }

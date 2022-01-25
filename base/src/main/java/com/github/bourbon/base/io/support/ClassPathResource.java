@@ -8,6 +8,7 @@ import com.github.bourbon.base.utils.ObjectUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 /**
  * @author sunboyu
@@ -27,7 +28,7 @@ public class ClassPathResource implements Resource {
     ClassPathResource(String path, ClassLoader classLoader) {
         Assert.notNull(path, "path must not be null");
         this.path = path;
-        this.classLoader = ObjectUtils.defaultSupplierIfNull(classLoader, ClassLoaderUtils::getClassLoader);
+        this.classLoader = ObjectUtils.defaultSupplierIfNull(classLoader, (Supplier<ClassLoader>) ClassLoaderUtils::getClassLoader);
     }
 
     @Override
