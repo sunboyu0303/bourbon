@@ -47,7 +47,7 @@ public class ServerDescriptor {
                 .append("host", host)
                 .append("port", port)
                 .append("type", type)
-                .appendEnd()
+                .appendEnd(false)
                 .toString();
     }
 }

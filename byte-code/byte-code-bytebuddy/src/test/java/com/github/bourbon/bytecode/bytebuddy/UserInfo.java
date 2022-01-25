@@ -1,6 +1,6 @@
 package com.github.bourbon.bytecode.bytebuddy;
 
-import com.alibaba.fastjson.JSON;
+import com.github.bourbon.base.appender.builder.JsonStringBuilder;
 
 /**
  * @author sunboyu
@@ -65,6 +65,14 @@ public class UserInfo {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return new JsonStringBuilder(true)
+                .appendBegin()
+                .append("address", address)
+                .append("age", age)
+                .append("code", code)
+                .append("info", info)
+                .append("name", name)
+                .appendEnd(false)
+                .toString();
     }
 }

@@ -1,6 +1,6 @@
 package com.github.bourbon.bytecode.asm;
 
-import com.alibaba.fastjson.JSON;
+import com.github.bourbon.base.appender.builder.JsonStringBuilder;
 
 /**
  * @author sunboyu
@@ -37,6 +37,6 @@ public class User {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return new JsonStringBuilder(true).appendBegin().append("name", name).append("age", age).appendEnd(false).toString();
     }
 }
