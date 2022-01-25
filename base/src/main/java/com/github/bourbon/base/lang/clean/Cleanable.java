@@ -1,4 +1,4 @@
-package com.github.bourbon.serialization.core;
+package com.github.bourbon.base.lang.clean;
 
 /**
  * @author sunboyu

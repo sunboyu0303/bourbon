@@ -1,4 +1,6 @@
-package com.github.bourbon.tracer.core.appender;
+package com.github.bourbon.base.appender;
+
+import com.github.bourbon.base.lang.clean.Cleanable;
 
 import java.io.IOException;
 
@@ -7,11 +9,9 @@ import java.io.IOException;
  * @version 1.0
  * @date 2022/1/25 13:44
  */
-public interface TraceAppender {
+public interface TraceAppender extends Cleanable {
 
     void flush() throws IOException;
 
     void append(String log) throws IOException;
-
-    void cleanup();
 }

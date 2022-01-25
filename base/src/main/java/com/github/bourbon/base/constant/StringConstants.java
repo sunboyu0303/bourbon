@@ -179,6 +179,10 @@ public final class StringConstants {
      */
     public static final String POUND = valueOf(CharConstants.POUND);
     /**
+     * {@code "%"}
+     */
+    public static final String PERCENT = valueOf(CharConstants.PERCENT);
+    /**
      * {@code "'"}
      */
     public static final String SINGLE_QUOTE = valueOf(CharConstants.SINGLE_QUOTE);

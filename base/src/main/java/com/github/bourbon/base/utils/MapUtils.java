@@ -1,5 +1,6 @@
 package com.github.bourbon.base.utils;
 
+import com.github.bourbon.base.constant.CharConstants;
 import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.convert.Convert;
 import com.github.bourbon.base.lang.Pair;
@@ -22,7 +23,7 @@ public interface MapUtils {
     }
 
     static Map<String, String> split(List<String> list, String separator) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = newHashMap();
         if (!CollectionUtils.isEmpty(list)) {
             for (String item : list) {
                 int index = item.indexOf(separator);
@@ -41,7 +42,7 @@ public interface MapUtils {
     }
 
     static List<String> join(Map<String, String> map, String separator) {
-        List<String> list = new ArrayList<>();
+        List<String> list = ListUtils.newArrayList();
         if (!isEmpty(map)) {
             map.forEach((k, v) -> {
                 if (CharSequenceUtils.isEmpty(v)) {
@@ -55,7 +56,7 @@ public interface MapUtils {
     }
 
     static Map<String, String> toMap(String[] pairs) {
-        Map<String, String> parameters = new HashMap<>();
+        Map<String, String> parameters = newHashMap();
         if (!ArrayUtils.isEmpty(pairs)) {
             if (pairs.length % 2 != 0) {
                 throw new IllegalArgumentException("pairs must be even.");
@@ -68,7 +69,7 @@ public interface MapUtils {
     }
 
     static Map<Object, Object> toMap(Object[] pairs) {
-        Map<Object, Object> ret = new HashMap<>();
+        Map<Object, Object> ret = newHashMap();
         if (!ArrayUtils.isEmpty(pairs)) {
             if (pairs.length % 2 != 0) {
                 throw new IllegalArgumentException("Map pairs can not be odd number.");
@@ -314,5 +315,44 @@ public interface MapUtils {
 
     static <K, V, X extends Throwable> Map<K, V> requireNonNull(Map<K, V> map, ThrowableSupplier<X> s) throws X {
         return ObjectUtils.requireNonNull(map, s);
+    }
+
+    static String mapToString(Map<String, String> map) {
+        return BooleanUtils.defaultIfPredicate(map, m -> !isEmpty(m), m -> {
+            StringJoiner sj = new StringJoiner(StringConstants.AND);
+            m.forEach((k, v) -> sj.add(k + StringConstants.EQUAL + v));
+            return sj.toString();
+        }, StringConstants.EMPTY);
+    }
+
+    static void stringToMap(String str, Map<String, String> map) {
+        if (CharSequenceUtils.isBlank(str)) {
+            return;
+        }
+        String key = null;
+        String value;
+        int mark = -1;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            switch (c) {
+                case CharConstants.AND:
+                    value = str.substring(mark + 1, i);
+                    if (key != null) {
+                        map.put(key, value);
+                    }
+                    key = null;
+                    mark = i;
+                    break;
+                case CharConstants.EQUAL:
+                    key = str.substring(mark + 1, i);
+                    mark = i;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (key != null) {
+            map.put(key, (str.length() - mark - 1) == 0 ? StringConstants.EMPTY : str.substring(mark + 1));
+        }
     }
 }

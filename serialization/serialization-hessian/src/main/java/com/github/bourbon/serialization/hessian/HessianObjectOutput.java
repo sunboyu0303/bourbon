@@ -1,7 +1,7 @@
 package com.github.bourbon.serialization.hessian;
 
 import com.caucho.hessian.io.HessianOutput;
-import com.github.bourbon.serialization.core.Cleanable;
+import com.github.bourbon.base.lang.clean.Cleanable;
 import com.github.bourbon.serialization.core.ObjectOutput;
 
 import java.io.IOException;

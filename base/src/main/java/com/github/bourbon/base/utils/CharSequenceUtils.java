@@ -3,7 +3,6 @@ package com.github.bourbon.base.utils;
 import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.utils.function.ThrowableSupplier;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -485,7 +484,7 @@ public interface CharSequenceUtils {
         if (delimiter == null) {
             return ArrayUtils.of(str);
         }
-        List<String> result = new ArrayList<>();
+        List<String> result = ListUtils.newArrayList();
         int pos;
         if (delimiter.isEmpty()) {
             for (pos = 0; pos < str.length(); ++pos) {
@@ -496,7 +495,6 @@ public interface CharSequenceUtils {
             for (pos = 0; (delPos = str.indexOf(delimiter, pos)) != -1; pos = delPos + delimiter.length()) {
                 result.add(deleteAny(str.substring(pos, delPos), charsToDelete));
             }
-
             if (str.length() > 0 && pos <= str.length()) {
                 result.add(deleteAny(str.substring(pos), charsToDelete));
             }
