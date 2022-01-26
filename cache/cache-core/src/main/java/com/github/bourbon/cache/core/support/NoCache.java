@@ -1,5 +1,7 @@
 package com.github.bourbon.cache.core.support;
 
+import com.github.bourbon.base.logger.Logger;
+import com.github.bourbon.base.logger.LoggerFactory;
 import com.github.bourbon.cache.core.Cache;
 
 import java.util.concurrent.CompletableFuture;
@@ -14,21 +16,26 @@ import java.util.concurrent.TimeoutException;
  */
 class NoCache<K, V> implements Cache<K, V> {
 
-    private final com.github.bourbon.base.cache.Cache<K, V> cache = new com.github.bourbon.base.cache.impl.NoCache<>();
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public V get(K k) {
-        return cache.get(k);
+        if (logger.isInfoEnabled()) {
+            logger.info("get key: {}", k);
+        }
+        return null;
     }
 
     @Override
     public V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return CompletableFuture.supplyAsync(() -> cache.get(k)).get(timeout, unit);
+        return CompletableFuture.supplyAsync(() -> get(k)).get(timeout, unit);
     }
 
     @Override
     public void put(K k, V v) {
-        cache.put(k, v);
+        if (logger.isInfoEnabled()) {
+            logger.info("put key: {}, value: {}", k, v);
+        }
     }
 
     @Override
