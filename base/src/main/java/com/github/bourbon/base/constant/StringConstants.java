@@ -15,6 +15,7 @@ public final class StringConstants {
     public static final String JAR = ".jar";
     public static final String WAR = ".war";
     public static final String CLASS_FILE_SUFFIX = ".class";
+    public static final String PROPERTIES_FILE_SUFFIX = ".properties";
     /**
      * {@code "\r\n"}
      */

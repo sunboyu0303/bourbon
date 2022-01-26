@@ -63,6 +63,10 @@ public interface Assert {
         }
     }
 
+    static void isNull(Object object) throws IllegalArgumentException {
+        isNull(object, "[Assertion failed] - the object argument must be null");
+    }
+
     static void isNull(Object object, String message) throws IllegalArgumentException {
         if (ObjectUtils.nonNull(object)) {
             throw new IllegalArgumentException(message);
@@ -85,6 +89,10 @@ public interface Assert {
         if (ObjectUtils.nonNull(object)) {
             throw supplier.get();
         }
+    }
+
+    static void isNull(String s) throws IllegalArgumentException {
+        isNull(s, "[Assertion failed] - the string argument must be null or empty");
     }
 
     static void isNull(String s, String message) throws IllegalArgumentException {
@@ -111,6 +119,10 @@ public interface Assert {
         }
     }
 
+    static void isNull(CharSequence s) throws IllegalArgumentException {
+        isNull(s, "[Assertion failed] - the CharSequence argument must be null or empty");
+    }
+
     static void isNull(CharSequence s, String message) throws IllegalArgumentException {
         if (!CharSequenceUtils.isEmpty(s)) {
             throw new IllegalArgumentException(message);
@@ -133,6 +145,10 @@ public interface Assert {
         if (!CharSequenceUtils.isEmpty(s)) {
             throw supplier.get();
         }
+    }
+
+    static void notNull(Object object) throws IllegalArgumentException {
+        notNull(object, "[Assertion failed] - this argument is required; it must not be null");
     }
 
     static void notNull(Object object, String message) throws IllegalArgumentException {
@@ -159,6 +175,10 @@ public interface Assert {
         }
     }
 
+    static void notNull(String s) throws IllegalArgumentException {
+        notNull(s, "[Assertion failed] - this argument is required; it must not be null or empty");
+    }
+
     static void notNull(String s, String message) throws IllegalArgumentException {
         if (CharSequenceUtils.isEmpty(s)) {
             throw new IllegalArgumentException(message);
@@ -181,6 +201,10 @@ public interface Assert {
         if (CharSequenceUtils.isEmpty(s)) {
             throw supplier.get();
         }
+    }
+
+    static void notNull(CharSequence s) throws IllegalArgumentException {
+        notNull(s, "[Assertion failed] - this argument is required; it must not be null or empty");
     }
 
     static void notNull(CharSequence s, String message) throws IllegalArgumentException {
@@ -207,6 +231,10 @@ public interface Assert {
         }
     }
 
+    static void notBlank(String s) throws IllegalArgumentException {
+        notBlank(s, "[Assertion failed] - this argument is required; it must not be blank");
+    }
+
     static void notBlank(String s, String message) throws IllegalArgumentException {
         if (CharSequenceUtils.isBlank(s)) {
             throw new IllegalArgumentException(message);
@@ -229,6 +257,10 @@ public interface Assert {
         if (CharSequenceUtils.isBlank(s)) {
             throw supplier.get();
         }
+    }
+
+    static void notBlank(CharSequence s) throws IllegalArgumentException {
+        notBlank(s, "[Assertion failed] - this argument is required; it must not be blank");
     }
 
     static void notBlank(CharSequence s, String message) throws IllegalArgumentException {
@@ -255,6 +287,10 @@ public interface Assert {
         }
     }
 
+    static void notEmpty(Object[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
+    }
+
     static void notEmpty(Object[] array, String message) throws IllegalArgumentException {
         if (ArrayUtils.isEmpty(array)) {
             throw new IllegalArgumentException(message);
@@ -277,6 +313,10 @@ public interface Assert {
         if (ArrayUtils.isEmpty(array)) {
             throw supplier.get();
         }
+    }
+
+    static void notEmpty(boolean[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
     }
 
     static void notEmpty(boolean[] array, String message) throws IllegalArgumentException {
@@ -303,6 +343,10 @@ public interface Assert {
         }
     }
 
+    static void notEmpty(float[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
+    }
+
     static void notEmpty(float[] array, String message) throws IllegalArgumentException {
         if (PrimitiveArrayUtils.isEmpty(array)) {
             throw new IllegalArgumentException(message);
@@ -325,6 +369,10 @@ public interface Assert {
         if (PrimitiveArrayUtils.isEmpty(array)) {
             throw supplier.get();
         }
+    }
+
+    static void notEmpty(double[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
     }
 
     static void notEmpty(double[] array, String message) throws IllegalArgumentException {
@@ -351,6 +399,10 @@ public interface Assert {
         }
     }
 
+    static void notEmpty(byte[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
+    }
+
     static void notEmpty(byte[] array, String message) throws IllegalArgumentException {
         if (PrimitiveArrayUtils.isEmpty(array)) {
             throw new IllegalArgumentException(message);
@@ -373,6 +425,10 @@ public interface Assert {
         if (PrimitiveArrayUtils.isEmpty(array)) {
             throw supplier.get();
         }
+    }
+
+    static void notEmpty(short[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
     }
 
     static void notEmpty(short[] array, String message) throws IllegalArgumentException {
@@ -399,6 +455,10 @@ public interface Assert {
         }
     }
 
+    static void notEmpty(int[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
+    }
+
     static void notEmpty(int[] array, String message) throws IllegalArgumentException {
         if (PrimitiveArrayUtils.isEmpty(array)) {
             throw new IllegalArgumentException(message);
@@ -421,6 +481,10 @@ public interface Assert {
         if (PrimitiveArrayUtils.isEmpty(array)) {
             throw supplier.get();
         }
+    }
+
+    static void notEmpty(long[] array) {
+        notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
     }
 
     static void notEmpty(long[] array, String message) throws IllegalArgumentException {
@@ -471,6 +535,10 @@ public interface Assert {
         }
     }
 
+    static void notEmpty(Collection<?> collection) {
+        notEmpty(collection, "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
+    }
+
     static void notEmpty(Collection<?> collection, String message) throws IllegalArgumentException {
         if (CollectionUtils.isEmpty(collection)) {
             throw new IllegalArgumentException(message);
@@ -517,6 +585,10 @@ public interface Assert {
         if (!CollectionUtils.isEmpty(collection)) {
             throw supplier.get();
         }
+    }
+
+    static void notEmpty(Map<?, ?> map) {
+        notEmpty(map, "[Assertion failed] - this map must not be empty: it must contain at least 1 element");
     }
 
     static void notEmpty(Map<?, ?> map, String message) throws IllegalArgumentException {

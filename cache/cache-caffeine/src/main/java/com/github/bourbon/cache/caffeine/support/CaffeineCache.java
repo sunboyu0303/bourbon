@@ -15,7 +15,9 @@ import com.github.bourbon.cache.core.Cache;
 import com.github.bourbon.cache.core.CacheParamInfo;
 
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -62,8 +64,11 @@ class CaffeineCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return info.isAsync() ? asyncCache.get(k).get(timeout, unit).orElse(null) : AsyncBaseService.supplierAsync(() -> CaffeineCache.this.get(k), timeout, unit).get(timeout, unit);
+    public CompletableFuture<V> getAsync(K k) {
+        if (info.isAsync()) {
+            return AsyncBaseService.supplierAsync(() -> asyncCache.get(k).join().orElse(null));
+        }
+        return AsyncBaseService.supplierAsync(() -> CaffeineCache.this.get(k));
     }
 
     @Override

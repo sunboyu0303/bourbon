@@ -21,7 +21,9 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.core.internal.statistics.DefaultStatisticsService;
 
 import java.time.Duration;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -83,8 +85,8 @@ class Ehcache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return AsyncBaseService.supplierAsync(() -> Ehcache.this.get(k), timeout, unit).get(timeout, unit);
+    public CompletableFuture<V> getAsync(K k) {
+        return AsyncBaseService.supplierAsync(() -> Ehcache.this.get(k));
     }
 
     @Override

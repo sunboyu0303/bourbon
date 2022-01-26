@@ -1,8 +1,6 @@
 package com.github.bourbon.cache.core;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author sunboyu
@@ -13,7 +11,7 @@ public interface Cache<K, V> {
 
     V get(K k);
 
-    V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException;
+    CompletableFuture<V> getAsync(K k);
 
     void put(K k, V v);
 

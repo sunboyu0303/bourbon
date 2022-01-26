@@ -17,10 +17,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -84,8 +83,8 @@ class GuavaCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return AsyncBaseService.supplierAsync(() -> GuavaCache.this.get(k), timeout, unit).get(timeout, unit);
+    public CompletableFuture<V> getAsync(K k) {
+        return AsyncBaseService.supplierAsync(() -> GuavaCache.this.get(k));
     }
 
     @Override

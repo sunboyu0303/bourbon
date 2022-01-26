@@ -5,9 +5,6 @@ import com.github.bourbon.base.logger.LoggerFactory;
 import com.github.bourbon.cache.core.Cache;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @author sunboyu
@@ -27,8 +24,8 @@ class NoCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return CompletableFuture.supplyAsync(() -> get(k)).get(timeout, unit);
+    public CompletableFuture<V> getAsync(K k) {
+        return CompletableFuture.supplyAsync(() -> get(k));
     }
 
     @Override

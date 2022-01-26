@@ -1,5 +1,9 @@
 package com.github.bourbon.base.convert;
 
+import com.github.bourbon.base.constant.ByteConstants;
+import com.github.bourbon.base.constant.IntConstants;
+import com.github.bourbon.base.constant.LongConstants;
+import com.github.bourbon.base.constant.ShortConstants;
 import com.github.bourbon.base.extension.model.ScopeModelUtils;
 import com.github.bourbon.base.extension.support.ExtensionLoader;
 import com.github.bourbon.base.utils.BooleanUtils;
@@ -7,7 +11,6 @@ import com.github.bourbon.base.utils.BooleanUtils;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 
 /**
  * @author sunboyu
@@ -120,19 +123,19 @@ public final class Convert {
     }
 
     public static Byte toByteNatural(String s, Byte def) {
-        return BooleanUtils.defaultIfPredicate(toByte(s), r -> r != null && r >= 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toByte(s), r -> r != null && r >= ByteConstants.DEFAULT, t -> t, def);
     }
 
     public static Byte toByteNatural(Object o, Byte def) {
-        return BooleanUtils.defaultIfPredicate(toByte(o), r -> r != null && r >= 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toByte(o), r -> r != null && r >= ByteConstants.DEFAULT, t -> t, def);
     }
 
     public static Byte toBytePositive(String s, Byte def) {
-        return BooleanUtils.defaultIfPredicate(toByte(s), r -> r != null && r > 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toByte(s), r -> r != null && r > ByteConstants.DEFAULT, t -> t, def);
     }
 
     public static Byte toBytePositive(Object o, Byte def) {
-        return BooleanUtils.defaultIfPredicate(toByte(o), r -> r != null && r > 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toByte(o), r -> r != null && r > ByteConstants.DEFAULT, t -> t, def);
     }
 
     public static Short toShort(String s) {
@@ -141,8 +144,8 @@ public final class Convert {
 
     private static final Converter<String, Short> STRING_TO_SHORT = (Converter<String, Short>) loader.getExtension("string-to-short");
 
-    public static Short toShort(String s, Short sh) {
-        return STRING_TO_SHORT.convert(s, sh);
+    public static Short toShort(String s, Short def) {
+        return STRING_TO_SHORT.convert(s, def);
     }
 
     public static Short toShort(Object o) {
@@ -151,24 +154,24 @@ public final class Convert {
 
     private static final Converter<Object, Number> OBJECT_TO_SHORT = (Converter<Object, Number>) loader.getExtension("object-to-short");
 
-    public static Short toShort(Object o, Short sh) {
-        return (Short) OBJECT_TO_SHORT.convert(o, sh);
+    public static Short toShort(Object o, Short def) {
+        return (Short) OBJECT_TO_SHORT.convert(o, def);
     }
 
     public static Short toShortNatural(String s, Short def) {
-        return BooleanUtils.defaultIfPredicate(toShort(s), r -> r != null && r >= 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toShort(s), r -> r != null && r >= ShortConstants.DEFAULT, t -> t, def);
     }
 
     public static Short toShortNatural(Object o, Short def) {
-        return BooleanUtils.defaultIfPredicate(toShort(o), r -> r != null && r >= 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toShort(o), r -> r != null && r >= ShortConstants.DEFAULT, t -> t, def);
     }
 
     public static Short toShortPositive(String s, Short def) {
-        return BooleanUtils.defaultIfPredicate(toShort(s), r -> r != null && r > 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toShort(s), r -> r != null && r > ShortConstants.DEFAULT, t -> t, def);
     }
 
     public static Short toShortPositive(Object o, Short def) {
-        return BooleanUtils.defaultIfPredicate(toShort(o), r -> r != null && r > 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toShort(o), r -> r != null && r > ShortConstants.DEFAULT, t -> t, def);
     }
 
     public static Integer toInteger(String s) {
@@ -192,19 +195,19 @@ public final class Convert {
     }
 
     public static Integer toIntegerNatural(String s, Integer def) {
-        return BooleanUtils.defaultIfPredicate(toInteger(s), r -> r != null && r >= 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toInteger(s), r -> r != null && r >= IntConstants.DEFAULT, t -> t, def);
     }
 
     public static Integer toIntegerNatural(Object o, Integer def) {
-        return BooleanUtils.defaultIfPredicate(toInteger(o), r -> r != null && r >= 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toInteger(o), r -> r != null && r >= IntConstants.DEFAULT, t -> t, def);
     }
 
     public static Integer toIntegerPositive(String s, Integer def) {
-        return BooleanUtils.defaultIfPredicate(toInteger(s), r -> r != null && r > 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toInteger(s), r -> r != null && r > IntConstants.DEFAULT, t -> t, def);
     }
 
     public static Integer toIntegerPositive(Object o, Integer def) {
-        return BooleanUtils.defaultIfPredicate(toInteger(o), r -> r != null && r > 0, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toInteger(o), r -> r != null && r > IntConstants.DEFAULT, t -> t, def);
     }
 
     public static Long toLong(String s) {
@@ -228,19 +231,19 @@ public final class Convert {
     }
 
     public static Long toLongNatural(String s, Long def) {
-        return BooleanUtils.defaultIfPredicate(toLong(s), r -> r != null && r >= 0L, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toLong(s), r -> r != null && r >= LongConstants.DEFAULT, t -> t, def);
     }
 
     public static Long toLongNatural(Object o, Long def) {
-        return BooleanUtils.defaultIfPredicate(toLong(o), r -> r != null && r >= 0L, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toLong(o), r -> r != null && r >= LongConstants.DEFAULT, t -> t, def);
     }
 
     public static Long toLongPositive(String s, Long def) {
-        return BooleanUtils.defaultIfPredicate(toLong(s), r -> r != null && r > 0L, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toLong(s), r -> r != null && r > LongConstants.DEFAULT, t -> t, def);
     }
 
     public static Long toLongPositive(Object o, Long def) {
-        return BooleanUtils.defaultIfPredicate(toLong(o), r -> r != null && r > 0L, Function.identity(), def);
+        return BooleanUtils.defaultIfPredicate(toLong(o), r -> r != null && r > LongConstants.DEFAULT, t -> t, def);
     }
 
     public static AtomicInteger toAtomicInteger(String s) {

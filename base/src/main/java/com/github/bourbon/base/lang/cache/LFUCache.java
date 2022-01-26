@@ -52,8 +52,8 @@ public class LFUCache<K, V> {
 
     public V put(final K key, final V value) {
         CacheNode<K, V> node;
+        lock.lock();
         try {
-            lock.lock();
             node = map.get(key);
             if (node != null) {
                 CacheNode.withDrawNode(node);
@@ -76,8 +76,8 @@ public class LFUCache<K, V> {
 
     public V remove(final K key) {
         CacheNode<K, V> node = null;
+        lock.lock();
         try {
-            lock.lock();
             if (map.containsKey(key)) {
                 node = map.remove(key);
                 if (node != null) {
@@ -93,8 +93,8 @@ public class LFUCache<K, V> {
 
     public V get(final K key) {
         CacheNode<K, V> node = null;
+        lock.lock();
         try {
-            lock.lock();
             if (map.containsKey(key)) {
                 node = map.get(key);
                 CacheNode.withDrawNode(node);
@@ -124,8 +124,8 @@ public class LFUCache<K, V> {
     }
 
     public void clear() {
+        lock.lock();
         try {
-            lock.lock();
             for (CacheDeque<K, V> deque : freqTable) {
                 while (!deque.isEmpty()) {
                     deque.pollFirst();

@@ -3,7 +3,6 @@ package com.github.bourbon.base.utils;
 import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.utils.function.ThrowableSupplier;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -24,20 +23,52 @@ public interface CharSequenceUtils {
         return ObjectUtils.isNull(cs) || cs.length() == 0;
     }
 
-    static String nullToDefault(CharSequence cs) {
-        return nullToDefault(cs, StringConstants.EMPTY);
+    static String defaultIfNull(String str) {
+        return defaultIfNull(str, StringConstants.EMPTY);
     }
 
-    static String nullToDefault(CharSequence cs, String s) {
-        return ObjectUtils.isNull(cs) ? s : cs.toString();
+    static String defaultIfNull(String str, String def) {
+        return ObjectUtils.defaultIfNull(str, def);
     }
 
-    static String emptyToDefault(CharSequence cs, String s) {
-        return isEmpty(cs) ? s : cs.toString();
+    static String defaultIfNull(CharSequence cs) {
+        return defaultIfNull(cs, StringConstants.EMPTY);
     }
 
-    static String blankToDefault(CharSequence cs, String s) {
-        return isBlank(cs) ? s : cs.toString();
+    static String defaultIfNull(CharSequence cs, String def) {
+        return ObjectUtils.defaultIfNull(cs, CharSequence::toString, def);
+    }
+
+    static String defaultIfEmpty(String s) {
+        return defaultIfEmpty(s, StringConstants.EMPTY);
+    }
+
+    static String defaultIfEmpty(String s, String def) {
+        return isEmpty(s) ? def : s;
+    }
+
+    static String defaultIfEmpty(CharSequence cs) {
+        return defaultIfEmpty(cs, StringConstants.EMPTY);
+    }
+
+    static String defaultIfEmpty(CharSequence cs, String def) {
+        return isEmpty(cs) ? def : cs.toString();
+    }
+
+    static String defaultIfBlank(String s) {
+        return defaultIfBlank(s, StringConstants.EMPTY);
+    }
+
+    static String defaultIfBlank(String s, String def) {
+        return isBlank(s) ? def : s;
+    }
+
+    static String defaultIfBlank(CharSequence cs) {
+        return defaultIfBlank(cs, StringConstants.EMPTY);
+    }
+
+    static String defaultIfBlank(CharSequence cs, String def) {
+        return isBlank(cs) ? def : cs.toString();
     }
 
     static boolean isBlank(CharSequence cs) {
@@ -52,34 +83,74 @@ public interface CharSequenceUtils {
         return true;
     }
 
-    static boolean isEquals(CharSequence s1, CharSequence s2) {
-        if (s1 == null && s2 == null) {
-            return true;
+    static boolean equals(String str1, String str2) {
+        return equals(str1, str2, false);
+    }
+
+    static boolean equals(CharSequence cs1, CharSequence cs2) {
+        return equals(cs1, cs2, false);
+    }
+
+    static boolean equals(String str1, String str2, boolean ignore) {
+        if (null == str1) {
+            return str2 == null;
         }
-        if (s1 == null || s2 == null) {
+        if (null == str2) {
             return false;
         }
-        return s1.equals(s2);
+        return BooleanUtils.defaultSupplierIfFalse(ignore, () -> str1.equalsIgnoreCase(str2), () -> str1.equals(str2));
+    }
+
+    static boolean equalsIgnoreCase(String str1, String str2) {
+        return equals(str1, str2, true);
+    }
+
+    static boolean equalsIgnoreCase(CharSequence cs1, CharSequence cs2) {
+        return equals(cs1, cs2, true);
+    }
+
+    static boolean equals(CharSequence cs1, CharSequence cs2, boolean ignore) {
+        if (null == cs1) {
+            return cs2 == null;
+        }
+        if (null == cs2) {
+            return false;
+        }
+        return BooleanUtils.defaultSupplierIfFalse(ignore, () -> cs1.toString().equalsIgnoreCase(cs2.toString()), () -> cs1.toString().contentEquals(cs2));
     }
 
     static boolean isWord(CharSequence cs) {
         return cs != null && cs.chars().allMatch(c -> CharUtils.isWord((char) c));
     }
 
-    static String join(CharSequence[] sequences) {
-        return BooleanUtils.defaultIfPredicate(sequences, s -> !ArrayUtils.isEmpty(s), s -> {
-            StringBuilder sb = new StringBuilder();
-            Arrays.stream(s).forEach(sb::append);
-            return sb.toString();
-        }, StringConstants.EMPTY);
+    static String join(CharSequence[] c) {
+        return join(c, StringConstants.EMPTY);
     }
 
     static String join(CharSequence[] c, CharSequence cs) {
         return ArrayUtils.isEmpty(c) ? StringConstants.EMPTY : String.join(cs, c);
     }
 
+    static String join(Collection<CharSequence> c) {
+        return join(c, StringConstants.EMPTY);
+    }
+
     static String join(Collection<CharSequence> c, CharSequence cs) {
         return CollectionUtils.isEmpty(c) ? StringConstants.EMPTY : String.join(cs, c);
+    }
+
+    static String trimAllWhitespace(String cs) {
+        if (isEmpty(cs)) {
+            return StringConstants.EMPTY;
+        }
+        int len = cs.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (char c : cs.toCharArray()) {
+            if (!Character.isWhitespace(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     static String trimAllWhitespace(CharSequence cs) {
@@ -125,6 +196,85 @@ public interface CharSequenceUtils {
         return start <= 0 && end >= length ? cs.toString() : cs.toString().substring(start, end);
     }
 
+    static String trim(String str) {
+        return trim(str, null);
+    }
+
+    static String trim(String str, String stripChars) {
+        return trim(str, stripChars, 0);
+    }
+
+    static String trimStart(String str) {
+        return trimStart(str, null);
+    }
+
+    static String trimStart(String str, String stripChars) {
+        return trim(str, stripChars, -1);
+    }
+
+    static String trimEnd(String str) {
+        return trimEnd(str, null);
+    }
+
+    static String trimEnd(String str, String stripChars) {
+        return trim(str, stripChars, 1);
+    }
+
+    static String trimToNull(String str) {
+        return trimToNull(str, null);
+    }
+
+    static String trimToNull(String str, String stripChars) {
+        String result = trim(str, stripChars);
+        return result != null && result.length() != 0 ? result : null;
+    }
+
+    static String trimToEmpty(String str) {
+        return trimToEmpty(str, null);
+    }
+
+    static String trimToEmpty(String str, String stripChars) {
+        return ObjectUtils.defaultIfNull(trim(str, stripChars), StringConstants.EMPTY);
+    }
+
+    static String trim(String str, String stripChars, int mode) {
+        if (str == null) {
+            return null;
+        }
+        int length = str.length();
+        int start = 0;
+        int end = length;
+        if (mode <= 0) {
+            if (stripChars == null) {
+                while (start < end && Character.isWhitespace(str.charAt(start))) {
+                    ++start;
+                }
+            } else {
+                if (stripChars.length() == 0) {
+                    return str;
+                }
+                while (start < end && stripChars.indexOf(str.charAt(start)) != -1) {
+                    ++start;
+                }
+            }
+        }
+        if (mode >= 0) {
+            if (stripChars == null) {
+                while (start < end && Character.isWhitespace(str.charAt(end - 1))) {
+                    --end;
+                }
+            } else {
+                if (stripChars.length() == 0) {
+                    return str;
+                }
+                while (start < end && stripChars.indexOf(str.charAt(end - 1)) != -1) {
+                    --end;
+                }
+            }
+        }
+        return start <= 0 && end >= length ? str : str.substring(start, end);
+    }
+
     static boolean contains(CharSequence cs, char c) {
         return indexOf(cs, c) > -1;
     }
@@ -161,20 +311,16 @@ public interface CharSequenceUtils {
             if (fromIndex < 0) {
                 fromIndex = 0;
             }
-
             int endLimit = cs1.length() - cs2.length() + 1;
             if (fromIndex > endLimit) {
                 return -1;
             }
-
             if (cs2.length() == 0) {
                 return fromIndex;
             }
-
             if (!ignoreCase) {
                 return cs1.toString().indexOf(cs2.toString(), fromIndex);
             }
-
             for (int i = fromIndex; i < endLimit; ++i) {
                 if (isSubEquals(cs1, i, cs2, 0, cs2.length(), true)) {
                     return i;
@@ -266,33 +412,9 @@ public interface CharSequenceUtils {
 
     static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
         if (null != str && null != prefix) {
-            boolean isStartWith;
-            if (ignoreCase) {
-                isStartWith = str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
-            } else {
-                isStartWith = str.toString().startsWith(prefix.toString());
-            }
-            return isStartWith && (!ignoreEquals || !equals(str, prefix, ignoreCase));
+            return BooleanUtils.defaultSupplierIfFalse(ignoreCase, () -> str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase()), () -> str.toString().startsWith(prefix.toString())) && (!ignoreEquals || !equals(str, prefix, ignoreCase));
         }
         return ignoreEquals && null == str && null == prefix;
-    }
-
-    static boolean equals(CharSequence cs1, CharSequence cs2) {
-        return equals(cs1, cs2, false);
-    }
-
-    static boolean equalsIgnoreCase(CharSequence cs1, CharSequence cs2) {
-        return equals(cs1, cs2, true);
-    }
-
-    static boolean equals(CharSequence cs1, CharSequence cs2, boolean ignore) {
-        if (null == cs1) {
-            return cs2 == null;
-        }
-        if (null == cs2) {
-            return false;
-        }
-        return BooleanUtils.defaultSupplierIfFalse(ignore, () -> cs1.toString().equalsIgnoreCase(cs2.toString()), () -> cs1.toString().contentEquals(cs2));
     }
 
     static String addSuffixIfNot(CharSequence cs, CharSequence suffix) {
@@ -331,7 +453,7 @@ public interface CharSequenceUtils {
 
     static boolean endWith(CharSequence cs, CharSequence suffix, boolean isIgnoreCase) {
         if (null != cs && null != suffix) {
-            return isIgnoreCase ? cs.toString().toLowerCase().endsWith(suffix.toString().toLowerCase()) : cs.toString().endsWith(suffix.toString());
+            return BooleanUtils.defaultSupplierIfFalse(isIgnoreCase, () -> cs.toString().toLowerCase().endsWith(suffix.toString().toLowerCase()), () -> cs.toString().endsWith(suffix.toString()));
         }
         return null == cs && null == suffix;
     }
@@ -374,45 +496,143 @@ public interface CharSequenceUtils {
         });
     }
 
-    static String subPre(CharSequence cs, int toIndexExclude) {
-        return sub(cs, 0, toIndexExclude);
+    static String subPre(CharSequence cs, int toIndex) {
+        return sub(cs, 0, toIndex);
     }
 
     static String subSuf(CharSequence cs, int fromIndex) {
         return BooleanUtils.defaultIfPredicate(cs, s -> !isEmpty(s), s -> sub(s, fromIndex, s.length()));
     }
 
-    static String sub(CharSequence str, int fromIndexInclude, int toIndexExclude) {
+    static String sub(CharSequence str, int fromIndex, int toIndex) {
         if (isEmpty(str)) {
             return toString(str);
         }
-
         int len = str.length();
-        if (fromIndexInclude < 0) {
-            fromIndexInclude += len;
-            if (fromIndexInclude < 0) {
-                fromIndexInclude = 0;
+        if (fromIndex < 0) {
+            fromIndex += len;
+            if (fromIndex < 0) {
+                fromIndex = 0;
             }
-        } else if (fromIndexInclude > len) {
-            fromIndexInclude = len;
+        } else if (fromIndex > len) {
+            fromIndex = len;
         }
-
-        if (toIndexExclude < 0) {
-            toIndexExclude += len;
-            if (toIndexExclude < 0) {
-                toIndexExclude = len;
+        if (toIndex < 0) {
+            toIndex += len;
+            if (toIndex < 0) {
+                toIndex = len;
             }
-        } else if (toIndexExclude > len) {
-            toIndexExclude = len;
+        } else if (toIndex > len) {
+            toIndex = len;
         }
-
-        if (toIndexExclude < fromIndexInclude) {
-            int tmp = fromIndexInclude;
-            fromIndexInclude = toIndexExclude;
-            toIndexExclude = tmp;
+        if (toIndex < fromIndex) {
+            int tmp = fromIndex;
+            fromIndex = toIndex;
+            toIndex = tmp;
         }
+        return fromIndex == toIndex ? StringConstants.EMPTY : str.subSequence(fromIndex, toIndex).toString();
+    }
 
-        return fromIndexInclude == toIndexExclude ? StringConstants.EMPTY : str.toString().substring(fromIndexInclude, toIndexExclude);
+    static String substring(String str, int start) {
+        if (str == null) {
+            return null;
+        }
+        int len = str.length();
+        if (start < 0) {
+            start += len;
+        }
+        if (start < 0) {
+            start = 0;
+        }
+        return start > len ? StringConstants.EMPTY : str.substring(start);
+    }
+
+    static String substring(String str, int start, int end) {
+        if (str == null) {
+            return null;
+        }
+        int len = str.length();
+        if (end < 0) {
+            end += len;
+        }
+        if (start < 0) {
+            start += len;
+        }
+        if (end > len) {
+            end = len;
+        }
+        if (start > end) {
+            return StringConstants.EMPTY;
+        }
+        if (start < 0) {
+            start = 0;
+        }
+        if (end < 0) {
+            end = 0;
+        }
+        return str.substring(start, end);
+    }
+
+    static String left(String str, int len) {
+        return ObjectUtils.defaultIfNull(str, s -> BooleanUtils.defaultIfFalse(len > 0, () -> s.length() <= len ? s : s.substring(0, len), StringConstants.EMPTY));
+    }
+
+    static String right(String str, int len) {
+        return ObjectUtils.defaultIfNull(str, s -> BooleanUtils.defaultIfFalse(len > 0, () -> s.length() <= len ? s : s.substring(s.length() - len), StringConstants.EMPTY));
+    }
+
+    static String substringBefore(String str, String separator) {
+        if (str != null && separator != null && str.length() != 0) {
+            return BooleanUtils.defaultIfFalse(separator.length() != 0, () -> BooleanUtils.defaultIfPredicate(str.indexOf(separator), pos -> pos != -1, pos -> str.substring(0, pos), str), StringConstants.EMPTY);
+        }
+        return str;
+    }
+
+    static String substringAfter(String str, String separator) {
+        if (!isEmpty(str)) {
+            return ObjectUtils.defaultIfNull(separator, s -> BooleanUtils.defaultIfPredicate(str.indexOf(s), pos -> pos != -1, pos -> str.substring(pos + s.length()), StringConstants.EMPTY), StringConstants.EMPTY);
+        }
+        return str;
+    }
+
+    static String substringBeforeLast(String str, String separator) {
+        if (!isEmpty(str) && !isEmpty(separator)) {
+            return BooleanUtils.defaultIfPredicate(str.lastIndexOf(separator), pos -> pos != -1, pos -> str.substring(0, pos), str);
+        }
+        return str;
+    }
+
+    static String substringAfterLast(String str, String separator) {
+        if (!isEmpty(str)) {
+            if (!isEmpty(separator)) {
+                int pos = str.lastIndexOf(separator);
+                return pos != -1 && pos != str.length() - separator.length() ? str.substring(pos + separator.length()) : StringConstants.EMPTY;
+            }
+            return StringConstants.EMPTY;
+        }
+        return str;
+    }
+
+    static String substringBetween(String str, String tag) {
+        return substringBetween(str, tag, tag, 0);
+    }
+
+    static String substringBetween(String str, String open, String close) {
+        return substringBetween(str, open, close, 0);
+    }
+
+    static String substringBetween(String str, String open, String close, int fromIndex) {
+        if (str != null && open != null && close != null) {
+            int start = str.indexOf(open, fromIndex);
+            if (start != -1) {
+                int end = str.indexOf(close, start + open.length());
+                if (end != -1) {
+                    return str.substring(start + open.length(), end);
+                }
+            }
+            return null;
+        }
+        return null;
     }
 
     static String removePrefix(CharSequence str, CharSequence prefix) {
@@ -504,15 +724,13 @@ public interface CharSequenceUtils {
 
     static String deleteAny(String inString, String charsToDelete) {
         if (!isEmpty(inString) && !isEmpty(charsToDelete)) {
-            int lastCharIndex = 0;
-            char[] result = new char[inString.length()];
-            for (int i = 0; i < inString.length(); ++i) {
-                char c = inString.charAt(i);
+            StringBuilder sb = new StringBuilder(inString.length());
+            for (char c : inString.toCharArray()) {
                 if (charsToDelete.indexOf(c) == -1) {
-                    result[lastCharIndex++] = c;
+                    sb.append(c);
                 }
             }
-            return lastCharIndex == inString.length() ? inString : new String(result, 0, lastCharIndex);
+            return sb.toString();
         }
         return inString;
     }

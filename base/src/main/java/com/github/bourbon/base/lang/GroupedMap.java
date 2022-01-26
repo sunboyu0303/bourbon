@@ -22,7 +22,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public String get(String group, String key) {
         try {
             readLock.lock();
-            return BooleanUtils.defaultIfPredicate(get(CharSequenceUtils.nullToDefault(group)), m -> !MapUtils.isEmpty(m), m -> m.get(key));
+            return BooleanUtils.defaultIfPredicate(get(CharSequenceUtils.defaultIfNull(group)), m -> !MapUtils.isEmpty(m), m -> m.get(key));
         } finally {
             readLock.unlock();
         }
@@ -58,7 +58,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public String put(String group, String key, String value) {
         try {
             writeLock.lock();
-            return computeIfAbsent(CharSequenceUtils.nullToDefault(group), k -> new LinkedHashMap<>()).put(key, value);
+            return computeIfAbsent(CharSequenceUtils.defaultIfNull(group), k -> new LinkedHashMap<>()).put(key, value);
         } finally {
             size = -1;
             writeLock.unlock();
@@ -68,7 +68,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public GroupedMap putAll(String group, Map<? extends String, ? extends String> m) {
         try {
             writeLock.lock();
-            final String g = CharSequenceUtils.nullToDefault(group);
+            final String g = CharSequenceUtils.defaultIfNull(group);
             m.forEach((k, v) -> put(g, k, v));
             return this;
         } finally {
@@ -80,7 +80,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public String remove(String group, String key) {
         try {
             writeLock.lock();
-            return BooleanUtils.defaultIfPredicate(get(CharSequenceUtils.nullToDefault(group)), m -> !MapUtils.isEmpty(m), m -> m.remove(key));
+            return BooleanUtils.defaultIfPredicate(get(CharSequenceUtils.defaultIfNull(group)), m -> !MapUtils.isEmpty(m), m -> m.remove(key));
         } finally {
             size = -1;
             writeLock.unlock();
@@ -90,7 +90,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public boolean isEmpty(String group) {
         try {
             readLock.lock();
-            return MapUtils.isEmpty(get(CharSequenceUtils.nullToDefault(group)));
+            return MapUtils.isEmpty(get(CharSequenceUtils.defaultIfNull(group)));
         } finally {
             readLock.unlock();
         }
@@ -104,7 +104,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public boolean containsKey(String group, String key) {
         try {
             readLock.lock();
-            LinkedHashMap<String, String> valueMap = get(CharSequenceUtils.nullToDefault(group));
+            LinkedHashMap<String, String> valueMap = get(CharSequenceUtils.defaultIfNull(group));
             return !MapUtils.isEmpty(valueMap) && valueMap.containsKey(key);
         } finally {
             readLock.unlock();
@@ -114,7 +114,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public boolean containsValue(String group, String value) {
         try {
             readLock.lock();
-            LinkedHashMap<String, String> valueMap = get(CharSequenceUtils.nullToDefault(group));
+            LinkedHashMap<String, String> valueMap = get(CharSequenceUtils.defaultIfNull(group));
             return !MapUtils.isEmpty(valueMap) && valueMap.containsValue(value);
         } finally {
             readLock.unlock();
@@ -124,7 +124,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public GroupedMap clear(String group) {
         try {
             writeLock.lock();
-            LinkedHashMap<String, String> valueMap = get(CharSequenceUtils.nullToDefault(group));
+            LinkedHashMap<String, String> valueMap = get(CharSequenceUtils.defaultIfNull(group));
             if (!MapUtils.isEmpty(valueMap)) {
                 valueMap.clear();
             }
@@ -148,7 +148,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public Set<String> keySet(String group) {
         try {
             readLock.lock();
-            return BooleanUtils.defaultSupplierIfPredicate(get(CharSequenceUtils.nullToDefault(group)), m -> !MapUtils.isEmpty(m), LinkedHashMap::keySet, Collections::emptySet);
+            return BooleanUtils.defaultSupplierIfPredicate(get(CharSequenceUtils.defaultIfNull(group)), m -> !MapUtils.isEmpty(m), LinkedHashMap::keySet, Collections::emptySet);
         } finally {
             readLock.unlock();
         }
@@ -167,7 +167,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public Collection<String> values(String group) {
         try {
             readLock.lock();
-            return BooleanUtils.defaultSupplierIfPredicate(get(CharSequenceUtils.nullToDefault(group)), m -> !MapUtils.isEmpty(m), LinkedHashMap::values, Collections::emptyList);
+            return BooleanUtils.defaultSupplierIfPredicate(get(CharSequenceUtils.defaultIfNull(group)), m -> !MapUtils.isEmpty(m), LinkedHashMap::values, Collections::emptyList);
         } finally {
             readLock.unlock();
         }
@@ -186,7 +186,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
     public Set<Map.Entry<String, String>> entrySet(String group) {
         try {
             readLock.lock();
-            return BooleanUtils.defaultSupplierIfPredicate(get(CharSequenceUtils.nullToDefault(group)), m -> !MapUtils.isEmpty(m), LinkedHashMap::entrySet, Collections::emptySet);
+            return BooleanUtils.defaultSupplierIfPredicate(get(CharSequenceUtils.defaultIfNull(group)), m -> !MapUtils.isEmpty(m), LinkedHashMap::entrySet, Collections::emptySet);
         } finally {
             readLock.unlock();
         }

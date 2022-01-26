@@ -19,7 +19,7 @@ public final class SystemUtils {
     }
 
     public static String get(String name, String defaultValue) {
-        return CharSequenceUtils.nullToDefault(get(name), defaultValue);
+        return CharSequenceUtils.defaultIfNull(get(name), defaultValue);
     }
 
     public static String get(String name) {

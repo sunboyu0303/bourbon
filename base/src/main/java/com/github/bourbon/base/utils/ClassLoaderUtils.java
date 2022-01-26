@@ -1,8 +1,5 @@
 package com.github.bourbon.base.utils;
 
-import com.github.bourbon.base.logger.Logger;
-import com.github.bourbon.base.logger.LoggerFactory;
-
 /**
  * @author sunboyu
  * @version 1.0
@@ -10,7 +7,33 @@ import com.github.bourbon.base.logger.LoggerFactory;
  */
 public interface ClassLoaderUtils {
 
-    Logger LOGGER = LoggerFactory.getLogger(ClassLoaderUtils.class);
+    static ClassLoader getContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
+    static ClassLoader getReferrerClassLoader(Class<?> referrer) {
+        ClassLoader classLoader = null;
+        if (referrer != null) {
+            classLoader = referrer.getClassLoader();
+            if (classLoader == null) {
+                classLoader = ClassLoader.getSystemClassLoader();
+            }
+        }
+        return classLoader;
+    }
+
+    static ClassLoader getCallerClassLoader() {
+        try {
+            String callerClassName = Thread.currentThread().getStackTrace()[3].getClassName();
+            try {
+                return Class.forName(callerClassName).getClassLoader();
+            } catch (ClassNotFoundException e) {
+                return Class.forName(callerClassName, true, getContextClassLoader()).getClassLoader();
+            }
+        } catch (Throwable t) {
+            throw new RuntimeException("Failed to get caller classloader ", t);
+        }
+    }
 
     static ClassLoader getClassLoader() {
         return getClassLoader(ClassLoaderUtils.class);
@@ -21,7 +44,7 @@ public interface ClassLoaderUtils {
         try {
             cl = Thread.currentThread().getContextClassLoader();
         } catch (Exception e) {
-            LOGGER.error(e);
+            // ignore
         }
         if (cl == null) {
             cl = clazz.getClassLoader();
@@ -29,7 +52,7 @@ public interface ClassLoaderUtils {
                 try {
                     cl = ClassLoader.getSystemClassLoader();
                 } catch (Exception e) {
-                    LOGGER.error(e);
+                    // ignore
                 }
             }
         }

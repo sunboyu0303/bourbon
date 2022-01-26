@@ -8,9 +8,7 @@ import com.github.bourbon.cache.core.Cache;
 import com.github.bourbon.cache.core.CacheAdapter;
 import com.github.bourbon.cache.core.CacheParamInfo;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -20,13 +18,13 @@ import java.util.function.BooleanSupplier;
  */
 class MultiCache<K, V> implements Cache<K, V> {
 
-    private static final ExtensionLoader<CacheAdapter> loader = ScopeModelUtils.getExtensionLoader(CacheAdapter.class);
     private final CacheParamInfo<K, V> info;
     private final Cache<K, V> ehcache;
     private final Cache<K, V> cache;
 
     MultiCache(CacheParamInfo<K, V> info) {
         this.info = info;
+        ExtensionLoader<CacheAdapter> loader = ScopeModelUtils.getExtensionLoader(CacheAdapter.class);
         this.ehcache = loader.getExtension("ehcache").getCache(info);
         this.cache = loader.getExtension("caffeine").getCache(
                 new CacheParamInfo<K, V>().setMaximumSize(info.getMaximumSize()).setJvmDuration(info.getJvmDuration())
@@ -46,8 +44,8 @@ class MultiCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public V get(K k, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return AsyncBaseService.supplierAsync(() -> MultiCache.this.get(k), timeout, unit).get(timeout, unit);
+    public CompletableFuture<V> getAsync(K k) {
+        return AsyncBaseService.supplierAsync(() -> MultiCache.this.get(k));
     }
 
     @Override

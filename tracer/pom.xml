@@ -16,11 +16,16 @@
     </parent>
 
     <modules>
+        <module>tracer-core</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-
+            <dependency>
+                <groupId>com.github.bourbon</groupId>
+                <artifactId>tracer-core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
