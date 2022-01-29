@@ -1,5 +1,6 @@
 package com.github.bourbon.base.utils.concurrent;
 
+import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.utils.ObjectUtils;
 
 import java.util.concurrent.ThreadFactory;
@@ -12,38 +13,37 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedThreadFactory implements ThreadFactory {
 
-    private static final AtomicInteger POOL_SEQ = new AtomicInteger(1);
+    private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
 
-    private final AtomicInteger mThreadNum = new AtomicInteger(1);
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
 
-    private final String mPrefix;
+    protected final ThreadGroup group;
 
-    protected final boolean mDaemon;
+    private final String namePrefix;
 
-    protected final ThreadGroup threadGroup;
+    protected final boolean isDaemon;
 
-    public NamedThreadFactory() {
-        this("pool-" + POOL_SEQ.getAndIncrement(), false);
-    }
-
-    public NamedThreadFactory(String prefix) {
-        this(prefix, false);
+    public NamedThreadFactory(String name) {
+        this(name, false);
     }
 
     public NamedThreadFactory(String prefix, boolean daemon) {
-        mPrefix = prefix + "-thread-";
-        mDaemon = daemon;
-        threadGroup = ObjectUtils.defaultSupplierIfNull(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup());
+        group = ObjectUtils.defaultSupplierIfNull(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup());
+        namePrefix = prefix + StringConstants.HYPHEN + POOL_NUMBER.getAndIncrement() + "-thread-";
+        isDaemon = daemon;
     }
 
     @Override
     public Thread newThread(Runnable r) {
-        Thread t = new Thread(threadGroup, r, getThreadName(), 0);
-        t.setDaemon(mDaemon);
+        Thread t = new Thread(group, r, getThreadName(), 0);
+        t.setDaemon(isDaemon);
+        if (t.getPriority() != Thread.NORM_PRIORITY) {
+            t.setPriority(Thread.NORM_PRIORITY);
+        }
         return t;
     }
 
     protected final String getThreadName() {
-        return mPrefix + mThreadNum.getAndIncrement();
+        return namePrefix + threadNumber.getAndIncrement();
     }
 }
