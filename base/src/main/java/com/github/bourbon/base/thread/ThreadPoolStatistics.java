@@ -1,9 +1,9 @@
 package com.github.bourbon.base.thread;
 
 import com.github.bourbon.base.utils.BooleanUtils;
-import com.github.bourbon.base.utils.MapUtils;
+import com.github.bourbon.base.utils.SetUtils;
 
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,7 +16,7 @@ public class ThreadPoolStatistics {
 
     private final ThreadPoolExecutor threadPoolExecutor;
 
-    private final Map<ExecutingRunnable, Long> executingTasks = MapUtils.newConcurrentHashMap();
+    private final Set<ExecutingRunnable> executingTasks = SetUtils.newConcurrentHashSet();
 
     private final AtomicLong totalRunningTime = new AtomicLong();
 
@@ -28,7 +28,7 @@ public class ThreadPoolStatistics {
         this.threadPoolExecutor = threadPoolExecutor;
     }
 
-    public Map<ExecutingRunnable, Long> getExecutingTasks() {
+    public Set<ExecutingRunnable> getExecutingTasks() {
         return executingTasks;
     }
 

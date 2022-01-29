@@ -28,15 +28,14 @@ public class ThreadPoolMonitorWrapper {
     }
 
     public void startMonitor() {
-        if (!SystemUtils.get(SofaThreadPoolConstants.SOFA_THREAD_POOL_LOGGING_CAPABILITY, true)) {
-            return;
-        }
-        synchronized (this) {
-            if (scheduledFuture != null) {
-                ThreadLogger.warn("Thread pool '{}' is already started with period: {} {}", threadPoolConfig.getIdentity(), threadPoolConfig.getPeriod(), threadPoolConfig.getTimeUnit());
-            } else {
-                scheduledFuture = ThreadPoolGovernor.getInstance().getMonitorScheduler().scheduleAtFixedRate(new ThreadPoolMonitorRunner(threadPoolConfig, threadPoolStatistics), threadPoolConfig.getPeriod(), threadPoolConfig.getPeriod(), threadPoolConfig.getTimeUnit());
-                ThreadLogger.info("Thread pool '{}' started with period: {} {}", threadPoolConfig.getIdentity(), threadPoolConfig.getPeriod(), threadPoolConfig.getTimeUnit());
+        if (SystemUtils.get(SofaThreadPoolConstants.SOFA_THREAD_POOL_LOGGING_CAPABILITY, true)) {
+            synchronized (this) {
+                if (scheduledFuture != null) {
+                    ThreadLogger.warn("Thread pool '{}' is already started with period: {} {}", threadPoolConfig.getIdentity(), threadPoolConfig.getPeriod(), threadPoolConfig.getTimeUnit());
+                } else {
+                    scheduledFuture = ThreadPoolGovernor.getInstance().getMonitorScheduler().scheduleAtFixedRate(new ThreadPoolMonitorRunner(threadPoolConfig, threadPoolStatistics), threadPoolConfig.getPeriod(), threadPoolConfig.getPeriod(), threadPoolConfig.getTimeUnit());
+                    ThreadLogger.info("Thread pool '{}' started with period: {} {}", threadPoolConfig.getIdentity(), threadPoolConfig.getPeriod(), threadPoolConfig.getTimeUnit());
+                }
             }
         }
     }

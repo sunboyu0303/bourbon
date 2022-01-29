@@ -7,45 +7,42 @@ import com.github.bourbon.base.thread.space.SpaceNamedThreadFactory;
 import com.github.bourbon.base.utils.CharSequenceUtils;
 import com.github.bourbon.base.utils.concurrent.NamedThreadFactory;
 
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author sunboyu
  * @version 1.0
- * @date 2022/1/29 15:25
+ * @date 2022/1/29 16:42
  */
-public class SofaScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor {
+public class SofaThreadPoolExecutor extends ThreadPoolExecutor {
 
-    private static final String SIMPLE_CLASS_NAME = SofaScheduledThreadPoolExecutor.class.getSimpleName();
+    private static final String SIMPLE_CLASS_NAME = SofaThreadPoolExecutor.class.getSimpleName();
     private static final AtomicInteger POOL_COUNTER = new AtomicInteger(0);
     private final ThreadPoolConfig config;
     private final ThreadPoolStatistics statistics;
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName, String spaceName, long taskTimeout, long period, TimeUnit timeUnit) {
-        super(corePoolSize, threadFactory, handler);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName, String spaceName, long taskTimeout, long period, TimeUnit timeUnit) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
         this.config = ThreadPoolConfig.newBuilder().threadPoolName(CharSequenceUtils.isEmpty(threadPoolName) ? createName() : threadPoolName).spaceName(spaceName).taskTimeout(taskTimeout).period(period).timeUnit(timeUnit).build();
         this.statistics = new ThreadPoolStatistics(this);
         ThreadPoolGovernor.getInstance().registerThreadPoolExecutor(this, config, statistics);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName, long taskTimeout, long period, TimeUnit timeUnit) {
-        this(corePoolSize, threadFactory, handler, threadPoolName, null, taskTimeout, period, timeUnit);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName, long taskTimeout, long period, TimeUnit timeUnit) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler, threadPoolName, null, taskTimeout, period, timeUnit);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName, String spaceName) {
-        this(corePoolSize, threadFactory, handler, threadPoolName, spaceName, 0, 0, null);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName, String spaceName) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler, threadPoolName, spaceName, 0, 0, null);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName) {
-        this(corePoolSize, threadFactory, handler, threadPoolName, 0, 0, null);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler, String threadPoolName) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler, threadPoolName, 0, 0, null);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, String threadPoolName, String spaceName) {
-        super(corePoolSize);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, String threadPoolName, String spaceName) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
         this.config = ThreadPoolConfig.newBuilder().threadPoolName(CharSequenceUtils.isEmpty(threadPoolName) ? createName() : threadPoolName).spaceName(spaceName).build();
         this.statistics = new ThreadPoolStatistics(this);
         ThreadPoolGovernor.getInstance().registerThreadPoolExecutor(this, config, statistics);
@@ -58,26 +55,26 @@ public class SofaScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor
         }
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, String threadPoolName) {
-        this(corePoolSize, threadPoolName, null);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, String threadPoolName) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadPoolName, null);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize) {
-        this(corePoolSize, StringConstants.EMPTY, null);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, StringConstants.EMPTY, null);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory) {
-        this(corePoolSize);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
         this.setThreadFactory(threadFactory);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, RejectedExecutionHandler handler) {
-        this(corePoolSize);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
         this.setRejectedExecutionHandler(handler);
     }
 
-    public SofaScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
-        this(corePoolSize);
+    public SofaThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
         this.setThreadFactory(threadFactory);
         this.setRejectedExecutionHandler(handler);
     }

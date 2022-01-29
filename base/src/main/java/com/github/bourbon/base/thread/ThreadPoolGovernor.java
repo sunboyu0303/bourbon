@@ -5,10 +5,14 @@ import com.github.bourbon.base.thread.log.ThreadLogger;
 import com.github.bourbon.base.thread.space.ThreadPoolSpace;
 import com.github.bourbon.base.threadpool.dynamic.ExecutorFactory;
 import com.github.bourbon.base.utils.CharSequenceUtils;
+import com.github.bourbon.base.utils.MapUtils;
 import com.github.bourbon.base.utils.concurrent.NamedThreadFactory;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author sunboyu
@@ -32,9 +36,9 @@ public final class ThreadPoolGovernor {
 
     private final GovernorInfoDumper governorInfoDumper = new GovernorInfoDumper();
 
-    private final ConcurrentHashMap<String, ThreadPoolMonitorWrapper> registry = new ConcurrentHashMap<>();
+    private final Map<String, ThreadPoolMonitorWrapper> registry = MapUtils.newConcurrentHashMap();
 
-    private final ConcurrentHashMap<String, ThreadPoolSpace> spaceNameMap = new ConcurrentHashMap<>();
+    private final Map<String, ThreadPoolSpace> spaceNameMap = MapUtils.newConcurrentHashMap();
 
     private volatile long governorPeriod = SofaThreadPoolConstants.DEFAULT_GOVERNOR_INTERVAL;
 
@@ -48,22 +52,26 @@ public final class ThreadPoolGovernor {
         return INSTANCE;
     }
 
-    public synchronized void startGovernorSchedule() {
-        if (governorScheduledFuture == null) {
-            governorScheduledFuture = governorScheduler.scheduleAtFixedRate(governorInfoDumper, governorPeriod, governorPeriod, TimeUnit.SECONDS);
-            ThreadLogger.info("Started {} with period: {} SECONDS", CLASS_NAME, governorPeriod);
-        } else {
-            ThreadLogger.warn("{} has already started with period: {} SECONDS.", CLASS_NAME, governorPeriod);
+    public void startGovernorSchedule() {
+        synchronized (monitor) {
+            if (governorScheduledFuture == null) {
+                governorScheduledFuture = governorScheduler.scheduleAtFixedRate(governorInfoDumper, governorPeriod, governorPeriod, TimeUnit.SECONDS);
+                ThreadLogger.info("Started {} with period: {} SECONDS", CLASS_NAME, governorPeriod);
+            } else {
+                ThreadLogger.warn("{} has already started with period: {} SECONDS.", CLASS_NAME, governorPeriod);
+            }
         }
     }
 
-    public synchronized void stopGovernorSchedule() {
-        if (governorScheduledFuture != null) {
-            governorScheduledFuture.cancel(true);
-            governorScheduledFuture = null;
-            ThreadLogger.info("Stopped {}.", CLASS_NAME);
-        } else {
-            ThreadLogger.warn("{} is not scheduling!", CLASS_NAME);
+    public void stopGovernorSchedule() {
+        synchronized (monitor) {
+            if (governorScheduledFuture != null) {
+                governorScheduledFuture.cancel(true);
+                governorScheduledFuture = null;
+                ThreadLogger.info("Stopped {}.", CLASS_NAME);
+            } else {
+                ThreadLogger.warn("{} is not scheduling!", CLASS_NAME);
+            }
         }
     }
 
@@ -82,9 +90,7 @@ public final class ThreadPoolGovernor {
         public void run() {
             try {
                 if (governorLoggable) {
-                    for (Map.Entry<String, ThreadPoolMonitorWrapper> entry : registry.entrySet()) {
-                        ThreadLogger.info("Thread pool '{}' exists with instance: {}", entry.getKey(), entry.getValue().getThreadPoolExecutor());
-                    }
+                    registry.forEach((k, v) -> ThreadLogger.info("Thread pool '{}' exists with instance: {}", k, v.getThreadPoolExecutor()));
                 }
             } catch (Throwable e) {
                 ThreadLogger.warn("{} is interrupted when running: {}", this, e);
@@ -123,13 +129,16 @@ public final class ThreadPoolGovernor {
             ThreadLogger.error("Rejected registering request of instance {} with empty name: {}.", threadPoolExecutor, identity);
             return;
         }
-        ThreadPoolMonitorWrapper threadPoolMonitorWrapper = new ThreadPoolMonitorWrapper(threadPoolExecutor, threadPoolConfig, threadPoolStatistics);
-        if (registry.putIfAbsent(identity, threadPoolMonitorWrapper) != null) {
+        ThreadPoolMonitorWrapper threadPoolMonitorWrapper = registry.get(identity);
+        if (threadPoolMonitorWrapper != null) {
             ThreadLogger.error("Rejected registering request of instance {} with duplicate name: {}", threadPoolExecutor, identity);
-        } else {
-            registry.get(identity).startMonitor();
+            return;
+        }
+        threadPoolMonitorWrapper = new ThreadPoolMonitorWrapper(threadPoolExecutor, threadPoolConfig, threadPoolStatistics);
+        if (registry.putIfAbsent(identity, threadPoolMonitorWrapper) == null) {
+            threadPoolMonitorWrapper.startMonitor();
             ThreadLogger.info("Thread pool with name '{}' registered", identity);
-            final String spaceName = threadPoolConfig.getSpaceName();
+            String spaceName = threadPoolConfig.getSpaceName();
             if (!CharSequenceUtils.isEmpty(spaceName)) {
                 spaceNameMap.computeIfAbsent(spaceName, k -> new ThreadPoolSpace()).addThreadPool(identity);
             }
@@ -148,8 +157,11 @@ public final class ThreadPoolGovernor {
             ThreadLogger.info("Thread pool with name '{}' unregistered", identity);
         }
         final String spaceName = threadPoolConfig.getSpaceName();
-        if (!CharSequenceUtils.isEmpty(spaceName) && spaceNameMap.get(spaceName) != null) {
-            spaceNameMap.get(spaceName).removeThreadPool(identity);
+        if (!CharSequenceUtils.isEmpty(spaceName)) {
+            ThreadPoolSpace space = spaceNameMap.get(spaceName);
+            if (space != null) {
+                space.removeThreadPool(identity);
+            }
         }
     }
 
@@ -207,9 +219,8 @@ public final class ThreadPoolGovernor {
         if (threadPoolSpace == null) {
             ThreadLogger.error("Thread pool with spaceName '{}' is not registered yet, return 0", spaceName);
             return 0;
-        } else {
-            return threadPoolSpace.getThreadPoolNumber();
         }
+        return threadPoolSpace.getThreadPoolNumber();
     }
 
     public void startMonitorThreadPoolBySpaceName(String spaceName) {
@@ -238,11 +249,11 @@ public final class ThreadPoolGovernor {
             ThreadLogger.error("Thread pool with spaceName '{}' is not registered yet", spaceName);
             return;
         }
-        threadPoolSpace.getThreadPoolIdentities().forEach(identity -> {
-            ThreadPoolMonitorWrapper wrapper = getThreadPoolMonitorWrapper(identity);
+        threadPoolSpace.getThreadPoolIdentities().forEach(i -> {
+            ThreadPoolMonitorWrapper wrapper = getThreadPoolMonitorWrapper(i);
             if (wrapper != null) {
                 wrapper.getThreadPoolConfig().setPeriod(period);
-                restartMonitorThreadPool(identity);
+                restartMonitorThreadPool(i);
             }
         });
         ThreadLogger.info("Thread pool with spaceName '{}' rescheduled with period '{}'", spaceName, period);

@@ -1,17 +1,16 @@
 package com.github.bourbon.base.thread;
 
 import com.github.bourbon.base.constant.CharConstants;
+import com.github.bourbon.base.constant.DateConstants;
 import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.lang.Clock;
 import com.github.bourbon.base.thread.log.ThreadLogger;
 import com.github.bourbon.base.tracer.TracerIdAdapter;
-import com.github.bourbon.base.utils.BooleanUtils;
 import com.github.bourbon.base.utils.ObjectUtils;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 /**
  * @author sunboyu
@@ -19,7 +18,8 @@ import java.util.Map;
  * @date 2022/1/29 16:19
  */
 public class ThreadPoolMonitorRunner implements Runnable {
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS").withZone(ZoneId.systemDefault());
+
+    private static final DateTimeFormatter DATE_FORMAT = DateConstants.DEFAULT_FORMATTER.withZone(ZoneId.systemDefault());
     private final ThreadPoolConfig config;
     private final ThreadPoolStatistics statistics;
 
@@ -33,8 +33,8 @@ public class ThreadPoolMonitorRunner implements Runnable {
         try {
             if (ThreadPoolGovernor.getInstance().isGlobalMonitorLoggable()) {
                 int decayedTaskCount = 0;
-                for (Map.Entry<ExecutingRunnable, Long> entry : statistics.getExecutingTasks().entrySet()) {
-                    decayedTaskCount = calculateDecayedTaskCounts(decayedTaskCount, entry);
+                for (ExecutingRunnable runnable : statistics.getExecutingTasks()) {
+                    decayedTaskCount = calculateDecayedTaskCounts(decayedTaskCount, runnable);
                 }
                 ThreadLogger.info("Thread pool '{}' info: [{},{},{},{},{}]", config.getIdentity(), statistics.getQueueSize(), statistics.getExecutingTasks().size(), statistics.getPoolSize() - statistics.getExecutingTasks().size(), statistics.getPoolSize(), decayedTaskCount);
                 if (statistics.getTotalTaskCount() != 0) {
@@ -47,12 +47,13 @@ public class ThreadPoolMonitorRunner implements Runnable {
         }
     }
 
-    private int calculateDecayedTaskCounts(int decayedTaskCount, Map.Entry<ExecutingRunnable, Long> entry) {
-        ExecutingRunnable task = entry.getKey();
-        long executionTime = Clock.currentTimeMillis() - BooleanUtils.defaultIfPredicate(task.getDequeueTime(), n -> n != 0, n -> n, entry.getValue());
-        if (executionTime >= config.getTaskTimeoutMilli()) {
-            ++decayedTaskCount;
-            printStackTrace(task);
+    private int calculateDecayedTaskCounts(int decayedTaskCount, ExecutingRunnable task) {
+        long dequeueTime = task.getDequeueTime();
+        if (dequeueTime != 0) {
+            if (Clock.currentTimeMillis() - dequeueTime >= config.getTaskTimeoutMilli()) {
+                ++decayedTaskCount;
+                printStackTrace(task);
+            }
         }
         return decayedTaskCount;
     }

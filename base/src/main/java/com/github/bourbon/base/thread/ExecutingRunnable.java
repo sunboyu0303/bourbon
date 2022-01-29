@@ -7,11 +7,11 @@ import com.github.bourbon.base.utils.ObjectUtils;
  * @version 1.0
  * @date 2022/1/29 14:15
  */
-class ExecutingRunnable implements Runnable {
+public class ExecutingRunnable implements Runnable {
 
-    private Runnable originRunnable;
+    private final Runnable originRunnable;
 
-    private Thread thread;
+    private final Thread thread;
 
     private long enqueueTime;
 
@@ -21,13 +21,14 @@ class ExecutingRunnable implements Runnable {
 
     private volatile boolean printed;
 
-    ExecutingRunnable(Runnable originRunnable) {
+    public ExecutingRunnable(Runnable originRunnable, Thread thread) {
         this.originRunnable = ObjectUtils.requireNonNull(originRunnable);
+        this.thread = ObjectUtils.requireNonNull(thread);
     }
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return ObjectUtils.hash(this.thread, this.originRunnable);
     }
 
     @Override
@@ -40,14 +41,6 @@ class ExecutingRunnable implements Runnable {
             return this.thread == er.thread && this.originRunnable == er.originRunnable;
         }
         return false;
-    }
-
-    @Override
-    public String toString() {
-        if (thread == null) {
-            return originRunnable.toString();
-        }
-        return originRunnable.toString() + thread.toString();
     }
 
     @Override
@@ -84,11 +77,6 @@ class ExecutingRunnable implements Runnable {
 
     public Thread getThread() {
         return thread;
-    }
-
-    public ExecutingRunnable setThread(Thread thread) {
-        this.thread = thread;
-        return this;
     }
 
     public boolean isPrinted() {

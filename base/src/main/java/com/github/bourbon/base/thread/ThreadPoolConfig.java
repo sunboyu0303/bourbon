@@ -40,16 +40,18 @@ public class ThreadPoolConfig {
         return threadPoolName;
     }
 
-    public void setThreadPoolName(String threadPoolName) {
+    public ThreadPoolConfig setThreadPoolName(String threadPoolName) {
         this.threadPoolName = threadPoolName;
+        return this;
     }
 
     public String getSpaceName() {
         return spaceName;
     }
 
-    public void setSpaceName(String spaceName) {
+    public ThreadPoolConfig setSpaceName(String spaceName) {
         this.spaceName = spaceName;
+        return this;
     }
 
     public long getTaskTimeout() {
@@ -86,11 +88,6 @@ public class ThreadPoolConfig {
 
     private static String buildIdentity(String threadPoolName, String spaceName) {
         return BooleanUtils.defaultIfPredicate(spaceName, n -> !CharSequenceUtils.isEmpty(n), n -> n + StringConstants.HYPHEN + threadPoolName, threadPoolName);
-    }
-
-    @Override
-    public String toString() {
-        return "ThreadPoolConfig{threadPoolName='" + threadPoolName + "', spaceName='" + spaceName + "', taskTimeout=" + taskTimeout + ", period=" + period + ", timeUnit=" + timeUnit + ", taskTimeoutMilli=" + getTaskTimeoutMilli() + ", identity='" + getIdentity() + "'}";
     }
 
     public static final class SofaThreadConfigBuilder {
