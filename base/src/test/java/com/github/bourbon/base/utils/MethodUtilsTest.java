@@ -1,6 +1,6 @@
 package com.github.bourbon.base.utils;
 
-import com.github.bourbon.base.lang.LongCounter;
+import com.github.bourbon.base.lang.counter.LongCounter;
 import com.github.bourbon.base.logger.Logger;
 import com.github.bourbon.base.logger.LoggerFactory;
 import org.junit.Assert;
@@ -16,7 +16,7 @@ import java.util.Arrays;
  */
 public class MethodUtilsTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodUtilsTest.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Test
     public void test() {

@@ -1,6 +1,6 @@
 package com.github.bourbon.base.utils.concurrent.atomic;
 
-import com.github.bourbon.base.lang.LongCounter;
+import com.github.bourbon.base.lang.counter.LongCounter;
 
 import java.util.concurrent.atomic.LongAdder;
 

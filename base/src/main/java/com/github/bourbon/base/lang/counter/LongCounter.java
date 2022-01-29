@@ -1,4 +1,4 @@
-package com.github.bourbon.base.lang;
+package com.github.bourbon.base.lang.counter;
 
 /**
  * @author sunboyu

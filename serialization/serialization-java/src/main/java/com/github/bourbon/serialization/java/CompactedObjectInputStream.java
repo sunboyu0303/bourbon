@@ -4,6 +4,7 @@ import com.github.bourbon.base.utils.ClassLoaderUtils;
 import com.github.bourbon.base.utils.ObjectUtils;
 
 import java.io.*;
+import java.util.function.Supplier;
 
 /**
  * @author sunboyu
@@ -20,7 +21,7 @@ class CompactedObjectInputStream extends ObjectInputStream {
 
     CompactedObjectInputStream(InputStream input, ClassLoader cl) throws IOException {
         super(input);
-        classLoader = ObjectUtils.defaultSupplierIfNull(cl, ClassLoaderUtils::getClassLoader);
+        classLoader = ObjectUtils.defaultSupplierIfNull(cl, (Supplier<ClassLoader>) ClassLoaderUtils::getClassLoader);
     }
 
     @Override

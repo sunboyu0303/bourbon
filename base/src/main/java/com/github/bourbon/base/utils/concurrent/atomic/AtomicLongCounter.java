@@ -1,6 +1,6 @@
 package com.github.bourbon.base.utils.concurrent.atomic;
 
-import com.github.bourbon.base.lang.LongCounter;
+import com.github.bourbon.base.lang.counter.LongCounter;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -13,18 +13,22 @@ public class AtomicLongCounter extends AtomicLong implements LongCounter {
 
     private static final long serialVersionUID = 5731994495135844990L;
 
+    @Override
     public void add(long delta) {
         addAndGet(delta);
     }
 
+    @Override
     public void increment() {
         incrementAndGet();
     }
 
+    @Override
     public void decrement() {
         decrementAndGet();
     }
 
+    @Override
     public long value() {
         return get();
     }
