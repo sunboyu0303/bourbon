@@ -5,6 +5,8 @@ import com.github.bourbon.base.convert.BasicType;
 import com.github.bourbon.base.lang.Assert;
 
 import java.beans.Introspector;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -289,9 +291,8 @@ public interface ClassUtils {
         } catch (ClassNotFoundException ex) {
             int lastDotIndex = name.lastIndexOf(CharConstants.DOT);
             if (lastDotIndex != -1) {
-                String nestedClassName = name.substring(0, lastDotIndex) + StringConstants.DOLLAR + name.substring(lastDotIndex + 1);
                 try {
-                    return Class.forName(nestedClassName, false, clToUse);
+                    return Class.forName(name.substring(0, lastDotIndex) + StringConstants.DOLLAR + name.substring(lastDotIndex + 1), false, clToUse);
                 } catch (ClassNotFoundException ex2) {
                     // Swallow - let original exception get through
                 }
@@ -358,10 +359,131 @@ public interface ClassUtils {
         if (CollectionUtils.isEmpty(classes)) {
             return StringConstants.LEFT_RIGHT_BRACKETS;
         }
-        StringJoiner stringJoiner = new StringJoiner(StringConstants.COMMA_SPACE, StringConstants.LEFT_BRACKETS, StringConstants.RIGHT_BRACKETS);
-        for (Class<?> clazz : classes) {
-            stringJoiner.add(clazz.getName());
+        StringJoiner sj = new StringJoiner(StringConstants.COMMA_SPACE, StringConstants.LEFT_BRACKETS, StringConstants.RIGHT_BRACKETS);
+        classes.forEach(clazz -> sj.add(clazz.getName()));
+        return sj.toString();
+    }
+
+    static Class<?> loadClass(String className) throws ClassNotFoundException {
+        return loadClass(className, ClassLoaderUtils.getContextClassLoader());
+    }
+
+    static Class<?> loadClass(String className, Class<?> referrer) throws ClassNotFoundException {
+        return loadClass(className, ClassLoaderUtils.getReferrerClassLoader(referrer));
+    }
+
+    static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+        if (className == null) {
+            return null;
         }
-        return stringJoiner.toString();
+        try {
+            if (classLoader == null) {
+                return Class.forName(className);
+            } else {
+                return Class.forName(className, true, classLoader);
+            }
+        } catch (ClassNotFoundException e) {
+            return ClassLoaderUtils.class.getClassLoader().loadClass(className);
+        }
+    }
+
+    static Class<?> loadServiceClass(String serviceId) throws ClassNotFoundException {
+        return loadServiceClass(serviceId, ClassLoaderUtils.getContextClassLoader());
+    }
+
+    static Class<?> loadServiceClass(String serviceId, Class<?> referrer) throws ClassNotFoundException {
+        return loadServiceClass(serviceId, ClassLoaderUtils.getReferrerClassLoader(referrer));
+    }
+
+    static Class<?> loadServiceClass(String serviceId, ClassLoader classLoader) throws ClassNotFoundException {
+        if (serviceId == null) {
+            return null;
+        }
+        serviceId = "META-INF/services/" + serviceId;
+        InputStream istream = ResourceUtils.getResourceAsStream(serviceId, classLoader);
+        if (istream == null) {
+            throw new RuntimeException("Could not find " + serviceId);
+        }
+        String serviceClassName;
+        try {
+            serviceClassName = CharSequenceUtils.trimToEmpty(StreamUtils.readText(istream, "UTF-8"));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load " + serviceId, e);
+        }
+        return loadClass(serviceClassName, classLoader);
+    }
+
+    static Class<?> loadServiceClass(String className, String serviceId) throws ClassNotFoundException {
+        return loadServiceClass(className, serviceId, ClassLoaderUtils.getContextClassLoader());
+    }
+
+    static Class<?> loadServiceClass(String className, String serviceId, Class<?> referrer) throws ClassNotFoundException {
+        return loadServiceClass(className, serviceId, ClassLoaderUtils.getReferrerClassLoader(referrer));
+    }
+
+    static Class<?> loadServiceClass(String className, String serviceId, ClassLoader classLoader) throws ClassNotFoundException {
+        try {
+            if (className != null) {
+                return loadClass(className, classLoader);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return loadServiceClass(serviceId, classLoader);
+    }
+
+    static Object newInstance(String className) throws ClassNotFoundException {
+        return newInstance(loadClass(className));
+    }
+
+    static Object newInstance(String className, Class<?> referrer) throws ClassNotFoundException {
+        return newInstance(loadClass(className, referrer));
+    }
+
+    static Object newInstance(String className, ClassLoader classLoader) throws ClassNotFoundException {
+        return newInstance(loadClass(className, classLoader));
+    }
+
+    static Object newInstance(Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        }
+        try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate class: " + clazz.getName(), e);
+        }
+    }
+
+    static Object newServiceInstance(String serviceId) throws ClassNotFoundException {
+        return newInstance(loadServiceClass(serviceId));
+    }
+
+    static Object newServiceInstance(String serviceId, Class<?> referrer) throws ClassNotFoundException {
+        return newInstance(loadServiceClass(serviceId, referrer));
+    }
+
+    static Object newServiceInstance(String serviceId, ClassLoader classLoader) throws ClassNotFoundException {
+        return newInstance(loadServiceClass(serviceId, classLoader));
+    }
+
+    static Object newServiceInstance(String className, String serviceId) throws ClassNotFoundException {
+        return newInstance(loadServiceClass(className, serviceId));
+    }
+
+    static Object newServiceInstance(String className, String serviceId, Class<?> referrer) throws ClassNotFoundException {
+        return newInstance(loadServiceClass(className, serviceId, referrer));
+    }
+
+    static Object newServiceInstance(String className, String serviceId, ClassLoader classLoader) throws ClassNotFoundException {
+        return newInstance(loadServiceClass(className, serviceId, classLoader));
+    }
+
+    static String getClassNameAsResource(Class<?> clazz) {
+        return ObjectUtils.defaultIfNull(clazz, c -> c.getName().replace(CharConstants.DOT, CharConstants.SLASH) + StringConstants.CLASS_FILE_SUFFIX);
+    }
+
+    static String getClassNameAsResource(String className) {
+        return ObjectUtils.defaultIfNull(className, name -> name.replace(CharConstants.DOT, CharConstants.SLASH) + StringConstants.CLASS_FILE_SUFFIX);
     }
 }
