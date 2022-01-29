@@ -23,14 +23,22 @@ public class NamedThreadFactory implements ThreadFactory {
 
     protected final boolean isDaemon;
 
-    public NamedThreadFactory(String name) {
-        this(name, false);
+    public NamedThreadFactory(String prefix) {
+        this(prefix, false);
     }
 
     public NamedThreadFactory(String prefix, boolean daemon) {
-        group = ObjectUtils.defaultSupplierIfNull(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup());
-        namePrefix = prefix + StringConstants.HYPHEN + POOL_NUMBER.getAndIncrement() + "-thread-";
-        isDaemon = daemon;
+        this(
+                ObjectUtils.defaultSupplierIfNull(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup()),
+                prefix + StringConstants.HYPHEN + POOL_NUMBER.getAndIncrement() + "-thread-",
+                daemon
+        );
+    }
+
+    protected NamedThreadFactory(ThreadGroup group, String namePrefix, boolean daemon) {
+        this.group = group;
+        this.namePrefix = namePrefix;
+        this.isDaemon = daemon;
     }
 
     @Override
