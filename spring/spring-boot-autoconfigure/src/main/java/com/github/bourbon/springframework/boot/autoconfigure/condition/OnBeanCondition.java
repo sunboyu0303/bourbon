@@ -26,6 +26,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -282,7 +283,7 @@ class OnBeanCondition extends FilteringSpringBootCondition implements Configurat
         if (CollectionUtils.isEmpty(additional)) {
             return result;
         }
-        result = ObjectUtils.defaultSupplierIfNull(result, SetUtils::newLinkedHashSet);
+        result = ObjectUtils.defaultSupplierIfNull(result, (Supplier<Set<String>>) SetUtils::newLinkedHashSet);
         result.addAll(additional);
         return result;
     }
@@ -291,7 +292,7 @@ class OnBeanCondition extends FilteringSpringBootCondition implements Configurat
         if (ArrayUtils.isEmpty(additional)) {
             return result;
         }
-        result = ObjectUtils.defaultSupplierIfNull(result, LinkedHashSet::new);
+        result = ObjectUtils.defaultSupplierIfNull(result, (Supplier<Set<String>>) SetUtils::newLinkedHashSet);
         Collections.addAll(result, additional);
         return result;
     }

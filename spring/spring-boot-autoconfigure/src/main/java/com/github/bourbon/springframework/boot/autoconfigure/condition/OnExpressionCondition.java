@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.expression.StandardBeanExpressionResolver;
 import org.springframework.core.annotation.AnnotationAttributes;
 
+import java.util.function.Supplier;
+
 /**
  * @author sunboyu
  * @version 1.0
@@ -34,7 +36,7 @@ class OnExpressionCondition extends SpringBootCondition implements Condition {
     }
 
     private Boolean evaluateExpression(ConfigurableListableBeanFactory beanFactory, String expression) {
-        BeanExpressionResolver resolver = ObjectUtils.defaultSupplierIfNull(beanFactory.getBeanExpressionResolver(), StandardBeanExpressionResolver::new);
+        BeanExpressionResolver resolver = ObjectUtils.defaultSupplierIfNull(beanFactory.getBeanExpressionResolver(), (Supplier<BeanExpressionResolver>) StandardBeanExpressionResolver::new);
         Object result = resolver.evaluate(expression, new BeanExpressionContext(beanFactory, null));
         return result != null && (boolean) result;
     }
