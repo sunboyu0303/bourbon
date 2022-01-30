@@ -14,9 +14,7 @@ public abstract class AbstractLoadBalance implements ILoadBalance {
 
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, Invocation invocation) {
-        return BooleanUtils.defaultIfPredicate(invokers, l -> !CollectionUtils.isEmpty(l),
-                l -> BooleanUtils.defaultSupplierIfFalse(l.size() == 1, () -> l.get(0), () -> doSelect(l, invocation))
-        );
+        return BooleanUtils.defaultIfPredicate(invokers, CollectionUtils::isNotEmpty, l -> BooleanUtils.defaultSupplierIfFalse(l.size() == 1, () -> l.get(0), () -> doSelect(l, invocation)));
     }
 
     protected abstract <T> Invoker<T> doSelect(List<Invoker<T>> invokers, Invocation invocation);

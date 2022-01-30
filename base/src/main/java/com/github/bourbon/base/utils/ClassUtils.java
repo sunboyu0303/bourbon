@@ -201,11 +201,11 @@ public interface ClassUtils {
     }
 
     static boolean isCglibProxyClass(Class<?> c) {
-        return !ObjectUtils.isNull(c) && isCglibProxyClassName(c.getName());
+        return ObjectUtils.nonNull(c) && isCglibProxyClassName(c.getName());
     }
 
     static boolean isCglibProxyClassName(String name) {
-        return !CharSequenceUtils.isEmpty(name) && name.contains(StringConstants.DOLLARS);
+        return CharSequenceUtils.isNotEmpty(name) && name.contains(StringConstants.DOLLARS);
     }
 
     static String getPackageName(Class<?> clazz) {

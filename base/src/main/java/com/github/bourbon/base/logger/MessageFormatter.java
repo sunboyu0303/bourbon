@@ -30,7 +30,7 @@ public final class MessageFormatter {
     }
 
     private static Throwable getThrowableCandidate(Object[] argArray) {
-        return BooleanUtils.defaultIfFalse(!ArrayUtils.isEmpty(argArray),
+        return BooleanUtils.defaultIfFalse(ArrayUtils.isNotEmpty(argArray),
                 () -> BooleanUtils.defaultIfAssignableFrom(argArray[argArray.length - 1], Throwable.class, Throwable.class::cast)
         );
     }
@@ -43,7 +43,7 @@ public final class MessageFormatter {
         return trimmed;
     }
 
-    private static FormattingTuple arrayFormat(final String messagePattern, final Object[] argArray, Throwable throwable) {
+    private static FormattingTuple arrayFormat(String messagePattern, Object[] argArray, Throwable throwable) {
 
         if (messagePattern == null) {
             return new FormattingTuple(null, argArray, throwable);

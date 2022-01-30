@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public interface MapUtils {
 
     static Map<String, Map<String, String>> splitAll(Map<String, List<String>> map, String separator) {
-        return BooleanUtils.defaultSupplierIfPredicate(map, m -> !isEmpty(m), m -> m.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> split(e.getValue(), separator))), HashMap::new);
+        return BooleanUtils.defaultSupplierIfPredicate(map, MapUtils::isNotEmpty, m -> m.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> split(e.getValue(), separator))), HashMap::new);
     }
 
     static Map<String, String> split(List<String> list, String separator) {
         Map<String, String> map = newHashMap();
-        if (!CollectionUtils.isEmpty(list)) {
+        if (CollectionUtils.isNotEmpty(list)) {
             for (String item : list) {
                 int index = item.indexOf(separator);
                 if (index == -1) {
@@ -38,12 +38,12 @@ public interface MapUtils {
     }
 
     static Map<String, List<String>> joinAll(Map<String, Map<String, String>> map, String separator) {
-        return BooleanUtils.defaultSupplierIfPredicate(map, m -> !isEmpty(m), m -> m.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> join(e.getValue(), separator))), HashMap::new);
+        return BooleanUtils.defaultSupplierIfPredicate(map, MapUtils::isNotEmpty, m -> m.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> join(e.getValue(), separator))), HashMap::new);
     }
 
     static List<String> join(Map<String, String> map, String separator) {
         List<String> list = ListUtils.newArrayList();
-        if (!isEmpty(map)) {
+        if (isNotEmpty(map)) {
             map.forEach((k, v) -> {
                 if (CharSequenceUtils.isEmpty(v)) {
                     list.add(k);
@@ -55,9 +55,9 @@ public interface MapUtils {
         return list;
     }
 
-    static Map<String, String> toMap(String[] pairs) {
+    static Map<String, String> toMap(String... pairs) {
         Map<String, String> parameters = newHashMap();
-        if (!ArrayUtils.isEmpty(pairs)) {
+        if (ArrayUtils.isNotEmpty(pairs)) {
             if (pairs.length % 2 != 0) {
                 throw new IllegalArgumentException("pairs must be even.");
             }
@@ -68,9 +68,9 @@ public interface MapUtils {
         return parameters;
     }
 
-    static Map<Object, Object> toMap(Object[] pairs) {
+    static Map<Object, Object> toMap(Object... pairs) {
         Map<Object, Object> ret = newHashMap();
-        if (!ArrayUtils.isEmpty(pairs)) {
+        if (ArrayUtils.isNotEmpty(pairs)) {
             if (pairs.length % 2 != 0) {
                 throw new IllegalArgumentException("Map pairs can not be odd number.");
             }
@@ -83,7 +83,7 @@ public interface MapUtils {
     }
 
     static Map<?, ?> merge(Map<?, ?>... items) {
-        return BooleanUtils.defaultSupplierIfPredicate(items, i -> !ArrayUtils.isEmpty(i), i -> BooleanUtils.defaultIfFalse(
+        return BooleanUtils.defaultSupplierIfPredicate(items, ArrayUtils::isNotEmpty, i -> BooleanUtils.defaultIfFalse(
                 i.length != 1, () -> Arrays.stream(i).filter(ObjectUtils::nonNull).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)), i[0]
         ), Collections::emptyMap);
     }
@@ -98,7 +98,7 @@ public interface MapUtils {
         return map;
     }
 
-    static <K, V> Map<K, V> of(Pair<K, V>... pairs) {
+    static <K, V> Map<K, V> ofPair(Pair<K, V>... pairs) {
         return Arrays.stream(pairs).collect(Collectors.toMap(p -> p.r1, p -> p.r2));
     }
 
@@ -106,12 +106,16 @@ public interface MapUtils {
         return map == null || map.isEmpty();
     }
 
+    static boolean isNotEmpty(final Map<?, ?> map) {
+        return !isEmpty(map);
+    }
+
     static <K, V> Map<K, V> emptyIfNull(Map<K, V> m) {
         return ObjectUtils.defaultSupplierIfNull(m, Collections::emptyMap);
     }
 
     static <T extends Map<K, V>, K, V> T defaultIfEmpty(T map, T defaultMap) {
-        return BooleanUtils.defaultIfPredicate(map, m -> !isEmpty(m), m -> m, defaultMap);
+        return BooleanUtils.defaultIfPredicate(map, MapUtils::isNotEmpty, m -> m, defaultMap);
     }
 
     static <K, V> Map<K, V> newMap(boolean isOrder) {
@@ -123,7 +127,7 @@ public interface MapUtils {
     }
 
     static <K, V> Map<K, V> newMap(boolean isOrder, Map<K, V> map) {
-        return BooleanUtils.defaultSupplierIfPredicate(map, m -> !isEmpty(m), m -> BooleanUtils.defaultSupplierIfFalse(isOrder, MapUtils::newLinkedHashMap, MapUtils::newHashMap), () -> newMap(isOrder));
+        return BooleanUtils.defaultSupplierIfPredicate(map, MapUtils::isNotEmpty, m -> BooleanUtils.defaultSupplierIfFalse(isOrder, MapUtils::newLinkedHashMap, MapUtils::newHashMap), () -> newMap(isOrder));
     }
 
     static <K, V> Map<K, V> newHashMap() {
@@ -318,7 +322,7 @@ public interface MapUtils {
     }
 
     static String mapToString(Map<String, String> map) {
-        return BooleanUtils.defaultIfPredicate(map, m -> !isEmpty(m), m -> {
+        return BooleanUtils.defaultIfPredicate(map, MapUtils::isNotEmpty, m -> {
             StringJoiner sj = new StringJoiner(StringConstants.AND);
             m.forEach((k, v) -> sj.add(k + StringConstants.EQUAL + v));
             return sj.toString();

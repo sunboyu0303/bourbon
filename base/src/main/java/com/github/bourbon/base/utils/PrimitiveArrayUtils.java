@@ -47,6 +47,38 @@ public interface PrimitiveArrayUtils {
         return array == null || array.length == 0;
     }
 
+    static boolean isNotEmpty(boolean[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(char[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(float[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(double[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(byte[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(short[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(int[] array) {
+        return !isEmpty(array);
+    }
+
+    static boolean isNotEmpty(long[] array) {
+        return !isEmpty(array);
+    }
+
     static boolean contains(boolean[] array, boolean objectToFind) {
         return indexOf(array, objectToFind, 0) != -1;
     }

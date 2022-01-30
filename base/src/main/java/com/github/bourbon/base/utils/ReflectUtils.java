@@ -38,7 +38,7 @@ public interface ReflectUtils {
     }
 
     static <T extends AccessibleObject> T setAccessible(T t) {
-        if (null != t && !t.isAccessible()) {
+        if (ObjectUtils.nonNull(t) && !t.isAccessible()) {
             t.setAccessible(true);
         }
         return t;
@@ -96,7 +96,7 @@ public interface ReflectUtils {
     static Object[] getFieldsValue(Object obj) throws IllegalAccessException {
         if (ObjectUtils.nonNull(obj)) {
             Field[] fields = getFields(BooleanUtils.defaultSupplierIfAssignableFrom(obj, Class.class, Class.class::cast, obj::getClass));
-            if (!ArrayUtils.isEmpty(fields)) {
+            if (ArrayUtils.isNotEmpty(fields)) {
                 int len = fields.length;
                 Object[] values = new Object[len];
                 for (int i = 0; i < len; ++i) {
@@ -109,7 +109,7 @@ public interface ReflectUtils {
     }
 
     static Set<String> getPublicMethodNames(Class<?> clazz) {
-        return BooleanUtils.defaultSupplierIfPredicate(getPublicMethods(clazz), a -> !ArrayUtils.isEmpty(a), a -> Arrays.stream(a).map(Method::getName).collect(Collectors.toSet()), SetUtils::newHashSet);
+        return BooleanUtils.defaultSupplierIfPredicate(getPublicMethods(clazz), ArrayUtils::isNotEmpty, a -> Arrays.stream(a).map(Method::getName).collect(Collectors.toSet()), SetUtils::newHashSet);
     }
 
     static Method[] getPublicMethods(Class<?> clazz) {
@@ -117,7 +117,7 @@ public interface ReflectUtils {
     }
 
     static List<Method> getPublicMethods(Class<?> clazz, Predicate<Method> predicate) {
-        return ObjectUtils.defaultIfNull(clazz, c -> BooleanUtils.defaultIfPredicate(getPublicMethods(c), m -> !ArrayUtils.isEmpty(m), m -> ObjectUtils.defaultSupplierIfNull(
+        return ObjectUtils.defaultIfNull(clazz, c -> BooleanUtils.defaultIfPredicate(getPublicMethods(c), ArrayUtils::isNotEmpty, m -> ObjectUtils.defaultSupplierIfNull(
                 predicate, p -> Arrays.stream(m).filter(p).collect(Collectors.toList()), () -> ListUtils.newArrayList(m)
         )));
     }
@@ -151,7 +151,7 @@ public interface ReflectUtils {
     static Method getMethod(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) {
         if (null != clazz && !CharSequenceUtils.isBlank(methodName)) {
             Method[] methods = getMethods(clazz);
-            if (!ArrayUtils.isEmpty(methods)) {
+            if (ArrayUtils.isNotEmpty(methods)) {
                 for (Method method : methods) {
                     if (CharSequenceUtils.equals(methodName, method.getName(), ignoreCase) && ClassUtils.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
                         return method;
@@ -174,14 +174,13 @@ public interface ReflectUtils {
     static Method getMethodByName(Class<?> clazz, boolean ignoreCase, String methodName) {
         if (null != clazz && !CharSequenceUtils.isBlank(methodName)) {
             Method[] methods = getMethods(clazz);
-            if (!ArrayUtils.isEmpty(methods)) {
+            if (ArrayUtils.isNotEmpty(methods)) {
                 for (Method method : methods) {
                     if (CharSequenceUtils.equals(methodName, method.getName(), ignoreCase)) {
                         return method;
                     }
                 }
             }
-            return null;
         }
         return null;
     }

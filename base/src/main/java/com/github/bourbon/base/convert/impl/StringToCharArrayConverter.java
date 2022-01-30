@@ -13,6 +13,6 @@ public class StringToCharArrayConverter implements StringConverter<char[]> {
 
     @Override
     public char[] convert(String str, char[] defaultValue) {
-        return BooleanUtils.defaultIfPredicate(str, s -> !CharSequenceUtils.isEmpty(s), String::toCharArray, defaultValue);
+        return BooleanUtils.defaultIfPredicate(str, CharSequenceUtils::isNotEmpty, String::toCharArray, defaultValue);
     }
 }

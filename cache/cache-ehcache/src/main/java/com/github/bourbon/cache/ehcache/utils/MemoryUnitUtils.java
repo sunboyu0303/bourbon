@@ -24,7 +24,7 @@ public final class MemoryUnitUtils {
     }
 
     public static MemoryUnit getMemoryUnit(String name, MemoryUnit memoryUnit) {
-        return BooleanUtils.defaultIfPredicate(name, n -> !CharSequenceUtils.isEmpty(n), n -> ObjectUtils.defaultIfNull(MAP.get(n), memoryUnit), memoryUnit);
+        return BooleanUtils.defaultIfPredicate(name, CharSequenceUtils::isNotEmpty, n -> ObjectUtils.defaultIfNull(MAP.get(n), memoryUnit), memoryUnit);
     }
 
     private MemoryUnitUtils() {

@@ -29,7 +29,7 @@ public final class BooleanUtils {
     }
 
     public static boolean toBoolean(String s) {
-        return !CharSequenceUtils.isBlank(s) && Boolean.parseBoolean(s.trim().toLowerCase());
+        return CharSequenceUtils.isNotBlank(s) && Boolean.parseBoolean(s.trim().toLowerCase());
     }
 
     public static char toChar(boolean b) {

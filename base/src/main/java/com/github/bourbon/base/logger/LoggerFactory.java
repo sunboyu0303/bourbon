@@ -22,7 +22,7 @@ public final class LoggerFactory {
     static {
         LoggerAdapter tmp = null;
         Set<LoggerAdapter> instances = ScopeModelUtils.getExtensionLoader(LoggerAdapter.class).getSupportedExtensionInstances();
-        if (!CollectionUtils.isEmpty(instances)) {
+        if (CollectionUtils.isNotEmpty(instances)) {
             for (LoggerAdapter adapter : instances) {
                 if (adapter.initialize()) {
                     tmp = adapter;

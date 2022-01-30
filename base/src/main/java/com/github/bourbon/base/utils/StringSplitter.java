@@ -87,7 +87,7 @@ public interface StringSplitter {
         if (s.length() == 1) {
             return split(cs, s.charAt(0), limit, isTrim, ignoreEmpty, ignoreCase);
         }
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = ListUtils.newArrayList();
         int len = cs.length();
         int separatorLen = s.length();
         int start = 0;

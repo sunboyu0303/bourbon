@@ -69,7 +69,7 @@ class ValueObjectBinder implements DataObjectBinder {
         Annotation[] annotations = parameter.getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation instanceof DefaultValue) {
-                return BooleanUtils.defaultSupplierIfPredicate(((DefaultValue) annotation).value(), v -> !ArrayUtils.isEmpty(v), v -> convertDefaultValue(context.getConverter(), v, type, annotations), () -> getNewInstanceIfPossible(context, type));
+                return BooleanUtils.defaultSupplierIfPredicate(((DefaultValue) annotation).value(), ArrayUtils::isNotEmpty, v -> convertDefaultValue(context.getConverter(), v, type, annotations), () -> getNewInstanceIfPossible(context, type));
             }
         }
         return null;

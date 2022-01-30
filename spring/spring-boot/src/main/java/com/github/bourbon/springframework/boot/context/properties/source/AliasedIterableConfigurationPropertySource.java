@@ -1,7 +1,7 @@
 package com.github.bourbon.springframework.boot.context.properties.source;
 
 import com.github.bourbon.base.utils.BooleanUtils;
-import org.springframework.util.CollectionUtils;
+import com.github.bourbon.base.utils.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -25,7 +25,7 @@ class AliasedIterableConfigurationPropertySource extends AliasedConfigurationPro
     private Stream<ConfigurationPropertyName> addAliases(ConfigurationPropertyName name) {
         Stream<ConfigurationPropertyName> names = Stream.of(name);
         List<ConfigurationPropertyName> aliases = getAliases().getAliases(name);
-        return BooleanUtils.defaultIfFalse(!CollectionUtils.isEmpty(aliases), () -> Stream.concat(names, aliases.stream()), names);
+        return BooleanUtils.defaultIfFalse(CollectionUtils.isNotEmpty(aliases), () -> Stream.concat(names, aliases.stream()), names);
     }
 
     @Override

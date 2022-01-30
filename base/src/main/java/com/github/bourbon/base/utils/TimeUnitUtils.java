@@ -20,7 +20,7 @@ public final class TimeUnitUtils {
     }
 
     public static TimeUnit getTimeUnit(String name, TimeUnit defaultTimeUnit) {
-        return BooleanUtils.defaultIfPredicate(name, n -> !CharSequenceUtils.isEmpty(n), n -> ObjectUtils.defaultIfNull(MAP.get(n), defaultTimeUnit), defaultTimeUnit);
+        return BooleanUtils.defaultIfPredicate(name, CharSequenceUtils::isNotEmpty, n -> ObjectUtils.defaultIfNull(MAP.get(n), defaultTimeUnit), defaultTimeUnit);
     }
 
     public static void sleepMinutes(long time) {

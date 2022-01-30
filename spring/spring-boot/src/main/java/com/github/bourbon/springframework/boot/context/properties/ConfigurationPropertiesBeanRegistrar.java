@@ -42,7 +42,7 @@ final class ConfigurationPropertiesBeanRegistrar {
     private String getName(Class<?> type, MergedAnnotation<ConfigurationProperties> annotation) {
         return BooleanUtils.defaultIfPredicate(
                 BooleanUtils.defaultIfFalse(annotation.isPresent(), () -> annotation.getString("prefix"), StringConstants.EMPTY),
-                p -> !CharSequenceUtils.isEmpty(p), p -> p + StringConstants.HYPHEN + type.getName(), type.getName()
+                CharSequenceUtils::isNotEmpty, p -> p + StringConstants.HYPHEN + type.getName(), type.getName()
         );
     }
 
@@ -58,8 +58,7 @@ final class ConfigurationPropertiesBeanRegistrar {
     }
 
     private void registerBeanDefinition(String beanName, Class<?> type, MergedAnnotation<ConfigurationProperties> annotation) {
-        Assert.isTrue(annotation.isPresent(), () -> "No " + ConfigurationProperties.class.getSimpleName() +
-                " annotation found on  '" + type.getName() + "'.");
+        Assert.isTrue(annotation.isPresent(), () -> "No " + ConfigurationProperties.class.getSimpleName() + " annotation found on  '" + type.getName() + "'.");
         registry.registerBeanDefinition(beanName, createBeanDefinition(beanName, type));
     }
 

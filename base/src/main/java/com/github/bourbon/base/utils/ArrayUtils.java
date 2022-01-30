@@ -24,6 +24,10 @@ public interface ArrayUtils extends PrimitiveArrayUtils {
         return ObjectUtils.isNull(arr) || arr.length == 0;
     }
 
+    static <T> boolean isNotEmpty(T[] arr) {
+        return !isEmpty(arr);
+    }
+
     static boolean isEmpty(Object o) {
         return ObjectUtils.isNull(o) || (o.getClass().isArray() && 0 == Array.getLength(o));
     }
@@ -270,7 +274,7 @@ public interface ArrayUtils extends PrimitiveArrayUtils {
         Object result = Array.newInstance(type, totalLen);
         int index = 0;
         for (Object[] array : items) {
-            if (!ArrayUtils.isEmpty(array)) {
+            if (ArrayUtils.isNotEmpty(array)) {
                 for (Object o : array) {
                     Array.set(result, index++, o);
                 }

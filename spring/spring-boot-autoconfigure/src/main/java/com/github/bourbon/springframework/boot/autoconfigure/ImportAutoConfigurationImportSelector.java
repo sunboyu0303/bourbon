@@ -64,14 +64,14 @@ class ImportAutoConfigurationImportSelector extends AutoConfigurationImportSelec
         Class<?> source = ClassUtils.resolveClassName(metadata.getClassName());
         for (String name : ANNOTATION_NAMES) {
             Class<?>[] exclude = ObjectUtils.defaultIfNull(AnnotatedElementUtils.getMergedAnnotationAttributes(source, name), m -> m.getClassArray("exclude"));
-            if (!ArrayUtils.isEmpty(exclude)) {
+            if (ArrayUtils.isNotEmpty(exclude)) {
                 exclusions.addAll(Arrays.stream(exclude).map(Class::getName).collect(Collectors.toList()));
             }
         }
         for (List<Annotation> annotations : getAnnotations(metadata).values()) {
             for (Annotation annotation : annotations) {
                 String[] exclude = (String[]) AnnotationUtils.getAnnotationAttributes(annotation, true).get("exclude");
-                if (!ArrayUtils.isEmpty(exclude)) {
+                if (ArrayUtils.isNotEmpty(exclude)) {
                     exclusions.addAll(ListUtils.newArrayList(exclude));
                 }
             }

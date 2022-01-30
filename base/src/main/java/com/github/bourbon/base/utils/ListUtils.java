@@ -35,7 +35,7 @@ public interface ListUtils {
     }
 
     static <T> List<T> of(T... elements) {
-        return BooleanUtils.defaultSupplierIfPredicate(elements, e -> !ArrayUtils.isEmpty(e), e -> Collections.unmodifiableList(newArrayList(e)), Collections::emptyList);
+        return BooleanUtils.defaultSupplierIfPredicate(elements, ArrayUtils::isNotEmpty, e -> Collections.unmodifiableList(newArrayList(e)), Collections::emptyList);
     }
 
     static <E> List<E> newArrayList() {
@@ -116,7 +116,7 @@ public interface ListUtils {
     }
 
     static <T> List<T> merge(List<T>... items) {
-        return BooleanUtils.defaultSupplierIfPredicate(items, i -> !ArrayUtils.isEmpty(i), i -> BooleanUtils.defaultSupplierIfFalse(
+        return BooleanUtils.defaultSupplierIfPredicate(items, ArrayUtils::isNotEmpty, i -> BooleanUtils.defaultSupplierIfFalse(
                 i.length != 1, () -> Arrays.stream(i).filter(ObjectUtils::nonNull).flatMap(Collection::stream).collect(Collectors.toList()), () -> i[0]
         ), Collections::emptyList);
     }

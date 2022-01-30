@@ -96,25 +96,25 @@ public interface Assert {
     }
 
     static void isNull(String s, String message) throws IllegalArgumentException {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     static void isNull(String s, Supplier<String> messageSupplier) throws IllegalArgumentException {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
     static void isNull(String s, String format, Object... args) throws IllegalArgumentException {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw new IllegalArgumentException(String.format(format, args));
         }
     }
 
     static <X extends Throwable> void isNull(String s, ThrowableSupplier<X> supplier) throws X {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw supplier.get();
         }
     }
@@ -124,25 +124,25 @@ public interface Assert {
     }
 
     static void isNull(CharSequence s, String message) throws IllegalArgumentException {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     static void isNull(CharSequence s, Supplier<String> messageSupplier) throws IllegalArgumentException {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
     static void isNull(CharSequence s, String format, Object... args) throws IllegalArgumentException {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw new IllegalArgumentException(String.format(format, args));
         }
     }
 
     static <X extends Throwable> void isNull(CharSequence s, ThrowableSupplier<X> supplier) throws X {
-        if (!CharSequenceUtils.isEmpty(s)) {
+        if (CharSequenceUtils.isNotEmpty(s)) {
             throw supplier.get();
         }
     }
@@ -512,25 +512,25 @@ public interface Assert {
     }
 
     static void isEmpty(Object[] array, String message) throws IllegalArgumentException {
-        if (!ArrayUtils.isEmpty(array)) {
+        if (ArrayUtils.isNotEmpty(array)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     static void isEmpty(Object[] array, Supplier<String> messageSupplier) throws IllegalArgumentException {
-        if (!ArrayUtils.isEmpty(array)) {
+        if (ArrayUtils.isNotEmpty(array)) {
             throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
     static void isEmpty(Object[] array, String format, Object... args) throws IllegalArgumentException {
-        if (!ArrayUtils.isEmpty(array)) {
+        if (ArrayUtils.isNotEmpty(array)) {
             throw new IllegalArgumentException(String.format(format, args));
         }
     }
 
     static <X extends Throwable> void isEmpty(Object[] array, ThrowableSupplier<X> supplier) throws X {
-        if (!ArrayUtils.isEmpty(array)) {
+        if (ArrayUtils.isNotEmpty(array)) {
             throw supplier.get();
         }
     }
@@ -564,25 +564,25 @@ public interface Assert {
     }
 
     static void isEmpty(Collection<?> collection, String message) throws IllegalArgumentException {
-        if (!CollectionUtils.isEmpty(collection)) {
+        if (CollectionUtils.isNotEmpty(collection)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     static void isEmpty(Collection<?> collection, Supplier<String> messageSupplier) throws IllegalArgumentException {
-        if (!CollectionUtils.isEmpty(collection)) {
+        if (CollectionUtils.isNotEmpty(collection)) {
             throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
     static void isEmpty(Collection<?> collection, String format, Object... args) throws IllegalArgumentException {
-        if (!CollectionUtils.isEmpty(collection)) {
+        if (CollectionUtils.isNotEmpty(collection)) {
             throw new IllegalArgumentException(String.format(format, args));
         }
     }
 
     static <X extends Throwable> void isEmpty(Collection<?> collection, ThrowableSupplier<X> supplier) throws X {
-        if (!CollectionUtils.isEmpty(collection)) {
+        if (CollectionUtils.isNotEmpty(collection)) {
             throw supplier.get();
         }
     }
@@ -616,25 +616,25 @@ public interface Assert {
     }
 
     static void isEmpty(Map<?, ?> map, String message) throws IllegalArgumentException {
-        if (!MapUtils.isEmpty(map)) {
+        if (MapUtils.isNotEmpty(map)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     static void isEmpty(Map<?, ?> map, Supplier<String> messageSupplier) throws IllegalArgumentException {
-        if (!MapUtils.isEmpty(map)) {
+        if (MapUtils.isNotEmpty(map)) {
             throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
     static void isEmpty(Map<?, ?> map, String format, Object... args) throws IllegalArgumentException {
-        if (!MapUtils.isEmpty(map)) {
+        if (MapUtils.isNotEmpty(map)) {
             throw new IllegalArgumentException(String.format(format, args));
         }
     }
 
     static <X extends Throwable> void isEmpty(Map<?, ?> map, ThrowableSupplier<X> supplier) throws X {
-        if (!MapUtils.isEmpty(map)) {
+        if (MapUtils.isNotEmpty(map)) {
             throw supplier.get();
         }
     }

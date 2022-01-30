@@ -51,7 +51,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                 }
                 valueStr = f.apply(value);
                 try {
-                    return BooleanUtils.defaultIfPredicate(valueStr, s -> !CharSequenceUtils.isBlank(s), Byte::parseByte);
+                    return BooleanUtils.defaultIfPredicate(valueStr, CharSequenceUtils::isNotBlank, Byte::parseByte);
                 } catch (NumberFormatException e) {
                     return NumberUtils.parseNumber(valueStr).byteValue();
                 }
@@ -67,7 +67,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                 }
                 valueStr = f.apply(value);
                 try {
-                    return BooleanUtils.defaultIfPredicate(valueStr, s -> !CharSequenceUtils.isBlank(s), Short::parseShort);
+                    return BooleanUtils.defaultIfPredicate(valueStr, CharSequenceUtils::isNotBlank, Short::parseShort);
                 } catch (NumberFormatException e) {
                     return NumberUtils.parseNumber(valueStr).shortValue();
                 }
@@ -90,7 +90,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                 if (value instanceof byte[]) {
                     return ByteUtils.bytesToInt(((byte[]) value));
                 }
-                return BooleanUtils.defaultIfPredicate(f.apply(value), s -> !CharSequenceUtils.isBlank(s), NumberUtils::parseInt);
+                return BooleanUtils.defaultIfPredicate(f.apply(value), CharSequenceUtils::isNotBlank, NumberUtils::parseInt);
             } else {
                 Number number;
                 if (AtomicInteger.class == targetType) {
@@ -120,7 +120,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                         if (value instanceof byte[]) {
                             return ByteUtils.bytesToLong(((byte[]) value));
                         }
-                        return BooleanUtils.defaultIfPredicate(f.apply(value), s -> !CharSequenceUtils.isBlank(s), NumberUtils::parseLong);
+                        return BooleanUtils.defaultIfPredicate(f.apply(value), CharSequenceUtils::isNotBlank, NumberUtils::parseLong);
                     }
 
                     if (AtomicLong.class == targetType) {
@@ -148,7 +148,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                             if (value instanceof byte[]) {
                                 return (float) ByteUtils.bytesToDouble(((byte[]) value));
                             }
-                            return BooleanUtils.defaultIfPredicate(f.apply(value), s -> !CharSequenceUtils.isBlank(s), NumberUtils::parseFloat);
+                            return BooleanUtils.defaultIfPredicate(f.apply(value), CharSequenceUtils::isNotBlank, NumberUtils::parseFloat);
                         }
 
                         if (Double.class == targetType) {
@@ -161,7 +161,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                             if (value instanceof byte[]) {
                                 return ByteUtils.bytesToDouble(((byte[]) value));
                             }
-                            return BooleanUtils.defaultIfPredicate(f.apply(value), s -> !CharSequenceUtils.isBlank(s), NumberUtils::parseDouble);
+                            return BooleanUtils.defaultIfPredicate(f.apply(value), CharSequenceUtils::isNotBlank, NumberUtils::parseDouble);
                         }
 
                         if (DoubleAdder.class == targetType) {
@@ -185,7 +185,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
                                 if (value instanceof Boolean) {
                                     return BooleanUtils.toInt((Boolean) value);
                                 }
-                                return BooleanUtils.defaultIfPredicate(f.apply(value), s -> !CharSequenceUtils.isBlank(s), NumberUtils::parseNumber);
+                                return BooleanUtils.defaultIfPredicate(f.apply(value), CharSequenceUtils::isNotBlank, NumberUtils::parseNumber);
                             }
                         }
                     }
@@ -223,7 +223,7 @@ public class ObjectToNumberConverter implements ObjectConverter<Number> {
 
     private String convertToStr(Object value) {
         String result = CharSequenceUtils.trim(ObjectConverter.convertToStr(value));
-        if (!CharSequenceUtils.isEmpty(result)) {
+        if (CharSequenceUtils.isNotEmpty(result)) {
             char c = Character.toUpperCase(result.charAt(result.length() - 1));
             if (c == CharConstants.D || c == CharConstants.L || c == CharConstants.F) {
                 return CharSequenceUtils.subPre(result, -1);

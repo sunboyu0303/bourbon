@@ -116,7 +116,7 @@ public interface TypeUtils {
             Type genericSuper = clazz.getGenericSuperclass();
             if (ObjectUtils.isNull(genericSuper) || Object.class.equals(genericSuper)) {
                 Type[] genericInterfaces = clazz.getGenericInterfaces();
-                if (!ArrayUtils.isEmpty(genericInterfaces)) {
+                if (ArrayUtils.isNotEmpty(genericInterfaces)) {
                     genericSuper = genericInterfaces[0];
                 }
             }

@@ -107,7 +107,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     }
 
     public static List<TtlRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        return BooleanUtils.defaultSupplierIfPredicate(tasks, c -> !CollectionUtils.isEmpty(c), c -> c.stream().map(task -> get(task, releaseTtlValueReferenceAfterRun, idempotent)).collect(Collectors.toList()), Collections::emptyList);
+        return BooleanUtils.defaultSupplierIfPredicate(tasks, CollectionUtils::isNotEmpty, c -> c.stream().map(task -> get(task, releaseTtlValueReferenceAfterRun, idempotent)).collect(Collectors.toList()), Collections::emptyList);
     }
 
     public static Runnable unwrap(Runnable runnable) {
@@ -115,6 +115,6 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     }
 
     public static List<Runnable> unwraps(Collection<? extends Runnable> tasks) {
-        return BooleanUtils.defaultSupplierIfPredicate(tasks, c -> !CollectionUtils.isEmpty(c), c -> c.stream().map(TtlRunnable::unwrap).collect(Collectors.toList()), Collections::emptyList);
+        return BooleanUtils.defaultSupplierIfPredicate(tasks, CollectionUtils::isNotEmpty, c -> c.stream().map(TtlRunnable::unwrap).collect(Collectors.toList()), Collections::emptyList);
     }
 }

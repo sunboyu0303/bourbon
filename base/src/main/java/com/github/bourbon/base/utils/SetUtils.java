@@ -160,7 +160,7 @@ public interface SetUtils {
     }
 
     static <E> Set<E> merge(Set<E>... items) {
-        return BooleanUtils.defaultSupplierIfPredicate(items, i -> !ArrayUtils.isEmpty(i), i -> BooleanUtils.defaultIfFalse(
+        return BooleanUtils.defaultSupplierIfPredicate(items, ArrayUtils::isNotEmpty, i -> BooleanUtils.defaultIfFalse(
                 i.length != 1, () -> Arrays.stream(i).filter(ObjectUtils::nonNull).flatMap(Collection::stream).collect(Collectors.toSet()), i[0]
         ), Collections::emptySet);
     }

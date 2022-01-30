@@ -26,8 +26,12 @@ public interface CollectionUtils {
         return c == null || c.isEmpty();
     }
 
+    static boolean isNotEmpty(Collection<?> c) {
+        return !isEmpty(c);
+    }
+
     static boolean contains(Collection<?> c, Object o) {
-        return !isEmpty(c) && c.contains(o);
+        return isNotEmpty(c) && c.contains(o);
     }
 
     static <E> void addAll(Collection<E> c, Iterator<E> i) {
@@ -88,7 +92,7 @@ public interface CollectionUtils {
     }
 
     static String[] toStringArray(Collection<String> collection) {
-        return BooleanUtils.defaultIfPredicate(collection, c -> !isEmpty(c), c -> c.toArray(StringConstants.EMPTY_STRING_ARRAY), StringConstants.EMPTY_STRING_ARRAY);
+        return BooleanUtils.defaultIfPredicate(collection, CollectionUtils::isNotEmpty, c -> c.toArray(StringConstants.EMPTY_STRING_ARRAY), StringConstants.EMPTY_STRING_ARRAY);
     }
 
     static <T> Collection<T> requireNonEmpty(Collection<T> c) {
@@ -180,13 +184,13 @@ public interface CollectionUtils {
     }
 
     static List<?> merge(List<?>... items) {
-        return BooleanUtils.defaultSupplierIfPredicate(items, i -> !ArrayUtils.isEmpty(i), i -> BooleanUtils.defaultSupplierIfFalse(
+        return BooleanUtils.defaultSupplierIfPredicate(items, ArrayUtils::isNotEmpty, i -> BooleanUtils.defaultSupplierIfFalse(
                 i.length != 1, () -> Arrays.stream(i).filter(ObjectUtils::nonNull).flatMap(Collection::stream).collect(Collectors.toList()), () -> i[0]
         ), Collections::emptyList);
     }
 
     static Set<?> merge(Set<?>... items) {
-        return BooleanUtils.defaultSupplierIfPredicate(items, i -> !ArrayUtils.isEmpty(i), i -> BooleanUtils.defaultSupplierIfFalse(
+        return BooleanUtils.defaultSupplierIfPredicate(items, ArrayUtils::isNotEmpty, i -> BooleanUtils.defaultSupplierIfFalse(
                 i.length != 1, () -> Arrays.stream(i).filter(ObjectUtils::nonNull).flatMap(Collection::stream).collect(Collectors.toSet()), () -> i[0]
         ), Collections::emptySet);
     }

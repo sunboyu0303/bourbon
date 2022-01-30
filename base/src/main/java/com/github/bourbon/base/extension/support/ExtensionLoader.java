@@ -65,7 +65,7 @@ public class ExtensionLoader<T> {
 
     public T getDefaultExtension() {
         getExtensionClasses();
-        return BooleanUtils.defaultIfFalse(!CharSequenceUtils.isBlank(cachedDefaultName), () -> getExtension(cachedDefaultName));
+        return BooleanUtils.defaultIfFalse(CharSequenceUtils.isNotBlank(cachedDefaultName), () -> getExtension(cachedDefaultName));
     }
 
     @SuppressWarnings("unchecked")
@@ -195,7 +195,7 @@ public class ExtensionLoader<T> {
             Map<ClassLoader, Set<URL>> resources = ClassLoaderResourceLoader.loadResources(fileName, classLoadersToLoad);
 
             for (Map.Entry<ClassLoader, Set<URL>> entry : resources.entrySet()) {
-                if (!CollectionUtils.isEmpty(entry.getValue())) {
+                if (CollectionUtils.isNotEmpty(entry.getValue())) {
                     for (URL url : entry.getValue()) {
                         loadResource(extensionClasses, entry.getKey(), url);
                     }
@@ -226,7 +226,7 @@ public class ExtensionLoader<T> {
                     } else {
                         clazz = line;
                     }
-                    if (!CharSequenceUtils.isEmpty(clazz)) {
+                    if (CharSequenceUtils.isNotEmpty(clazz)) {
                         try {
                             loadClass(extensionClasses, url, Class.forName(clazz, true, classLoader), name);
                         } catch (Throwable e) {
@@ -263,9 +263,8 @@ public class ExtensionLoader<T> {
     }
 
     public Set<T> getSupportedExtensionInstances() {
-        return BooleanUtils.defaultSupplierIfPredicate(getExtensionClasses().keySet(), e -> !CollectionUtils.isEmpty(e),
-                e -> SetUtils.newLinkedHashSet(e.stream().map(this::getExtension).sorted(Prioritized.COMPARATOR).collect(Collectors.toList())),
-                SetUtils::newLinkedHashSet
+        return BooleanUtils.defaultSupplierIfPredicate(getExtensionClasses().keySet(), CollectionUtils::isNotEmpty,
+                e -> SetUtils.newLinkedHashSet(e.stream().map(this::getExtension).sorted(Prioritized.COMPARATOR).collect(Collectors.toList())), SetUtils::newLinkedHashSet
         );
     }
 }

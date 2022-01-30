@@ -118,7 +118,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     protected Object createBeanInstance(BeanDefinition beanDefinition, String beanName, Object[] args) throws Exception {
         Class<?> clazz = beanDefinition.getClazz();
         Constructor<?> constructorToUse = null;
-        if (!ArrayUtils.isEmpty(args)) {
+        if (ArrayUtils.isNotEmpty(args)) {
             try {
                 constructorToUse = clazz.getConstructor(ClassUtils.getClasses(args));
             } catch (NoSuchMethodException e) {
@@ -205,7 +205,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             ((InitializingBean) bean).afterPropertiesSet();
         }
         String initMethodName = beanDefinition.getInitMethodName();
-        if (!CharSequenceUtils.isEmpty(initMethodName) && !(bean instanceof InitializingBean && InitializingBean.NAME.equals(initMethodName))) {
+        if (CharSequenceUtils.isNotEmpty(initMethodName) && !(bean instanceof InitializingBean && InitializingBean.NAME.equals(initMethodName))) {
             Method initMethod = ReflectUtils.getMethod(beanDefinition.getClazz(), initMethodName);
             if (null == initMethod) {
                 throw new BeansException("Could not find an init method named '" + initMethodName + "' on bean with name '" + beanName + "'");
@@ -219,7 +219,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             return;
         }
 
-        if (bean instanceof DisposableBean || !CharSequenceUtils.isEmpty(beanDefinition.getDestroyMethodName())) {
+        if (bean instanceof DisposableBean || CharSequenceUtils.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
         }
     }

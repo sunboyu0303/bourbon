@@ -18,8 +18,7 @@ public final class CacheFactory {
     private static final Map<String, Cache<?, ?>> MAP = MapUtils.newConcurrentHashMap();
 
     private static final CacheAdapter cacheAdapter = BooleanUtils.defaultSupplierIfPredicate(
-            ScopeModelUtils.getExtensionLoader(CacheAdapter.class).getSupportedExtensionInstances(),
-            c -> !CollectionUtils.isEmpty(c), c -> c.iterator().next(), NoCacheAdapter::new
+            ScopeModelUtils.getExtensionLoader(CacheAdapter.class).getSupportedExtensionInstances(), CollectionUtils::isNotEmpty, c -> c.iterator().next(), NoCacheAdapter::new
     );
 
     @SuppressWarnings("unchecked")

@@ -61,7 +61,7 @@ public final class NumberUtils {
 
         for (int i = 1; i < values.length; ++i) {
             value = values[i];
-            if (!CharSequenceUtils.isBlank(value)) {
+            if (CharSequenceUtils.isNotBlank(value)) {
                 result = result.add(toBigDecimal(value));
             }
         }
@@ -128,7 +128,7 @@ public final class NumberUtils {
 
         for (int i = 1; i < values.length; ++i) {
             value = values[i];
-            if (!CharSequenceUtils.isBlank(value)) {
+            if (CharSequenceUtils.isNotBlank(value)) {
                 result = result.subtract(toBigDecimal(value));
             }
         }
@@ -170,7 +170,7 @@ public final class NumberUtils {
     }
 
     public static BigDecimal mul(Number[] values) {
-        if (!ArrayUtils.isEmpty(values) && !ArrayUtils.hasNull(values)) {
+        if (ArrayUtils.isNotEmpty(values) && !ArrayUtils.hasNull(values)) {
             Number value = values[0];
             BigDecimal result = new BigDecimal(value.toString());
 
@@ -189,7 +189,7 @@ public final class NumberUtils {
     }
 
     public static BigDecimal mul(String[] values) {
-        if (!ArrayUtils.isEmpty(values) && !ArrayUtils.hasNull(values)) {
+        if (ArrayUtils.isNotEmpty(values) && !ArrayUtils.hasNull(values)) {
             BigDecimal result = new BigDecimal(values[0]);
 
             for (int i = 1; i < values.length; ++i) {
@@ -202,7 +202,7 @@ public final class NumberUtils {
     }
 
     public static BigDecimal mul(BigDecimal[] values) {
-        if (!ArrayUtils.isEmpty(values) && !ArrayUtils.hasNull(values)) {
+        if (ArrayUtils.isNotEmpty(values) && !ArrayUtils.hasNull(values)) {
             BigDecimal result = values[0];
 
             for (int i = 1; i < values.length; ++i) {
@@ -327,7 +327,7 @@ public final class NumberUtils {
     }
 
     public static BigDecimal toBigDecimal(String numberStr) {
-        return BooleanUtils.defaultIfPredicate(numberStr, s -> !CharSequenceUtils.isBlank(s), s -> {
+        return BooleanUtils.defaultIfPredicate(numberStr, CharSequenceUtils::isNotBlank, s -> {
             try {
                 Number n = parseNumber(s);
                 return BooleanUtils.defaultSupplierIfAssignableFrom(n, BigDecimal.class, BigDecimal.class::cast, () -> new BigDecimal(n.toString()));
@@ -346,7 +346,7 @@ public final class NumberUtils {
     }
 
     public static BigInteger toBigInteger(String number) {
-        return BooleanUtils.defaultIfPredicate(number, n -> !CharSequenceUtils.isBlank(n), BigInteger::new, BigInteger.ZERO);
+        return BooleanUtils.defaultIfPredicate(number, CharSequenceUtils::isNotBlank, BigInteger::new, BigInteger.ZERO);
     }
 
     public static boolean isNumber(CharSequence str) {
@@ -383,7 +383,6 @@ public final class NumberUtils {
                     if (hasDecPoint || hasExp) {
                         return false;
                     }
-
                     hasDecPoint = true;
                 } else if (chars[i] != CharConstants.SMALL_E && chars[i] != CharConstants.E) {
                     if (chars[i] != CharConstants.PLUS && chars[i] != CharConstants.HYPHEN) {

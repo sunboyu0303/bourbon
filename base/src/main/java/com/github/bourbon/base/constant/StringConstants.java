@@ -32,8 +32,13 @@ public final class StringConstants {
      * {@code "$$"}
      */
     public static final String DOLLARS = DOLLAR + DOLLAR;
-
+    /**
+     * {@code "a"}
+     */
     public static final String SMALL_A = valueOf(CharConstants.SMALL_A);
+    /**
+     * {@code "b"}
+     */
     public static final String SMALL_B = valueOf(CharConstants.SMALL_B);
     public static final String SMALL_C = valueOf(CharConstants.SMALL_C);
     public static final String SMALL_D = valueOf(CharConstants.SMALL_D);
@@ -64,12 +69,23 @@ public final class StringConstants {
     public static final String SMALL_X = valueOf(CharConstants.SMALL_X);
     public static final String SMALL_Y = valueOf(CharConstants.SMALL_Y);
     public static final String SMALL_Z = valueOf(CharConstants.SMALL_Z);
-
+    /**
+     * {@code "A"}
+     */
     public static final String A = valueOf(CharConstants.A);
+    /**
+     * {@code "B"}
+     */
     public static final String B = valueOf(CharConstants.B);
     public static final String C = valueOf(CharConstants.C);
     public static final String D = valueOf(CharConstants.D);
+    /**
+     * {@code "E"}
+     */
     public static final String E = valueOf(CharConstants.E);
+    /**
+     * {@code "F"}
+     */
     public static final String F = valueOf(CharConstants.F);
     public static final String G = valueOf(CharConstants.G);
 
@@ -79,6 +95,9 @@ public final class StringConstants {
     public static final String K = valueOf(CharConstants.K);
     public static final String L = valueOf(CharConstants.L);
     public static final String M = valueOf(CharConstants.M);
+    /**
+     * {@code "N"}
+     */
     public static final String N = valueOf(CharConstants.N);
 
     public static final String O = valueOf(CharConstants.O);
@@ -87,6 +106,9 @@ public final class StringConstants {
 
     public static final String R = valueOf(CharConstants.R);
     public static final String S = valueOf(CharConstants.S);
+    /**
+     * {@code "T"}
+     */
     public static final String T = valueOf(CharConstants.T);
 
     public static final String U = valueOf(CharConstants.U);
@@ -94,6 +116,9 @@ public final class StringConstants {
     public static final String W = valueOf(CharConstants.W);
 
     public static final String X = valueOf(CharConstants.X);
+    /**
+     * {@code "Y"}
+     */
     public static final String Y = valueOf(CharConstants.Y);
     public static final String Z = valueOf(CharConstants.Z);
 
