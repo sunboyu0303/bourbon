@@ -2094,4 +2094,132 @@ public interface PrimitiveArrayUtils {
         System.arraycopy(src, 0, tmp, 0, Math.min(src.length, length));
         return tmp;
     }
+
+    static boolean[] defaultIfNull(boolean[] array) {
+        return defaultIfNull(array, BooleanConstants.EMPTY_BOOLEAN_ARRAY);
+    }
+
+    static char[] defaultIfNull(char[] array) {
+        return defaultIfNull(array, CharConstants.EMPTY_CHAR_ARRAY);
+    }
+
+    static float[] defaultIfNull(float[] array) {
+        return defaultIfNull(array, FloatConstants.EMPTY_FLOAT_ARRAY);
+    }
+
+    static double[] defaultIfNull(double[] array) {
+        return defaultIfNull(array, DoubleConstants.EMPTY_DOUBLE_ARRAY);
+    }
+
+    static byte[] defaultIfNull(byte[] array) {
+        return defaultIfNull(array, ByteConstants.EMPTY_BYTE_ARRAY);
+    }
+
+    static short[] defaultIfNull(short[] array) {
+        return defaultIfNull(array, ShortConstants.EMPTY_SHORT_ARRAY);
+    }
+
+    static int[] defaultIfNull(int[] array) {
+        return defaultIfNull(array, IntConstants.EMPTY_INT_ARRAY);
+    }
+
+    static long[] defaultIfNull(long[] array) {
+        return defaultIfNull(array, LongConstants.EMPTY_LONG_ARRAY);
+    }
+
+    static boolean[] defaultIfNull(boolean[] array, boolean[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static char[] defaultIfNull(char[] array, char[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static float[] defaultIfNull(float[] array, float[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static double[] defaultIfNull(double[] array, double[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static byte[] defaultIfNull(byte[] array, byte[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static short[] defaultIfNull(short[] array, short[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static int[] defaultIfNull(int[] array, int[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static long[] defaultIfNull(long[] array, long[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static boolean[] defaultIfEmpty(boolean[] array) {
+        return defaultIfEmpty(array, BooleanConstants.EMPTY_BOOLEAN_ARRAY);
+    }
+
+    static char[] defaultIfEmpty(char[] array) {
+        return defaultIfEmpty(array, CharConstants.EMPTY_CHAR_ARRAY);
+    }
+
+    static float[] defaultIfEmpty(float[] array) {
+        return defaultIfEmpty(array, FloatConstants.EMPTY_FLOAT_ARRAY);
+    }
+
+    static double[] defaultIfEmpty(double[] array) {
+        return defaultIfEmpty(array, DoubleConstants.EMPTY_DOUBLE_ARRAY);
+    }
+
+    static byte[] defaultIfEmpty(byte[] array) {
+        return defaultIfEmpty(array, ByteConstants.EMPTY_BYTE_ARRAY);
+    }
+
+    static short[] defaultIfEmpty(short[] array) {
+        return defaultIfEmpty(array, ShortConstants.EMPTY_SHORT_ARRAY);
+    }
+
+    static int[] defaultIfEmpty(int[] array) {
+        return defaultIfEmpty(array, IntConstants.EMPTY_INT_ARRAY);
+    }
+
+    static long[] defaultIfEmpty(long[] array) {
+        return defaultIfEmpty(array, LongConstants.EMPTY_LONG_ARRAY);
+    }
+
+    static boolean[] defaultIfEmpty(boolean[] array, boolean[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static char[] defaultIfEmpty(char[] array, char[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static float[] defaultIfEmpty(float[] array, float[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static double[] defaultIfEmpty(double[] array, double[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static byte[] defaultIfEmpty(byte[] array, byte[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static short[] defaultIfEmpty(short[] array, short[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static int[] defaultIfEmpty(int[] array, int[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    static long[] defaultIfEmpty(long[] array, long[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
 }

@@ -81,6 +81,7 @@ public class SimpleTpMonitorService extends AbstractLifecycle implements TpMonit
         private final StringBuilder fullLogBuffer = new StringBuilder(LINE_LIMIT_CHARS);
         private final StringBuilder detailLogBuffer = new StringBuilder(LINE_LIMIT_CHARS);
 
+        @Override
         public void run() {
             try {
                 long currentTimePoint = (SystemClock.currentTimeMillis() + 5L) / 1_000L;

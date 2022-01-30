@@ -116,6 +116,10 @@ public final class StringConstants {
      */
     public static final String SPACE_EQUAL_SPACE = SPACE + EQUAL + SPACE;
     /**
+     * {@code "    "}
+     */
+    public static final String SPACE_SPACE_SPACE_SPACE = SPACE + SPACE + SPACE + SPACE;
+    /**
      * {@code "&"}
      */
     public static final String AND = valueOf(CharConstants.AND);

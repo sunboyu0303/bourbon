@@ -440,4 +440,22 @@ public interface ArrayUtils extends PrimitiveArrayUtils {
         System.arraycopy(src, 0, tmp, 0, Math.min(src.length, length));
         return tmp;
     }
+
+    Object[] EMPTY_OBJECT_ARRAY = {};
+
+    static Object[] defaultIfNull(Object[] array) {
+        return defaultIfNull(array, EMPTY_OBJECT_ARRAY);
+    }
+
+    static Object[] defaultIfNull(Object[] array, Object[] defaultArray) {
+        return ObjectUtils.defaultIfNull(array, defaultArray);
+    }
+
+    static Object[] defaultIfEmpty(Object[] array) {
+        return defaultIfEmpty(array, EMPTY_OBJECT_ARRAY);
+    }
+
+    static Object[] defaultIfEmpty(Object[] array, Object[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
 }

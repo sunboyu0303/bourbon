@@ -154,4 +154,12 @@ public class SofaThreadPoolExecutor extends ThreadPoolExecutor {
         this.config.setTaskTimeout(taskTimeout);
         ThreadLogger.info("Updated '{}' taskTimeout to {} {}", this.config.getIdentity(), taskTimeout, config.getTimeUnit());
     }
+
+    public ThreadPoolConfig getConfig() {
+        return config;
+    }
+
+    public ThreadPoolStatistics getStatistics() {
+        return statistics;
+    }
 }
