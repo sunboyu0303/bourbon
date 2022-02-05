@@ -14,16 +14,16 @@ import java.util.ServiceLoader;
  */
 public final class TracerIdAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(TracerIdAdapter.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private static final TracerIdAdapter INSTANCE = new TracerIdAdapter();
     private TracerIdRetriever tracerIdRetriever;
 
     private TracerIdAdapter() {
         Iterator<TracerIdRetriever> tracerIdAdapterIterator = ServiceLoader.load(TracerIdRetriever.class).iterator();
         if (tracerIdAdapterIterator.hasNext()) {
-            this.tracerIdRetriever = tracerIdAdapterIterator.next();
+            tracerIdRetriever = tracerIdAdapterIterator.next();
             if (logger.isInfoEnabled()) {
-                logger.info("TracerIdConverter use tracerIdAdapter '{}'", this.tracerIdRetriever.getClass().getName());
+                logger.info("TracerIdConverter use tracerIdAdapter '{}'", tracerIdRetriever.getClass().getName());
             }
         } else {
             if (logger.isWarnEnabled()) {

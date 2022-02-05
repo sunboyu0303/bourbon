@@ -11,14 +11,16 @@ public class RollingCalendar extends GregorianCalendar {
 
     private static final long serialVersionUID = -3560331770601814177L;
 
-    private final RollingCalendarType type;
+    private RollingCalendarType type = RollingCalendarType.TROUBLE;
 
-    public RollingCalendar(RollingCalendarType type) {
-        this.type = type;
+    public RollingCalendar() {
     }
 
-    public RollingCalendar(TimeZone tz, Locale locale, RollingCalendarType type) {
+    public RollingCalendar(TimeZone tz, Locale locale) {
         super(tz, locale);
+    }
+
+    public void setType(RollingCalendarType type) {
         this.type = type;
     }
 
@@ -74,6 +76,6 @@ public class RollingCalendar extends GregorianCalendar {
     }
 
     public enum RollingCalendarType {
-        SECOND, MINUTE, HOUR_OF_DAY, DAY_OF_MONTH, WEEK_OF_YEAR, MONTH
+        TROUBLE, SECOND, MINUTE, HOUR_OF_DAY, DAY_OF_MONTH, WEEK_OF_YEAR, MONTH
     }
 }

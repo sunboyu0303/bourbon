@@ -1,6 +1,7 @@
 package com.github.bourbon.tracer.core.samplers;
 
 import com.github.bourbon.base.utils.CharSequenceUtils;
+import com.github.bourbon.tracer.core.appender.self.SelfLog;
 import com.github.bourbon.tracer.core.configuration.SofaTracerConfiguration;
 
 /**

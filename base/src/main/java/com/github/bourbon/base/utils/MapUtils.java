@@ -329,6 +329,15 @@ public interface MapUtils {
         }, StringConstants.EMPTY);
     }
 
+    static String mapToStringWithPrefix(Map<String, String> map, String prefix) {
+        String pre = ObjectUtils.defaultIfNull(prefix, StringConstants.EMPTY);
+        return BooleanUtils.defaultIfPredicate(map, MapUtils::isNotEmpty, m -> {
+            StringJoiner sj = new StringJoiner(StringConstants.AND);
+            m.forEach((k, v) -> sj.add(pre + k + StringConstants.EQUAL + v));
+            return sj.toString();
+        }, StringConstants.EMPTY);
+    }
+
     static void stringToMap(String str, Map<String, String> map) {
         if (CharSequenceUtils.isBlank(str)) {
             return;

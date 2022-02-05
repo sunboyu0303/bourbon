@@ -16,6 +16,7 @@ public final class StringConstants {
     public static final String WAR = ".war";
     public static final String CLASS_FILE_SUFFIX = ".class";
     public static final String PROPERTIES_FILE_SUFFIX = ".properties";
+    public static final String LOG_FILE_SUFFIX = ".log";
     /**
      * {@code "\r\n"}
      */
@@ -120,17 +121,49 @@ public final class StringConstants {
      * {@code "Y"}
      */
     public static final String Y = valueOf(CharConstants.Y);
+    /**
+     * {@code "Z"}
+     */
     public static final String Z = valueOf(CharConstants.Z);
-
+    /**
+     * {@code "0"}
+     */
     public static final String ZERO = valueOf(CharConstants.ZERO);
+    /**
+     * {@code "1"}
+     */
     public static final String ONE = valueOf(CharConstants.ONE);
+    /**
+     * {@code "2"}
+     */
     public static final String TWO = valueOf(CharConstants.TWO);
+    /**
+     * {@code "3"}
+     */
     public static final String THREE = valueOf(CharConstants.THREE);
+    /**
+     * {@code "4"}
+     */
     public static final String FOUR = valueOf(CharConstants.FOUR);
+    /**
+     * {@code "5"}
+     */
     public static final String FIVE = valueOf(CharConstants.FIVE);
+    /**
+     * {@code "6"}
+     */
     public static final String SIX = valueOf(CharConstants.SIX);
+    /**
+     * {@code "7"}
+     */
     public static final String SEVEN = valueOf(CharConstants.SEVEN);
+    /**
+     * {@code "8"}
+     */
     public static final String EIGHT = valueOf(CharConstants.EIGHT);
+    /**
+     * {@code "9"}
+     */
     public static final String NINE = valueOf(CharConstants.NINE);
     /**
      * {@code "="}
@@ -290,7 +323,9 @@ public final class StringConstants {
     public static final String LESSER_THAN_EQUAL = LESSER_THAN + EQUAL;
 
     public static final String HYPHEN_GREATER_THAN = HYPHEN + GREATER_THAN;
-
+    /**
+     * {@code " -> "}
+     */
     public static final String SPACE_HYPHEN_GREATER_THAN_SPACE = SPACE + HYPHEN_GREATER_THAN + SPACE;
 
     public static final String SINGLE_QUOTE_LEFT_BRACES = SINGLE_QUOTE + LEFT_BRACES;

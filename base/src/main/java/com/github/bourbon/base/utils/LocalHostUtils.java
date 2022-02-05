@@ -1,5 +1,7 @@
 package com.github.bourbon.base.utils;
 
+import com.github.bourbon.base.constant.CharConstants;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -13,6 +15,7 @@ import java.util.Enumeration;
 public final class LocalHostUtils {
 
     private static String ip;
+    private static String ip16;
     private static String hostName;
 
     static {
@@ -32,6 +35,16 @@ public final class LocalHostUtils {
                     }
                 }
             }
+            StringBuilder sb = new StringBuilder();
+            for (String column : ip.split("\\.")) {
+                String hex = HexUtils.toHex(Integer.parseInt(column));
+                if (hex.length() == 1) {
+                    sb.append(CharConstants.ZERO).append(hex);
+                } else {
+                    sb.append(hex);
+                }
+            }
+            ip16 = sb.toString();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -39,6 +52,10 @@ public final class LocalHostUtils {
 
     public static String ip() {
         return ip;
+    }
+
+    public static String ip16() {
+        return ip16;
     }
 
     public static String hostName() {

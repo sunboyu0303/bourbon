@@ -17,19 +17,19 @@ public class SpanExtensionFactory {
 
     public static void logStartedSpan(Span currentSpan) {
         if (!spanExtensions.isEmpty() && currentSpan != null) {
-            spanExtensions.forEach(spanExtension -> spanExtension.logStartedSpan(currentSpan));
+            spanExtensions.forEach(e -> e.logStartedSpan(currentSpan));
         }
     }
 
     public static void logStoppedSpan(Span currentSpan) {
         if (!spanExtensions.isEmpty() && currentSpan != null) {
-            spanExtensions.forEach(spanExtension -> spanExtension.logStoppedSpan(currentSpan));
+            spanExtensions.forEach(e -> e.logStoppedSpan(currentSpan));
         }
     }
 
     public static void logStoppedSpanInRunnable(Span currentSpan) {
         if (!spanExtensions.isEmpty() && currentSpan != null) {
-            spanExtensions.forEach(spanExtension -> spanExtension.logStoppedSpanInRunnable(currentSpan));
+            spanExtensions.forEach(e -> e.logStoppedSpanInRunnable(currentSpan));
         }
     }
 }

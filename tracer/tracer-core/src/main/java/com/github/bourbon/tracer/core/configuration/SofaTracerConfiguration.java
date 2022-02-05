@@ -1,11 +1,12 @@
 package com.github.bourbon.tracer.core.configuration;
 
+import com.github.bourbon.base.code.LogCode2Description;
 import com.github.bourbon.base.constant.StringConstants;
-import com.github.bourbon.base.utils.BooleanUtils;
-import com.github.bourbon.base.utils.MapUtils;
-import com.github.bourbon.base.utils.ObjectUtils;
-import com.github.bourbon.base.utils.PropertiesUtils;
+import com.github.bourbon.base.utils.*;
+import com.github.bourbon.tracer.core.appender.file.TimedRollingFileAppender;
+import com.github.bourbon.tracer.core.appender.self.SelfLog;
 import com.github.bourbon.tracer.core.appender.info.StaticInfoLog;
+import com.github.bourbon.tracer.core.constants.SofaTracerConstants;
 
 import java.util.Collections;
 import java.util.Map;
@@ -54,13 +55,13 @@ public final class SofaTracerConfiguration {
 
     private static SofaTracerExternalConfiguration sofaTracerExternalConfiguration = null;
 
-    public static final String SAMPLER_STRATEGY_NAME_KEY = "tracer_sampler_strategy_name_key";
+    private static final String SAMPLER_STRATEGY_NAME_KEY = "tracer_sampler_strategy_name_key";
 
     public static final String SAMPLER_STRATEGY_CUSTOM_RULE_CLASS_NAME = "tracer_sampler_strategy_custom_rule_class_name";
 
     public static final String SAMPLER_STRATEGY_PERCENTAGE_KEY = "tracer_sampler_strategy_percentage_key";
 
-    public static final String JSON_FORMAT_OUTPUT = "global_json_format_output";
+    private static final String JSON_FORMAT_OUTPUT = "global_json_format_output";
 
     static {
         StaticInfoLog.logStaticInfo();
@@ -83,14 +84,17 @@ public final class SofaTracerConfiguration {
     }
 
     public static Integer getInteger(String key) {
-        if (properties.containsKey(key)) {
-            return (Integer) properties.get(key);
+        Object o = properties.get(key);
+        if (ObjectUtils.nonNull(o)) {
+            return (Integer) o;
         }
-        if (System.getProperties().containsKey(key)) {
-            return Integer.valueOf(System.getProperty(key));
+        String value = System.getProperty(key);
+        if (CharSequenceUtils.isNotBlank(value)) {
+            return Integer.valueOf(value);
         }
-        if (fileProperties.containsKey(key)) {
-            return Integer.valueOf(fileProperties.getProperty(key));
+        value = fileProperties.getProperty(key);
+        if (CharSequenceUtils.isNotBlank(value)) {
+            return Integer.valueOf(value);
         }
         return null;
     }
@@ -102,25 +106,65 @@ public final class SofaTracerConfiguration {
     @SuppressWarnings("unchecked")
     public static Map<String, String> getMapEmptyIfNull(String key) {
         return BooleanUtils.defaultSupplierIfAssignableFrom(properties.get(key), Map.class, Map.class::cast, () -> {
-            SelfLog.error(String.format(LogCode2Description.convert(SPACE_ID, "01-00010"), key));
+            SelfLog.error(String.format(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00010"), key));
             return Collections.emptyMap();
         });
     }
 
     public static String getProperty(String key, String defaultValue) {
-        if (properties.containsKey(key)) {
-            return properties.get(key).toString();
+        Object o = properties.get(key);
+        if (ObjectUtils.nonNull(o)) {
+            return o.toString();
         }
-        if (System.getProperties().containsKey(key)) {
-            return System.getProperty(key);
+        String value = System.getProperty(key);
+        if (ObjectUtils.nonNull(value)) {
+            return value;
         }
-        if (fileProperties.containsKey(key)) {
-            return fileProperties.get(key).toString();
+        o = fileProperties.get(key);
+        if (ObjectUtils.nonNull(o)) {
+            return o.toString();
         }
-        if (sofaTracerExternalConfiguration != null && sofaTracerExternalConfiguration.contains(key)) {
-            return sofaTracerExternalConfiguration.getValue(key);
+        if (sofaTracerExternalConfiguration != null) {
+            value = sofaTracerExternalConfiguration.getValue(key);
+            if (ObjectUtils.nonNull(value)) {
+                return value;
+            }
         }
         return defaultValue;
+    }
+
+    public static String getRollingPolicy(String rollingKey) {
+        if (CharSequenceUtils.isBlank(rollingKey)) {
+            return StringConstants.EMPTY;
+        }
+        String rollingPolicy = getProperty(rollingKey);
+        if (CharSequenceUtils.isBlank(rollingPolicy)) {
+            rollingPolicy = getProperty(TRACER_GLOBAL_ROLLING_KEY);
+        }
+        return BooleanUtils.defaultIfPredicate(rollingPolicy, CharSequenceUtils::isNotBlank, t -> t, TimedRollingFileAppender.DAILY_ROLLING_PATTERN);
+    }
+
+    public static String getLogReserveConfig(String logReserveKey) {
+        if (CharSequenceUtils.isBlank(logReserveKey)) {
+            return StringConstants.EMPTY;
+        }
+        String reserveDay = getProperty(logReserveKey);
+        if (CharSequenceUtils.isNotBlank(reserveDay)) {
+            return reserveDay;
+        }
+        return getProperty(TRACER_GLOBAL_LOG_RESERVE_DAY, String.valueOf(DEFAULT_LOG_RESERVE_DAY));
+    }
+
+    public static void setSofaTracerExternalConfiguration(SofaTracerExternalConfiguration sofaTracerExternalConfiguration) {
+        SofaTracerConfiguration.sofaTracerExternalConfiguration = sofaTracerExternalConfiguration;
+    }
+
+    public static String getSofaTracerSamplerStrategy() {
+        return BooleanUtils.defaultIfPredicate(getProperty(SAMPLER_STRATEGY_NAME_KEY), CharSequenceUtils::isNotBlank, t -> t);
+    }
+
+    public static boolean isJsonOutput() {
+        return !"false".equalsIgnoreCase(getProperty(JSON_FORMAT_OUTPUT));
     }
 
     private SofaTracerConfiguration() {

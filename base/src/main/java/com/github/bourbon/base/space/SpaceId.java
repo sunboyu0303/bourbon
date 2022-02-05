@@ -1,13 +1,10 @@
 package com.github.bourbon.base.space;
 
-import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.lang.Assert;
-import com.github.bourbon.base.utils.BooleanUtils;
 import com.github.bourbon.base.utils.MapUtils;
 import com.github.bourbon.base.utils.ObjectUtils;
 
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * @author sunboyu
@@ -57,14 +54,5 @@ public class SpaceId {
     @Override
     public int hashCode() {
         return 31 * tags.hashCode() + spaceName.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return BooleanUtils.defaultIfPredicate(tags, t -> !t.isEmpty(), t -> {
-            StringJoiner sj = new StringJoiner(StringConstants.COMMA_SPACE, StringConstants.LEFT_BRACKETS, StringConstants.RIGHT_BRACKETS);
-            t.forEach((k, v) -> sj.add(k + StringConstants.EQUAL + v));
-            return spaceName + sj.toString();
-        }, spaceName);
     }
 }

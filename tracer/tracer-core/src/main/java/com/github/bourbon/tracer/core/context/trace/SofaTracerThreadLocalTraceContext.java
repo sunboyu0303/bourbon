@@ -37,7 +37,7 @@ public class SofaTracerThreadLocalTraceContext implements SofaTraceContext {
 
     @Override
     public int getThreadLocalSpanSize() {
-        return BooleanUtils.defaultIfFalse(threadLocal.get() == null, 0, 1);
+        return BooleanUtils.defaultIfFalse(isEmpty(), 0, 1);
     }
 
     @Override

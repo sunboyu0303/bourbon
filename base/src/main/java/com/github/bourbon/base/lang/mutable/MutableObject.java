@@ -10,7 +10,7 @@ import com.github.bourbon.base.utils.ObjectUtils;
  */
 public class MutableObject<T> implements Mutable<T> {
     private static final long serialVersionUID = -1600709885140428612L;
-    private transient T value;
+    private T value;
 
     public MutableObject() {
     }

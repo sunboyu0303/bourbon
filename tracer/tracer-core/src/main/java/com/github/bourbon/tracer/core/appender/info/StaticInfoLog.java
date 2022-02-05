@@ -1,6 +1,12 @@
 package com.github.bourbon.tracer.core.appender.info;
 
 import com.github.bourbon.base.appender.TraceAppender;
+import com.github.bourbon.base.constant.CharConstants;
+import com.github.bourbon.base.constant.StringConstants;
+import com.github.bourbon.base.utils.LocalHostUtils;
+import com.github.bourbon.base.utils.PidUtils;
+import com.github.bourbon.tracer.core.appender.file.TimedRollingFileAppender;
+import com.github.bourbon.tracer.core.appender.self.SelfLog;
 import com.github.bourbon.tracer.core.utils.TracerUtils;
 
 import java.io.IOException;
@@ -12,15 +18,14 @@ import java.io.IOException;
  */
 public final class StaticInfoLog {
 
-    private static final TraceAppender appender = new TimedRollingFileAppender("static-info.log", true);
+    private static final TraceAppender APPENDER = new TimedRollingFileAppender("static-info.log", true);
 
     public static synchronized void logStaticInfo() {
         try {
-            String log = TracerUtils.getPID() + "," + TracerUtils.getInetAddress() + "," + TracerUtils.getCurrentZone() + "," + TracerUtils.getDefaultTimeZone();
-            appender.append(log + "\n");
-            appender.flush();
+            APPENDER.append(PidUtils.pid() + CharConstants.COMMA + LocalHostUtils.ip() + CharConstants.COMMA + TracerUtils.getCurrentZone() + CharConstants.COMMA + TracerUtils.getDefaultTimeZone() + CharConstants.LF);
+            APPENDER.flush();
         } catch (IOException e) {
-            SelfLog.error("", e);
+            SelfLog.error(StringConstants.EMPTY, e);
         }
     }
 

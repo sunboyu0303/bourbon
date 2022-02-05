@@ -31,8 +31,8 @@ public class ThreadPoolConfig {
     private ThreadPoolConfig(SofaThreadConfigBuilder builder) {
         this.threadPoolName = builder.threadPoolName;
         this.spaceName = builder.spaceName;
-        this.taskTimeout = BooleanUtils.defaultIfPredicate(builder.taskTimeout, t -> t != 0, t -> t, SofaThreadPoolConstants.DEFAULT_TASK_TIMEOUT);
-        this.period = BooleanUtils.defaultIfPredicate(builder.period, t -> t != 0, t -> t, SofaThreadPoolConstants.DEFAULT_PERIOD);
+        this.taskTimeout = BooleanUtils.defaultIfPredicate(builder.taskTimeout, t -> t > 0, t -> t, SofaThreadPoolConstants.DEFAULT_TASK_TIMEOUT);
+        this.period = BooleanUtils.defaultIfPredicate(builder.period, t -> t > 0, t -> t, SofaThreadPoolConstants.DEFAULT_PERIOD);
         this.timeUnit = ObjectUtils.defaultIfNull(builder.timeUnit, TimeUnit.MILLISECONDS);
     }
 
@@ -87,7 +87,7 @@ public class ThreadPoolConfig {
     }
 
     private static String buildIdentity(String threadPoolName, String spaceName) {
-        return BooleanUtils.defaultIfPredicate(spaceName, n -> !CharSequenceUtils.isEmpty(n), n -> n + StringConstants.HYPHEN + threadPoolName, threadPoolName);
+        return BooleanUtils.defaultIfPredicate(spaceName, CharSequenceUtils::isNotEmpty, n -> n + StringConstants.HYPHEN + threadPoolName, threadPoolName);
     }
 
     public static final class SofaThreadConfigBuilder {

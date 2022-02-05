@@ -22,7 +22,7 @@ import java.util.Properties;
  */
 public final class LogCode2Description {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogCode2Description.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final Map<SpaceId, LogCode2Description> LOG_CODE_2_DESCRIPTION_MAP = MapUtils.newConcurrentHashMap();
 
@@ -58,7 +58,7 @@ public final class LogCode2Description {
     private LogCode2Description(SpaceId spaceId) {
         logFormat = spaceId.getSpaceName().toUpperCase() + "-%s: %s";
         String prefix = spaceId.getSpaceName().replace(StringConstants.DOT, StringConstants.SLASH) + "/log-codes";
-        String encoding = BooleanUtils.defaultSupplierIfPredicate(Locale.getDefault().toString(), t -> !CharSequenceUtils.isEmpty(t), t -> t, Locale.ENGLISH::toString);
+        String encoding = BooleanUtils.defaultSupplierIfPredicate(Locale.getDefault().toString(), CharSequenceUtils::isNotEmpty, t -> t, Locale.ENGLISH::toString);
         String fileName = prefix + StringConstants.UNDERLINE + encoding + StringConstants.PROPERTIES_FILE_SUFFIX;
         if (getClass().getClassLoader().getResource(fileName) == null) {
             fileName = prefix + StringConstants.PROPERTIES_FILE_SUFFIX;
@@ -66,16 +66,16 @@ public final class LogCode2Description {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream(fileName)) {
             properties = new Properties();
             if (in == null) {
-                LOGGER.error("Code file for CodeSpace \"{}\" doesn't exist!", spaceId.getSpaceName());
+                logger.error("Code file for CodeSpace \"{}\" doesn't exist!", spaceId.getSpaceName());
             } else {
                 properties.load(new InputStreamReader(in));
             }
         } catch (Throwable e) {
-            LOGGER.error("Code space \"{}\" initializing failed!", spaceId.getSpaceName(), e);
+            logger.error("Code space \"{}\" initializing failed!", spaceId.getSpaceName(), e);
         }
     }
 
     private String convert(String code) {
-        return String.format(logFormat, code, ObjectUtils.defaultSupplierIfNull(properties.get(code), () -> "Unknown Code"));
+        return String.format(logFormat, code, ObjectUtils.defaultIfNull(properties.get(code), "Unknown Code"));
     }
 }

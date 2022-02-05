@@ -22,7 +22,7 @@ public class DefaultRuntimeEnvironmentService extends AbstractLifecycle implemen
     @Override
     protected void doInitialize() {
         cpu = SystemUtils.operatingSystemMXBean().getAvailableProcessors();
-        pid = PidUtils.getPid();
+        pid = PidUtils.pid();
         ip = LocalHostUtils.ip();
         hostName = LocalHostUtils.hostName();
     }

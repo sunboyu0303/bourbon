@@ -16,19 +16,19 @@ import java.util.List;
  */
 public class LogConfigListener implements ManagementListener {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void afterConfigLoaded(ConfigKey configKey, ConfigSource configSource, List<ConfigSource> configSourceList) {
-        LOGGER.info("Load {} from {} ,effect key is {}, value is \"{}\"", configKey.getKey(), configSource.getName(), configSource.getEffectiveKey(configKey), configSource.getStringConfig(configKey));
+    public void afterConfigLoaded(ConfigKey<?> configKey, ConfigSource configSource, List<ConfigSource> configSourceList) {
+        logger.info("Load {} from {} ,effect key is {}, value is \"{}\"", configKey.getKey(), configSource.getName(), configSource.getEffectiveKey(configKey), configSource.getStringConfig(configKey));
     }
 
     @Override
-    public void onLoadDefaultValue(ConfigKey key, Object defaultValue) {
+    public void onLoadDefaultValue(ConfigKey<?> key, Object defaultValue) {
         if (key.getDefaultValue().equals(defaultValue)) {
-            LOGGER.info("Load {} according defaultValue ,default value is \"{}\"", key.getKey(), defaultValue);
+            logger.info("Load {} according defaultValue ,default value is \"{}\"", key.getKey(), defaultValue);
         } else {
-            LOGGER.warn("Config {}'s defaultValue {} does not equals to actually defaultValue {}", key.toString(), key.getDefaultValue(), defaultValue);
+            logger.warn("Config {}'s defaultValue {} does not equals to actually defaultValue {}", key.toString(), key.getDefaultValue(), defaultValue);
         }
     }
 

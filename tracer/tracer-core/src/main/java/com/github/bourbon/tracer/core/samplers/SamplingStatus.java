@@ -19,8 +19,9 @@ public class SamplingStatus {
         return isSampled;
     }
 
-    public void setSampled(boolean sampled) {
+    public SamplingStatus setSampled(boolean sampled) {
         isSampled = sampled;
+        return this;
     }
 
     public Map<String, Object> getTags() {

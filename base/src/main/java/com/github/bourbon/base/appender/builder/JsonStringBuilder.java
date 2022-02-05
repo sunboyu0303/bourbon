@@ -32,70 +32,44 @@ public class JsonStringBuilder {
         return this;
     }
 
-    public JsonStringBuilder appendBegin(String key, Object value) {
-        this.appendBegin();
-        this.append(key, value);
-        return this;
-    }
-
     public JsonStringBuilder append(String key, Object value) {
         if (value == null) {
-            if (this.isValueNullCheck) {
+            if (isValueNullCheck) {
                 return this;
             }
         }
-        this.append(key, value, CharConstants.COMMA);
+        append(key, value, CharConstants.COMMA);
         return this;
     }
 
     public JsonStringBuilder appendEnd() {
-        return this.appendEnd(true);
+        return appendEnd(true);
     }
 
     public JsonStringBuilder appendEnd(boolean isNewLine) {
-        if (this.sb.charAt(sb.length() - 1) == CharConstants.COMMA) {
-            this.sb.deleteCharAt(sb.length() - 1);
+        if (sb.charAt(sb.length() - 1) == CharConstants.COMMA) {
+            sb.deleteCharAt(sb.length() - 1);
         }
-        this.sb.append(CharConstants.RIGHT_BRACES);
+        sb.append(CharConstants.RIGHT_BRACES);
         if (isNewLine) {
-            this.sb.append(StringConstants.NEWLINE);
-        }
-        return this;
-    }
-
-    public JsonStringBuilder appendEnd(String key, Object value) {
-        return this.appendEnd(key, value, true);
-    }
-
-    public JsonStringBuilder appendEnd(String key, Object value, boolean isNewLine) {
-        if (value == null) {
-            if (this.isValueNullCheck) {
-                return this.appendEnd(isNewLine);
-            } else {
-                this.append(key, value, CharConstants.RIGHT_BRACES);
-            }
-        } else {
-            this.append(key, value, CharConstants.RIGHT_BRACES);
-        }
-        if (isNewLine) {
-            this.sb.append(StringConstants.NEWLINE);
+            sb.append(StringConstants.NEWLINE);
         }
         return this;
     }
 
     private JsonStringBuilder append(String key, Object value, char endChar) {
         if (value == null) {
-            this.sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.DOUBLE_QUOTES).append(endChar);
+            sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.DOUBLE_QUOTES).append(endChar);
             return this;
         }
         if (value instanceof String) {
             String valueStr = (String) value;
             if (valueStr.length() <= 0 || (valueStr.charAt(0) != CharConstants.LEFT_BRACES && valueStr.charAt(0) != CharConstants.LEFT_BRACKETS)) {
-                this.sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(CharConstants.DOUBLE_QUOTES).append(value).append(CharConstants.DOUBLE_QUOTES).append(endChar);
+                sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(CharConstants.DOUBLE_QUOTES).append(value).append(CharConstants.DOUBLE_QUOTES).append(endChar);
                 return this;
             }
         }
-        this.sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(value).append(endChar);
+        sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(value).append(endChar);
         return this;
     }
 
