@@ -1,6 +1,5 @@
 package com.github.bourbon.springframework.boot.convert;
 
-import com.github.bourbon.base.lang.Assert;
 import com.github.bourbon.base.utils.ObjectUtils;
 import com.github.bourbon.base.utils.SetUtils;
 import org.springframework.core.convert.ConversionService;
@@ -35,7 +34,7 @@ final class DelimitedStringToArrayConverter implements ConditionalGenericConvert
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return ObjectUtils.defaultIfNull(source, s -> convert((String) s, sourceType, targetType));
+        return ObjectUtils.defaultIfNullElseFunction(source, s -> convert((String) s, sourceType, targetType));
     }
 
     private Object convert(String source, TypeDescriptor sourceType, TypeDescriptor targetType) {

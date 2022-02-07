@@ -143,11 +143,11 @@ public enum DurationStyle {
         }
 
         public static Unit fromChronoUnit(ChronoUnit chronoUnit) {
-            return ObjectUtils.defaultIfNull(chronoUnit, unit -> ObjectUtils.requireNonNull(unitMap.get(unit), () -> new IllegalArgumentException("Unknown unit " + chronoUnit)), Unit.MILLIS);
+            return ObjectUtils.defaultIfNullElseFunction(chronoUnit, unit -> ObjectUtils.requireNonNull(unitMap.get(unit), () -> new IllegalArgumentException("Unknown unit " + chronoUnit)), Unit.MILLIS);
         }
 
         public static Unit fromSuffix(String suffix) {
-            return ObjectUtils.defaultIfNull(suffix, s -> ObjectUtils.requireNonNull(suffixMap.get(s.toLowerCase()), () -> new IllegalArgumentException("Unknown unit '" + suffix + "'")), Unit.MILLIS);
+            return ObjectUtils.defaultIfNullElseFunction(suffix, s -> ObjectUtils.requireNonNull(suffixMap.get(s.toLowerCase()), () -> new IllegalArgumentException("Unknown unit '" + suffix + "'")), Unit.MILLIS);
         }
     }
 }

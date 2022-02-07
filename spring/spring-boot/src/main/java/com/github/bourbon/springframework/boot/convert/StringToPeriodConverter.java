@@ -28,11 +28,11 @@ final class StringToPeriodConverter implements GenericConverter {
     }
 
     private PeriodStyle getStyle(TypeDescriptor targetType) {
-        return ObjectUtils.defaultIfNull(targetType.getAnnotation(PeriodFormat.class), PeriodFormat::value);
+        return ObjectUtils.defaultIfNullElseFunction(targetType.getAnnotation(PeriodFormat.class), PeriodFormat::value);
     }
 
     private ChronoUnit getPeriodUnit(TypeDescriptor targetType) {
-        return ObjectUtils.defaultIfNull(targetType.getAnnotation(PeriodUnit.class), PeriodUnit::value);
+        return ObjectUtils.defaultIfNullElseFunction(targetType.getAnnotation(PeriodUnit.class), PeriodUnit::value);
     }
 
     private Period convert(String source, PeriodStyle style, ChronoUnit unit) {

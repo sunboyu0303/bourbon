@@ -37,7 +37,7 @@ public class MessageInterpolatorFactory implements ObjectFactory<MessageInterpol
     @Override
     public MessageInterpolator getObject() throws BeansException {
         MessageInterpolator messageInterpolator = getMessageInterpolator();
-        return ObjectUtils.defaultIfNull(messageSource, m -> new MessageSourceMessageInterpolator(m, messageInterpolator), messageInterpolator);
+        return ObjectUtils.defaultIfNullElseFunction(messageSource, m -> new MessageSourceMessageInterpolator(m, messageInterpolator), messageInterpolator);
     }
 
     private MessageInterpolator getMessageInterpolator() {

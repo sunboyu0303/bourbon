@@ -26,7 +26,7 @@ class ConfigurationPropertiesBindConstructorProvider implements BindConstructorP
     }
 
     Constructor<?> getBindConstructor(Class<?> type, boolean isNestedConstructorBinding) {
-        return ObjectUtils.defaultIfNull(type, t -> {
+        return ObjectUtils.defaultIfNullElseFunction(type, t -> {
             Constructor<?> constructor = findConstructorBindingAnnotatedConstructor(t);
             if (constructor == null && (isConstructorBindingType(t) || isNestedConstructorBinding)) {
                 constructor = deduceBindConstructor(t);
@@ -62,7 +62,7 @@ class ConfigurationPropertiesBindConstructorProvider implements BindConstructorP
     }
 
     private boolean isImplicitConstructorBindingType(Class<?> type) {
-        return ObjectUtils.defaultIfNull(type.getSuperclass(), c -> "java.lang.Record".equals(c.getName()), false);
+        return ObjectUtils.defaultIfNullElseFunction(type.getSuperclass(), c -> "java.lang.Record".equals(c.getName()), false);
     }
 
     private boolean isConstructorBindingAnnotatedType(Class<?> type) {
@@ -76,7 +76,7 @@ class ConfigurationPropertiesBindConstructorProvider implements BindConstructorP
     }
 
     private Constructor<?> deducedKotlinBindConstructor(Class<?> type) {
-        return ObjectUtils.defaultIfNull(BeanUtils.findPrimaryConstructor(type), p -> BooleanUtils.defaultIfFalse(p.getParameterCount() > 0, () -> p));
+        return ObjectUtils.defaultIfNullElseFunction(BeanUtils.findPrimaryConstructor(type), p -> BooleanUtils.defaultIfFalse(p.getParameterCount() > 0, () -> p));
     }
 
     private boolean isKotlinType(Class<?> type) {

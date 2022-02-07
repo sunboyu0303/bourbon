@@ -74,10 +74,10 @@ public final class ConfigurationProperty implements OriginProvider, Comparable<C
     }
 
     static ConfigurationProperty of(ConfigurationPropertyName name, OriginTrackedValue value) {
-        return ObjectUtils.defaultIfNull(value, v -> new ConfigurationProperty(name, v.getValue(), v.getOrigin()));
+        return ObjectUtils.defaultIfNullElseFunction(value, v -> new ConfigurationProperty(name, v.getValue(), v.getOrigin()));
     }
 
     static ConfigurationProperty of(ConfigurationPropertySource source, ConfigurationPropertyName name, Object value, Origin origin) {
-        return ObjectUtils.defaultIfNull(value, v -> new ConfigurationProperty(source, name, value, origin));
+        return ObjectUtils.defaultIfNullElseFunction(value, v -> new ConfigurationProperty(source, name, value, origin));
     }
 }

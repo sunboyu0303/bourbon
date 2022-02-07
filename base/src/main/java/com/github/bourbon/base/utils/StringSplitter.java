@@ -123,7 +123,7 @@ public interface StringSplitter {
     }
 
     static String[] splitToArray(CharSequence s, char c, int i) {
-        return ObjectUtils.defaultIfNull(s, cs -> splitToArray(cs.toString(), c, i, false, false), StringConstants.EMPTY_STRING_ARRAY);
+        return ObjectUtils.defaultIfNullElseFunction(s, cs -> splitToArray(cs.toString(), c, i, false, false), StringConstants.EMPTY_STRING_ARRAY);
     }
 
     static String[] splitToArray(String cs, char c, int i, boolean isTrim, boolean ignoreEmpty) {

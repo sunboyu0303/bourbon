@@ -59,7 +59,7 @@ public class Binder {
     }
 
     public Binder(Iterable<ConfigurationPropertySource> sources, PlaceholdersResolver resolver, ConversionService service, Consumer<PropertyEditorRegistry> consumer, BindHandler handler, BindConstructorProvider provider) {
-        this(sources, resolver, ObjectUtils.defaultIfNull(service, ListUtils::newArrayList, (List<ConversionService>) null), consumer, handler, provider);
+        this(sources, resolver, ObjectUtils.defaultIfNullElseFunction(service, ListUtils::newArrayList, (List<ConversionService>) null), consumer, handler, provider);
     }
 
     public Binder(Iterable<ConfigurationPropertySource> sources, PlaceholdersResolver resolver, List<ConversionService> services, Consumer<PropertyEditorRegistry> consumer, BindHandler handler, BindConstructorProvider provider) {
@@ -182,7 +182,7 @@ public class Binder {
         if (aggregateBinder != null) {
             return bindAggregate(name, target, handler, context, aggregateBinder);
         }
-        return ObjectUtils.defaultSupplierIfNull(property, p -> {
+        return ObjectUtils.defaultSupplierIfNullElseFunction(property, p -> {
             try {
                 return bindProperty(target, context, p);
             } catch (ConverterNotFoundException ex) {

@@ -20,6 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class AbstractRollingFileAppender implements TraceAppender {
 
+    protected static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
+
     private final AtomicBoolean isRolling = new AtomicBoolean(false);
 
     private final AtomicBoolean isFlushing = new AtomicBoolean(false);
@@ -35,7 +37,7 @@ public abstract class AbstractRollingFileAppender implements TraceAppender {
     private volatile long nextFlushTime = 0L;
 
     protected AbstractRollingFileAppender(String file, boolean append) {
-        this(file, 8 * 1024, append);
+        this(file, DEFAULT_BUFFER_SIZE, append);
     }
 
     protected AbstractRollingFileAppender(String file, int bufferSize, boolean append) {

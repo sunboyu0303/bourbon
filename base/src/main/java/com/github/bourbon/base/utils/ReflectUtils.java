@@ -55,7 +55,7 @@ public interface ReflectUtils {
     }
 
     static String getFieldName(Field f) {
-        return ObjectUtils.defaultIfNull(f, Field::getName);
+        return ObjectUtils.defaultIfNullElseFunction(f, Field::getName);
     }
 
     static Field getField(Class<?> c, String name) {
@@ -113,11 +113,11 @@ public interface ReflectUtils {
     }
 
     static Method[] getPublicMethods(Class<?> clazz) {
-        return ObjectUtils.defaultIfNull(clazz, Class::getMethods);
+        return ObjectUtils.defaultIfNullElseFunction(clazz, Class::getMethods);
     }
 
     static List<Method> getPublicMethods(Class<?> clazz, Predicate<Method> predicate) {
-        return ObjectUtils.defaultIfNull(clazz, c -> BooleanUtils.defaultIfPredicate(getPublicMethods(c), ArrayUtils::isNotEmpty, m -> ObjectUtils.defaultSupplierIfNull(
+        return ObjectUtils.defaultIfNullElseFunction(clazz, c -> BooleanUtils.defaultIfPredicate(getPublicMethods(c), ArrayUtils::isNotEmpty, m -> ObjectUtils.defaultSupplierIfNullElseFunction(
                 predicate, p -> Arrays.stream(m).filter(p).collect(Collectors.toList()), () -> ListUtils.newArrayList(m)
         )));
     }

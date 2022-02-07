@@ -47,11 +47,11 @@ public final class PropertyPlaceholderUtils {
     }
 
     public static String resolvePlaceholder(String location, String value) {
-        return ObjectUtils.defaultIfNull(getProperties(location), p -> resolvePlaceholder(p, value));
+        return ObjectUtils.defaultIfNullElseFunction(getProperties(location), p -> resolvePlaceholder(p, value));
     }
 
     public static String resolvePlaceholder(Properties properties, String value) {
-        return ObjectUtils.defaultIfNull(properties, p -> {
+        return ObjectUtils.defaultIfNullElseFunction(properties, p -> {
             StringBuilder buffer = new StringBuilder(value);
             int startIdx = value.indexOf(DEFAULT_PLACEHOLDER_PREFIX);
             int stopIdx = value.indexOf(DEFAULT_PLACEHOLDER_SUFFIX);

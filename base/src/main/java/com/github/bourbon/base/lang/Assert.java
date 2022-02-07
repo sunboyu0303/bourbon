@@ -656,7 +656,7 @@ public interface Assert {
 
     static void instanceCheckFailed(Class<?> type, Object obj, String message) throws IllegalArgumentException {
         if (CharSequenceUtils.isEmpty(message)) {
-            String className = ObjectUtils.defaultIfNull(obj, o -> o.getClass().getName(), StringConstants.NULL);
+            String className = ObjectUtils.defaultIfNullElseFunction(obj, o -> o.getClass().getName(), StringConstants.NULL);
             throw new IllegalArgumentException("Object of class [" + className + "] must be an instance of " + type);
         }
         throw new IllegalArgumentException(message);

@@ -113,10 +113,8 @@ public final class Bindable<T> {
     }
 
     public Bindable<T> withExistingValue(T existingValue) {
-        Assert.isTrue(existingValue == null || type.isArray() || boxedType.resolve().isInstance(existingValue),
-                () -> "ExistingValue must be an instance of " + type
-        );
-        return new Bindable<>(type, boxedType, ObjectUtils.defaultIfNull(existingValue, e -> () -> e), annotations, bindRestrictions);
+        Assert.isTrue(existingValue == null || type.isArray() || boxedType.resolve().isInstance(existingValue), () -> "ExistingValue must be an instance of " + type);
+        return new Bindable<>(type, boxedType, ObjectUtils.defaultIfNullElseFunction(existingValue, e -> () -> e), annotations, bindRestrictions);
     }
 
     public Bindable<T> withSuppliedValue(Supplier<T> suppliedValue) {

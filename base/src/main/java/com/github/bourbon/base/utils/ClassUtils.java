@@ -22,7 +22,7 @@ public interface ClassUtils {
 
     @SuppressWarnings("unchecked")
     static <T> Class<T> getClass(T t) {
-        return ObjectUtils.defaultIfNull(t, c -> (Class<T>) c.getClass());
+        return ObjectUtils.defaultIfNullElseFunction(t, c -> (Class<T>) c.getClass());
     }
 
     static String getClassName(Object o) {
@@ -30,7 +30,7 @@ public interface ClassUtils {
     }
 
     static String getClassName(Object obj, boolean isSimple) {
-        return ObjectUtils.defaultIfNull(obj, o -> getClassName(o.getClass(), isSimple));
+        return ObjectUtils.defaultIfNullElseFunction(obj, o -> getClassName(o.getClass(), isSimple));
     }
 
     static String getClassName(Class<?> c) {
@@ -38,7 +38,7 @@ public interface ClassUtils {
     }
 
     static String getClassName(Class<?> clazz, boolean isSimple) {
-        return ObjectUtils.defaultIfNull(clazz, c -> BooleanUtils.defaultSupplierIfFalse(isSimple, c::getSimpleName, c::getName));
+        return ObjectUtils.defaultIfNullElseFunction(clazz, c -> BooleanUtils.defaultSupplierIfFalse(isSimple, c::getSimpleName, c::getName));
     }
 
     static String getSimpleClassName(Class<?> c) {
@@ -128,7 +128,7 @@ public interface ClassUtils {
     static Class<?>[] getClasses(Object[] objects) {
         Class<?>[] classes = new Class[objects.length];
         for (int i = 0; i < objects.length; ++i) {
-            classes[i] = ObjectUtils.defaultIfNull(objects[i], Object::getClass, Object.class);
+            classes[i] = ObjectUtils.defaultIfNullElseFunction(objects[i], Object::getClass, Object.class);
         }
         return classes;
     }
@@ -189,11 +189,11 @@ public interface ClassUtils {
     }
 
     static String lowerFirst(Class<?> clazz) {
-        return ObjectUtils.defaultIfNull(clazz, c -> CharSequenceUtils.lowerFirst(c.getSimpleName()));
+        return ObjectUtils.defaultIfNullElseFunction(clazz, c -> CharSequenceUtils.lowerFirst(c.getSimpleName()));
     }
 
     static String upperFirst(Class<?> clazz) {
-        return ObjectUtils.defaultIfNull(clazz, c -> CharSequenceUtils.upperFirst(c.getSimpleName()));
+        return ObjectUtils.defaultIfNullElseFunction(clazz, c -> CharSequenceUtils.upperFirst(c.getSimpleName()));
     }
 
     static boolean isCglibProxy(Object object) {
@@ -480,10 +480,10 @@ public interface ClassUtils {
     }
 
     static String getClassNameAsResource(Class<?> clazz) {
-        return ObjectUtils.defaultIfNull(clazz, c -> c.getName().replace(CharConstants.DOT, CharConstants.SLASH) + StringConstants.CLASS_FILE_SUFFIX);
+        return ObjectUtils.defaultIfNullElseFunction(clazz, c -> c.getName().replace(CharConstants.DOT, CharConstants.SLASH) + StringConstants.CLASS_FILE_SUFFIX);
     }
 
     static String getClassNameAsResource(String className) {
-        return ObjectUtils.defaultIfNull(className, name -> name.replace(CharConstants.DOT, CharConstants.SLASH) + StringConstants.CLASS_FILE_SUFFIX);
+        return ObjectUtils.defaultIfNullElseFunction(className, name -> name.replace(CharConstants.DOT, CharConstants.SLASH) + StringConstants.CLASS_FILE_SUFFIX);
     }
 }

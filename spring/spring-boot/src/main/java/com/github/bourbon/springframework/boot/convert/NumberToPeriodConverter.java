@@ -24,6 +24,6 @@ final class NumberToPeriodConverter implements GenericConverter {
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return delegate.convert(ObjectUtils.defaultIfNull(source, Object::toString), TypeDescriptor.valueOf(String.class), targetType);
+        return delegate.convert(ObjectUtils.defaultIfNullElseFunction(source, Object::toString), TypeDescriptor.valueOf(String.class), targetType);
     }
 }

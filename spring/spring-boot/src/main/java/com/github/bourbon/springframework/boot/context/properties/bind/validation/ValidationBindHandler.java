@@ -142,7 +142,7 @@ public class ValidationBindHandler extends AbstractBindHandler {
 
         @Override
         public Class<?> getFieldType(String field) {
-            return ObjectUtils.defaultSupplierIfNull(ObjectUtils.defaultIfNull(getBoundField(ValidationBindHandler.this.boundTypes, field), ResolvableType::resolve), () -> super.getFieldType(field));
+            return ObjectUtils.defaultSupplierIfNull(ObjectUtils.defaultIfNullElseFunction(getBoundField(ValidationBindHandler.this.boundTypes, field), ResolvableType::resolve), () -> super.getFieldType(field));
         }
 
         @Override

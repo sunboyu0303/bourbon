@@ -26,7 +26,7 @@ class PrefixedConfigurationPropertySource implements ConfigurationPropertySource
 
     @Override
     public ConfigurationProperty getConfigurationProperty(ConfigurationPropertyName name) {
-        return ObjectUtils.defaultIfNull(source.getConfigurationProperty(getPrefixedName(name)), p -> ConfigurationProperty.of(p.getSource(), name, p.getValue(), p.getOrigin()));
+        return ObjectUtils.defaultIfNullElseFunction(source.getConfigurationProperty(getPrefixedName(name)), p -> ConfigurationProperty.of(p.getSource(), name, p.getValue(), p.getOrigin()));
     }
 
     private ConfigurationPropertyName getPrefixedName(ConfigurationPropertyName name) {

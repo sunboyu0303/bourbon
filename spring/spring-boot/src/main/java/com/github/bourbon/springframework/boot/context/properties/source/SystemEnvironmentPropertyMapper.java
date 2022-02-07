@@ -92,7 +92,7 @@ final class SystemEnvironmentPropertyMapper implements PropertyMapper {
         if (!hasDashedEntries(name)) {
             return false;
         }
-        return ObjectUtils.defaultIfNull(buildLegacyCompatibleName(name), l -> l.isAncestorOf(candidate), false);
+        return ObjectUtils.defaultIfNullElseFunction(buildLegacyCompatibleName(name), l -> l.isAncestorOf(candidate), false);
     }
 
     private ConfigurationPropertyName buildLegacyCompatibleName(ConfigurationPropertyName name) {

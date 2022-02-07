@@ -41,7 +41,7 @@ public final class BindResult<T> {
 
     public <U> BindResult<U> map(Function<T, U> mapper) {
         Assert.notNull(mapper, "Mapper must not be null");
-        return of(ObjectUtils.defaultIfNull(value, mapper));
+        return of(ObjectUtils.defaultIfNullElseFunction(value, mapper));
     }
 
     public T orElse(T other) {
@@ -74,6 +74,6 @@ public final class BindResult<T> {
 
     @SuppressWarnings("unchecked")
     static <T> BindResult<T> of(T value) {
-        return ObjectUtils.defaultSupplierIfNull(value, BindResult::new, () -> (BindResult<T>) UNBOUND);
+        return ObjectUtils.defaultSupplierIfNullElseFunction(value, BindResult::new, () -> (BindResult<T>) UNBOUND);
     }
 }

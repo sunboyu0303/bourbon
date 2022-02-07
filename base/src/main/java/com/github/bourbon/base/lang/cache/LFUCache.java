@@ -88,7 +88,7 @@ public class LFUCache<K, V> {
         } finally {
             lock.unlock();
         }
-        return ObjectUtils.defaultIfNull(node, n -> n.v);
+        return ObjectUtils.defaultIfNullElseFunction(node, n -> n.v);
     }
 
     public V get(final K key) {
@@ -103,7 +103,7 @@ public class LFUCache<K, V> {
         } finally {
             lock.unlock();
         }
-        return ObjectUtils.defaultIfNull(node, n -> n.v);
+        return ObjectUtils.defaultIfNullElseFunction(node, n -> n.v);
     }
 
     private int proceedEviction() {

@@ -87,6 +87,6 @@ class MessageSourceMessageInterpolator implements MessageInterpolator {
     }
 
     private String replaceParameter(String parameter, Locale locale, Set<String> visitedParameters) {
-        return ObjectUtils.defaultIfNull(messageSource.getMessage(replaceParameters(parameter, locale, visitedParameters), null, null, locale), v -> replaceParameters(v, locale, visitedParameters));
+        return ObjectUtils.defaultIfNullElseFunction(messageSource.getMessage(replaceParameters(parameter, locale, visitedParameters), null, null, locale), v -> replaceParameters(v, locale, visitedParameters));
     }
 }

@@ -38,7 +38,7 @@ public class InternalThreadLocal<V> {
     }
 
     public static int size() {
-        return ObjectUtils.defaultIfNull(InternalThreadLocalMap.getIfSet(), InternalThreadLocalMap::size, 0);
+        return ObjectUtils.defaultIfNullElseFunction(InternalThreadLocalMap.getIfSet(), InternalThreadLocalMap::size, 0);
     }
 
     public static void destroy() {

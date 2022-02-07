@@ -43,7 +43,7 @@ public class OriginTrackedValue implements OriginProvider {
 
     @Override
     public String toString() {
-        return ObjectUtils.defaultIfNull(value, Object::toString);
+        return ObjectUtils.defaultIfNullElseFunction(value, Object::toString);
     }
 
     public static OriginTrackedValue of(Object value) {
@@ -51,7 +51,7 @@ public class OriginTrackedValue implements OriginProvider {
     }
 
     public static OriginTrackedValue of(Object object, Origin origin) {
-        return ObjectUtils.defaultIfNull(object, value -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(object, value -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 value, CharSequence.class, v -> new OriginTrackedCharSequence((CharSequence) v, origin), () -> new OriginTrackedValue(value, origin)
         ));
     }

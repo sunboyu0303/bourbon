@@ -83,7 +83,7 @@ public final class ConditionContextUtils {
                     return loader;
                 }
             }
-            return ObjectUtils.defaultSupplierIfNull(beanFactory, ConfigurableBeanFactory::getBeanClassLoader, ClassLoaderUtils::getClassLoader);
+            return ObjectUtils.defaultSupplierIfNullElseFunction(beanFactory, ConfigurableBeanFactory::getBeanClassLoader, ClassLoaderUtils::getClassLoader);
         }
 
         @Override

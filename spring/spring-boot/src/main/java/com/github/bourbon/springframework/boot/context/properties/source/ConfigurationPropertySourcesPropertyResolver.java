@@ -52,7 +52,7 @@ class ConfigurationPropertySourcesPropertyResolver extends AbstractPropertyResol
     }
 
     private <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
-        return ObjectUtils.defaultIfNull(findPropertyValue(key), v -> {
+        return ObjectUtils.defaultIfNullElseFunction(findPropertyValue(key), v -> {
             if (resolveNestedPlaceholders && v instanceof String) {
                 v = resolveNestedPlaceholders((String) v);
             }
@@ -78,7 +78,7 @@ class ConfigurationPropertySourcesPropertyResolver extends AbstractPropertyResol
 
     private ConfigurationPropertySourcesPropertySource getAttached() {
         ConfigurationPropertySourcesPropertySource attached = (ConfigurationPropertySourcesPropertySource) ConfigurationPropertySources.getAttached(propertySources);
-        Iterable<ConfigurationPropertySource> iterable = ObjectUtils.defaultIfNull(attached, PropertySource::getSource);
+        Iterable<ConfigurationPropertySource> iterable = ObjectUtils.defaultIfNullElseFunction(attached, PropertySource::getSource);
         return BooleanUtils.defaultIfFalse(iterable instanceof SpringConfigurationPropertySources && ((SpringConfigurationPropertySources) iterable).isUsingSources(propertySources), () -> attached);
     }
 

@@ -14,15 +14,15 @@ import java.util.concurrent.*;
 public final class TtlExecutors {
 
     public static Executor getTtlExecutor(Executor executor) {
-        return ObjectUtils.defaultIfNull(executor, e -> BooleanUtils.defaultSupplierIfAssignableFrom(e, TtlEnhanced.class, t -> t, () -> new ExecutorTtlWrapper(e, true)));
+        return ObjectUtils.defaultIfNullElseFunction(executor, e -> BooleanUtils.defaultSupplierIfAssignableFrom(e, TtlEnhanced.class, t -> t, () -> new ExecutorTtlWrapper(e, true)));
     }
 
     public static ExecutorService getTtlExecutorService(ExecutorService service) {
-        return ObjectUtils.defaultIfNull(service, e -> BooleanUtils.defaultSupplierIfAssignableFrom(e, TtlEnhanced.class, t -> t, () -> new ExecutorServiceTtlWrapper(e, true)));
+        return ObjectUtils.defaultIfNullElseFunction(service, e -> BooleanUtils.defaultSupplierIfAssignableFrom(e, TtlEnhanced.class, t -> t, () -> new ExecutorServiceTtlWrapper(e, true)));
     }
 
     public static ScheduledExecutorService getTtlScheduledExecutorService(ScheduledExecutorService service) {
-        return ObjectUtils.defaultIfNull(service, e -> BooleanUtils.defaultSupplierIfAssignableFrom(e, TtlEnhanced.class, t -> t, () -> new ScheduledExecutorServiceTtlWrapper(e, true)));
+        return ObjectUtils.defaultIfNullElseFunction(service, e -> BooleanUtils.defaultSupplierIfAssignableFrom(e, TtlEnhanced.class, t -> t, () -> new ScheduledExecutorServiceTtlWrapper(e, true)));
     }
 
     @SuppressWarnings("unchecked")
@@ -39,7 +39,7 @@ public final class TtlExecutors {
     }
 
     public static ThreadFactory getDisableInheritableThreadFactory(ThreadFactory threadFactory) {
-        return ObjectUtils.defaultIfNull(threadFactory, tf -> BooleanUtils.defaultIfFalse(!isDisableInheritableThreadFactory(tf), () -> new DisableInheritableThreadFactoryWrapper(tf), tf));
+        return ObjectUtils.defaultIfNullElseFunction(threadFactory, tf -> BooleanUtils.defaultIfFalse(!isDisableInheritableThreadFactory(tf), () -> new DisableInheritableThreadFactoryWrapper(tf), tf));
     }
 
     public static boolean isDisableInheritableThreadFactory(ThreadFactory tf) {

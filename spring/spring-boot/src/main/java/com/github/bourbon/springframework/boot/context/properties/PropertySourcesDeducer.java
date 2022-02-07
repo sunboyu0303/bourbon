@@ -22,7 +22,7 @@ class PropertySourcesDeducer {
     }
 
     PropertySources getPropertySources() {
-        return ObjectUtils.defaultSupplierIfNull(getSinglePropertySourcesPlaceholderConfigurer(), PropertySourcesPlaceholderConfigurer::getAppliedPropertySources,
+        return ObjectUtils.defaultSupplierIfNullElseFunction(getSinglePropertySourcesPlaceholderConfigurer(), PropertySourcesPlaceholderConfigurer::getAppliedPropertySources,
                 () -> ObjectUtils.requireNonNull(extractEnvironmentPropertySources(), "Unable to obtain PropertySources from PropertySourcesPlaceholderConfigurer or Environment")
         );
     }

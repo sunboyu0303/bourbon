@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 public interface ArrayUtils extends PrimitiveArrayUtils {
 
     static int length(Object o) {
-        return ObjectUtils.defaultIfNull(o, Array::getLength, 0);
+        return ObjectUtils.defaultIfNullElseFunction(o, Array::getLength, 0);
     }
 
     static <T> boolean isEmpty(T[] arr) {
@@ -72,11 +72,11 @@ public interface ArrayUtils extends PrimitiveArrayUtils {
     }
 
     static Class<?> getComponentType(Object object) {
-        return ObjectUtils.defaultIfNull(object, o -> o.getClass().getComponentType());
+        return ObjectUtils.defaultIfNullElseFunction(object, o -> o.getClass().getComponentType());
     }
 
     static Class<?> getComponentType(Class<?> clazz) {
-        return ObjectUtils.defaultIfNull(clazz, Class::getComponentType);
+        return ObjectUtils.defaultIfNullElseFunction(clazz, Class::getComponentType);
     }
 
     static Class<?> getArrayType(Class<?> clazz) {
@@ -239,6 +239,42 @@ public interface ArrayUtils extends PrimitiveArrayUtils {
             }
         }
         return obj.toString();
+    }
+
+    static String toString(Object[] items, char separator, String prefix, String postfix) {
+        String emptyArrayString = prefix + postfix;
+        // handle null, zero and one elements before building a buffer
+        if (isEmpty(items)) {
+            return emptyArrayString;
+        }
+        Object first = items[0];
+        if (items.length == 1) {
+            return ObjectUtils.isNull(first) ? emptyArrayString : prefix + first.toString() + postfix;
+        }
+        StringBuilder sb = new StringBuilder(256);
+        sb.append(prefix);
+        if (first != null) {
+            sb.append(first);
+        }
+        for (int i = 1; i < items.length; i++) {
+            sb.append(separator);
+            Object obj = items[i];
+            if (obj != null) {
+                sb.append(obj);
+            }
+        }
+        sb.append(postfix);
+        return sb.toString();
+    }
+
+    static String toString(Object[] items, String separator, String prefix, String postfix) {
+        StringJoiner sj = new StringJoiner(separator, prefix, postfix);
+        if (isNotEmpty(items)) {
+            for (Object o : items) {
+                sj.add(ObjectUtils.defaultIfNullElseFunction(o, Object::toString, StringConstants.EMPTY));
+            }
+        }
+        return sj.toString();
     }
 
     static Object[] merge(Object[][] items) {

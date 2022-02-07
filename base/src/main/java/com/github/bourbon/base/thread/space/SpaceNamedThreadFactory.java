@@ -18,7 +18,7 @@ public final class SpaceNamedThreadFactory extends NamedThreadFactory {
 
     public SpaceNamedThreadFactory(String threadPoolName, String spaceName, boolean daemon) {
         super(
-                ObjectUtils.defaultSupplierIfNull(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup()),
+                ObjectUtils.defaultSupplierIfNullElseFunction(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup()),
                 spaceName + StringConstants.HYPHEN + threadPoolName + StringConstants.HYPHEN + ThreadPoolGovernor.getInstance().getSpaceNameThreadPoolNumber(spaceName) + "-thread-",
                 daemon
         );

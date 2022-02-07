@@ -23,7 +23,7 @@ class ConfigurationPropertySourcesPropertySource extends PropertySource<Iterable
 
     @Override
     public Object getProperty(String name) {
-        return ObjectUtils.defaultIfNull(findConfigurationProperty(name), ConfigurationProperty::getValue);
+        return ObjectUtils.defaultIfNullElseFunction(findConfigurationProperty(name), ConfigurationProperty::getValue);
     }
 
     @Override

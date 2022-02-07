@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 public interface CharSequenceUtils {
 
     static int length(CharSequence cs) {
-        return ObjectUtils.defaultIfNull(cs, CharSequence::length, 0);
+        return ObjectUtils.defaultIfNullElseFunction(cs, CharSequence::length, 0);
     }
 
     static boolean isEmpty(CharSequence cs) {
@@ -40,7 +40,7 @@ public interface CharSequenceUtils {
     }
 
     static String defaultIfNull(CharSequence cs, String def) {
-        return ObjectUtils.defaultIfNull(cs, CharSequence::toString, def);
+        return ObjectUtils.defaultIfNullElseFunction(cs, CharSequence::toString, def);
     }
 
     static String defaultIfEmpty(String s) {
@@ -177,7 +177,7 @@ public interface CharSequenceUtils {
     }
 
     static String trim(CharSequence cs) {
-        return ObjectUtils.defaultIfNull(cs, s -> trim(s, 0));
+        return ObjectUtils.defaultIfNullElseFunction(cs, s -> trim(s, 0));
     }
 
     static String trim(CharSequence cs, int i) {
@@ -373,15 +373,15 @@ public interface CharSequenceUtils {
     }
 
     static List<String> split(CharSequence cs, char c, int i, boolean isTrim, boolean ignoreEmpty) {
-        return ObjectUtils.defaultSupplierIfNull(cs, s -> StringSplitter.split(s.toString(), c, i, isTrim, ignoreEmpty), ListUtils::newArrayList);
+        return ObjectUtils.defaultSupplierIfNullElseFunction(cs, s -> StringSplitter.split(s.toString(), c, i, isTrim, ignoreEmpty), ListUtils::newArrayList);
     }
 
     static String[] splitToArray(CharSequence cs, CharSequence cs2) {
-        return ObjectUtils.defaultIfNull(cs, cs1 -> StringSplitter.splitToArray(cs1.toString(), toString(cs2), 0, false, false), StringConstants.EMPTY_STRING_ARRAY);
+        return ObjectUtils.defaultIfNullElseFunction(cs, cs1 -> StringSplitter.splitToArray(cs1.toString(), toString(cs2), 0, false, false), StringConstants.EMPTY_STRING_ARRAY);
     }
 
     static String toString(CharSequence cs) {
-        return ObjectUtils.defaultIfNull(cs, CharSequence::toString);
+        return ObjectUtils.defaultIfNullElseFunction(cs, CharSequence::toString);
     }
 
     static boolean isSubEquals(CharSequence cs1, int i1, CharSequence cs2, int i2, int length, boolean ignoreCase) {
@@ -467,7 +467,7 @@ public interface CharSequenceUtils {
     }
 
     static String removePreAndLowerFirst(CharSequence cs, int preLength) {
-        return ObjectUtils.defaultIfNull(cs, str -> {
+        return ObjectUtils.defaultIfNullElseFunction(cs, str -> {
             if (str.length() > preLength) {
                 char first = Character.toLowerCase(str.charAt(preLength));
                 return str.length() > preLength + 1 ? first + str.toString().substring(preLength + 1) : String.valueOf(first);
@@ -481,7 +481,7 @@ public interface CharSequenceUtils {
     }
 
     static String lowerFirst(CharSequence cs) {
-        return ObjectUtils.defaultIfNull(cs, str -> {
+        return ObjectUtils.defaultIfNullElseFunction(cs, str -> {
             if (str.length() > 0) {
                 char firstChar = str.charAt(0);
                 if (Character.isUpperCase(firstChar)) {
@@ -493,7 +493,7 @@ public interface CharSequenceUtils {
     }
 
     static String upperFirst(CharSequence cs) {
-        return ObjectUtils.defaultIfNull(cs, str -> {
+        return ObjectUtils.defaultIfNullElseFunction(cs, str -> {
             if (str.length() > 0) {
                 char firstChar = str.charAt(0);
                 if (Character.isLowerCase(firstChar)) {
@@ -582,11 +582,11 @@ public interface CharSequenceUtils {
     }
 
     static String left(String str, int len) {
-        return ObjectUtils.defaultIfNull(str, s -> BooleanUtils.defaultIfFalse(len > 0, () -> s.length() <= len ? s : s.substring(0, len), StringConstants.EMPTY));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> BooleanUtils.defaultIfFalse(len > 0, () -> s.length() <= len ? s : s.substring(0, len), StringConstants.EMPTY));
     }
 
     static String right(String str, int len) {
-        return ObjectUtils.defaultIfNull(str, s -> BooleanUtils.defaultIfFalse(len > 0, () -> s.length() <= len ? s : s.substring(s.length() - len), StringConstants.EMPTY));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> BooleanUtils.defaultIfFalse(len > 0, () -> s.length() <= len ? s : s.substring(s.length() - len), StringConstants.EMPTY));
     }
 
     static String substringBefore(String str, String separator) {
@@ -598,7 +598,7 @@ public interface CharSequenceUtils {
 
     static String substringAfter(String str, String separator) {
         if (isNotEmpty(str)) {
-            return ObjectUtils.defaultIfNull(separator, s -> BooleanUtils.defaultIfPredicate(str.indexOf(s), pos -> pos != -1, pos -> str.substring(pos + s.length()), StringConstants.EMPTY), StringConstants.EMPTY);
+            return ObjectUtils.defaultIfNullElseFunction(separator, s -> BooleanUtils.defaultIfPredicate(str.indexOf(s), pos -> pos != -1, pos -> str.substring(pos + s.length()), StringConstants.EMPTY), StringConstants.EMPTY);
         }
         return str;
     }
@@ -797,5 +797,17 @@ public interface CharSequenceUtils {
             throw s.get();
         }
         return cs.toString();
+    }
+
+    static int countMatches(String str, char c) {
+        int count = 0;
+        if (isNotEmpty(str)) {
+            for (char ch : str.toCharArray()) {
+                if (ch == c) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }

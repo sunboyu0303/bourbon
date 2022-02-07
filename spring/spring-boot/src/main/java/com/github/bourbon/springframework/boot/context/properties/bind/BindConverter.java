@@ -63,7 +63,7 @@ final class BindConverter {
 
     @SuppressWarnings("unchecked")
     <T> T convert(Object source, ResolvableType targetType, Annotation... targetAnnotations) {
-        return ObjectUtils.defaultIfNull(source, s -> (T) convert(s, TypeDescriptor.forObject(s), new ResolvableTypeDescriptor(targetType, targetAnnotations)));
+        return ObjectUtils.defaultIfNullElseFunction(source, s -> (T) convert(s, TypeDescriptor.forObject(s), new ResolvableTypeDescriptor(targetType, targetAnnotations)));
     }
 
     private Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
@@ -79,7 +79,7 @@ final class BindConverter {
                 }
             }
         }
-        throw ObjectUtils.defaultSupplierIfNull(failure, f -> f, () -> new ConverterNotFoundException(sourceType, targetType));
+        throw ObjectUtils.defaultSupplierIfNullElseFunction(failure, f -> f, () -> new ConverterNotFoundException(sourceType, targetType));
     }
 
     static BindConverter get(List<ConversionService> services, Consumer<PropertyEditorRegistry> consumer) {

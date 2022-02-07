@@ -42,13 +42,13 @@ public final class ConfigurationPropertySources {
     }
 
     static PropertySource<?> getAttached(MutablePropertySources sources) {
-        return ObjectUtils.defaultIfNull(sources, s -> s.get(ATTACHED_PROPERTY_SOURCE_NAME));
+        return ObjectUtils.defaultIfNullElseFunction(sources, s -> s.get(ATTACHED_PROPERTY_SOURCE_NAME));
     }
 
     public static Iterable<ConfigurationPropertySource> get(Environment environment) {
         Assert.isInstanceOf(ConfigurableEnvironment.class, environment);
         MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
-        return ObjectUtils.defaultSupplierIfNull((ConfigurationPropertySourcesPropertySource) sources.get(ATTACHED_PROPERTY_SOURCE_NAME), PropertySource::getSource, () -> from(sources));
+        return ObjectUtils.defaultSupplierIfNullElseFunction((ConfigurationPropertySourcesPropertySource) sources.get(ATTACHED_PROPERTY_SOURCE_NAME), PropertySource::getSource, () -> from(sources));
     }
 
     public static Iterable<ConfigurationPropertySource> from(PropertySource<?> source) {

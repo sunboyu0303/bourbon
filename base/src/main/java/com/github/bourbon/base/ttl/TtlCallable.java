@@ -90,7 +90,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
 
     @SuppressWarnings("unchecked")
     public static <T> TtlCallable<T> get(Callable<T> t, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
-        return ObjectUtils.defaultIfNull(t, callable -> BooleanUtils.defaultSupplierIfAssignableFrom(callable, TtlEnhanced.class, c -> {
+        return ObjectUtils.defaultIfNullElseFunction(t, callable -> BooleanUtils.defaultSupplierIfAssignableFrom(callable, TtlEnhanced.class, c -> {
             if (idempotent) {
                 return (TtlCallable) c;
             }

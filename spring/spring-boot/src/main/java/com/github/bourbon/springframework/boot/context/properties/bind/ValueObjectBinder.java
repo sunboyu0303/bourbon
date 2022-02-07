@@ -59,7 +59,7 @@ class ValueObjectBinder implements DataObjectBinder {
 
     @Override
     public <T> T create(Bindable<T> target, Binder.Context context) {
-        return ObjectUtils.defaultIfNull(ValueObject.get(target, constructorProvider, context), v -> v.instantiate(
+        return ObjectUtils.defaultIfNullElseFunction(ValueObject.get(target, constructorProvider, context), v -> v.instantiate(
                 v.getConstructorParameters().stream().map(p -> getDefaultValue(context, p)).collect(Collectors.toList())
         ));
     }
@@ -90,7 +90,7 @@ class ValueObjectBinder implements DataObjectBinder {
     private <T> T getNewInstanceIfPossible(Binder.Context context, ResolvableType type) {
         Class<T> resolved = (Class<T>) type.resolve();
         Assert.isTrue(resolved == null || isEmptyDefaultValueAllowed(resolved), () -> "Parameter of type " + type + " must have a non-empty default value.");
-        return ObjectUtils.defaultSupplierIfNull(create(Bindable.of(type), context), () -> ObjectUtils.defaultIfNull(resolved, BeanUtils::instantiateClass));
+        return ObjectUtils.defaultSupplierIfNull(create(Bindable.of(type), context), () -> ObjectUtils.defaultIfNullElseFunction(resolved, BeanUtils::instantiateClass));
     }
 
     private boolean isEmptyDefaultValueAllowed(Class<?> type) {
@@ -121,7 +121,7 @@ class ValueObjectBinder implements DataObjectBinder {
             if (type == null || type.isEnum() || Modifier.isAbstract(type.getModifiers())) {
                 return null;
             }
-            return ObjectUtils.defaultIfNull(provider.getBindConstructor(bindable, context.isNestedConstructorBinding()), c -> BooleanUtils.defaultSupplierIfFalse(
+            return ObjectUtils.defaultIfNullElseFunction(provider.getBindConstructor(bindable, context.isNestedConstructorBinding()), c -> BooleanUtils.defaultSupplierIfFalse(
                     KotlinDetector.isKotlinType(type), () -> KotlinValueObject.get((Constructor<T>) c, bindable.getType()), () -> DefaultValueObject.get(c, bindable.getType())
             ));
         }
@@ -154,7 +154,7 @@ class ValueObjectBinder implements DataObjectBinder {
         }
 
         static <T> ValueObject<T> get(Constructor<T> bindConstructor, ResolvableType type) {
-            return ObjectUtils.defaultSupplierIfNull(ReflectJvmMapping.getKotlinFunction(bindConstructor), c -> new KotlinValueObject<>(bindConstructor, c, type), () -> DefaultValueObject.get(bindConstructor, type));
+            return ObjectUtils.defaultSupplierIfNullElseFunction(ReflectJvmMapping.getKotlinFunction(bindConstructor), c -> new KotlinValueObject<>(bindConstructor, c, type), () -> DefaultValueObject.get(bindConstructor, type));
         }
     }
 

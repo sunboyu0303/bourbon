@@ -5,7 +5,6 @@ import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.lang.Assert;
 import com.github.bourbon.base.utils.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -114,19 +113,19 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
     }
 
     public ConfigurationPropertyName append(String suffix) {
-        return BooleanUtils.defaultSupplierIfPredicate(suffix, s -> !CharSequenceUtils.isEmpty(s), s -> new ConfigurationPropertyName(elements.append(probablySingleElementOf(s))), () -> this);
+        return BooleanUtils.defaultIfPredicate(suffix, CharSequenceUtils::isNotEmpty, s -> new ConfigurationPropertyName(elements.append(probablySingleElementOf(s))), this);
     }
 
     public ConfigurationPropertyName append(ConfigurationPropertyName suffix) {
-        return ObjectUtils.defaultSupplierIfNull(suffix, s -> new ConfigurationPropertyName(elements.append(s.elements)), () -> this);
+        return ObjectUtils.defaultIfNullElseFunction(suffix, s -> new ConfigurationPropertyName(elements.append(s.elements)), this);
     }
 
     public ConfigurationPropertyName getParent() {
-        return BooleanUtils.defaultSupplierIfPredicate(getNumberOfElements(), n -> n > 1, n -> chop(n - 1), () -> EMPTY);
+        return BooleanUtils.defaultIfPredicate(getNumberOfElements(), n -> n > 1, n -> chop(n - 1), EMPTY);
     }
 
     public ConfigurationPropertyName chop(int size) {
-        return BooleanUtils.defaultSupplierIfFalse(size < getNumberOfElements(), () -> new ConfigurationPropertyName(elements.chop(size)), () -> this);
+        return BooleanUtils.defaultIfFalse(size < getNumberOfElements(), () -> new ConfigurationPropertyName(elements.chop(size)), this);
     }
 
     public ConfigurationPropertyName subName(int offset) {
@@ -402,7 +401,7 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
     }
 
     static ConfigurationPropertyName of(CharSequence name, boolean returnNullIfInvalid) {
-        return ObjectUtils.defaultIfNull(elementsOf(name, returnNullIfInvalid), ConfigurationPropertyName::new);
+        return ObjectUtils.defaultIfNullElseFunction(elementsOf(name, returnNullIfInvalid), ConfigurationPropertyName::new);
     }
 
     private static Elements probablySingleElementOf(CharSequence name) {

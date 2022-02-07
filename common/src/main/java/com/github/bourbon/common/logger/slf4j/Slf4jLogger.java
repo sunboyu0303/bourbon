@@ -24,7 +24,7 @@ class Slf4jLogger implements Logger {
 
     @Override
     public boolean isTraceEnabled() {
-        return ObjectUtils.defaultIfNull(laLog, org.slf4j.Logger::isTraceEnabled, log.isTraceEnabled());
+        return ObjectUtils.defaultIfNullElseFunction(laLog, org.slf4j.Logger::isTraceEnabled, log.isTraceEnabled());
     }
 
     @Override
@@ -70,7 +70,7 @@ class Slf4jLogger implements Logger {
 
     @Override
     public boolean isDebugEnabled() {
-        return ObjectUtils.defaultIfNull(laLog, org.slf4j.Logger::isDebugEnabled, log.isDebugEnabled());
+        return ObjectUtils.defaultIfNullElseFunction(laLog, org.slf4j.Logger::isDebugEnabled, log.isDebugEnabled());
     }
 
     @Override
@@ -116,7 +116,7 @@ class Slf4jLogger implements Logger {
 
     @Override
     public boolean isInfoEnabled() {
-        return ObjectUtils.defaultIfNull(laLog, org.slf4j.Logger::isInfoEnabled, log.isInfoEnabled());
+        return ObjectUtils.defaultIfNullElseFunction(laLog, org.slf4j.Logger::isInfoEnabled, log.isInfoEnabled());
     }
 
     @Override
@@ -162,7 +162,7 @@ class Slf4jLogger implements Logger {
 
     @Override
     public boolean isWarnEnabled() {
-        return ObjectUtils.defaultIfNull(laLog, org.slf4j.Logger::isWarnEnabled, log.isWarnEnabled());
+        return ObjectUtils.defaultIfNullElseFunction(laLog, org.slf4j.Logger::isWarnEnabled, log.isWarnEnabled());
     }
 
     @Override
@@ -208,7 +208,7 @@ class Slf4jLogger implements Logger {
 
     @Override
     public boolean isErrorEnabled() {
-        return ObjectUtils.defaultIfNull(laLog, org.slf4j.Logger::isErrorEnabled, log.isErrorEnabled());
+        return ObjectUtils.defaultIfNullElseFunction(laLog, org.slf4j.Logger::isErrorEnabled, log.isErrorEnabled());
     }
 
     @Override

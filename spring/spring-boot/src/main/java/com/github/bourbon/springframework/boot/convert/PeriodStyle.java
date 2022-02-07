@@ -49,7 +49,7 @@ public enum PeriodStyle {
         }
 
         private int parseInt(Matcher matcher, int group) {
-            return ObjectUtils.defaultIfNull(matcher.group(group), Integer::parseInt, 0);
+            return ObjectUtils.defaultIfNullElseFunction(matcher.group(group), Integer::parseInt, 0);
         }
 
         @Override
@@ -179,7 +179,7 @@ public enum PeriodStyle {
         }
 
         private static Unit fromChronoUnit(ChronoUnit chronoUnit) {
-            return ObjectUtils.defaultIfNull(chronoUnit, unit -> ObjectUtils.requireNonNull(unitMap.get(unit), () -> new IllegalArgumentException("Unsupported unit " + chronoUnit)), Unit.DAYS);
+            return ObjectUtils.defaultIfNullElseFunction(chronoUnit, unit -> ObjectUtils.requireNonNull(unitMap.get(unit), () -> new IllegalArgumentException("Unsupported unit " + chronoUnit)), Unit.DAYS);
         }
     }
 }

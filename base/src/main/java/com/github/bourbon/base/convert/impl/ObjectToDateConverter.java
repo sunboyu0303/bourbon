@@ -15,7 +15,7 @@ public class ObjectToDateConverter implements ObjectConverter<Date> {
 
     @Override
     public Date convertInternal(Object object) {
-        return ObjectUtils.defaultIfNull(object, o -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(object, o -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 o, Date.class, Date.class::cast, () -> BooleanUtils.defaultSupplierIfAssignableFrom(
                         o, Number.class, n -> new Date(((Number) n).longValue()),
                         () -> BooleanUtils.defaultIfAssignableFrom(o, CharSequence.class, s -> new Date(Long.parseLong(s.toString())))

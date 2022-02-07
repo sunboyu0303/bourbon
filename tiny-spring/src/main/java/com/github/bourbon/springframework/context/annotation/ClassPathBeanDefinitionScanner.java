@@ -37,7 +37,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
     }
 
     private ConfigurableBeanFactory.Scope resolveBeanScope(BeanDefinition beanDefinition) {
-        return ObjectUtils.defaultIfNull(beanDefinition.getClazz().getAnnotation(Scope.class), Scope::value);
+        return ObjectUtils.defaultIfNullElseFunction(beanDefinition.getClazz().getAnnotation(Scope.class), Scope::value);
     }
 
     private String determineBeanName(BeanDefinition beanDefinition) {

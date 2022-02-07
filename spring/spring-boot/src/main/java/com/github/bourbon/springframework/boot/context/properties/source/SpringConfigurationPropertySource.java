@@ -37,7 +37,7 @@ class SpringConfigurationPropertySource implements ConfigurationPropertySource {
 
     @Override
     public ConfigurationProperty getConfigurationProperty(ConfigurationPropertyName name) {
-        return ObjectUtils.defaultIfNull(name, n -> {
+        return ObjectUtils.defaultIfNullElseFunction(name, n -> {
             for (PropertyMapper mapper : mappers) {
                 try {
                     for (String candidate : mapper.map(n)) {

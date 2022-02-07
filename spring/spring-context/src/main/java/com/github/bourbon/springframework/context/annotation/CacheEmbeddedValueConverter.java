@@ -15,34 +15,34 @@ public interface CacheEmbeddedValueConverter extends EmbeddedValueResolverAware 
     StringValueResolver getEmbeddedValueResolver();
 
     default Boolean getBoolean(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toBoolean));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toBoolean));
     }
 
     default Float getFloat(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toFloat));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toFloat));
     }
 
     default Double getDouble(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toDouble));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toDouble));
     }
 
     default Byte getByte(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toByte));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toByte));
     }
 
     default Short getShort(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toShort));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toShort));
     }
 
     default Integer getInteger(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toInteger));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toInteger));
     }
 
     default Long getLong(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> ObjectUtils.defaultIfNull(getEmbeddedValue(s), Convert::toLong));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> ObjectUtils.defaultIfNullElseFunction(getEmbeddedValue(s), Convert::toLong));
     }
 
     default String getEmbeddedValue(String str) {
-        return ObjectUtils.defaultIfNull(str, s -> getEmbeddedValueResolver().resolveStringValue(s));
+        return ObjectUtils.defaultIfNullElseFunction(str, s -> getEmbeddedValueResolver().resolveStringValue(s));
     }
 }

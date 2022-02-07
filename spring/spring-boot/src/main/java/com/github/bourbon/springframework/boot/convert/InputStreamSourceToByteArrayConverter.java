@@ -27,8 +27,6 @@ class InputStreamSourceToByteArrayConverter implements Converter<InputStreamSour
     }
 
     private String getName(InputStreamSource source) {
-        return ObjectUtils.defaultSupplierIfNull(Origin.from(source), Object::toString,
-                () -> BooleanUtils.defaultIfAssignableFrom(source, Resource.class, s -> ((Resource) s).getDescription(), "input stream source")
-        );
+        return ObjectUtils.defaultSupplierIfNullElseFunction(Origin.from(source), Object::toString, () -> BooleanUtils.defaultIfAssignableFrom(source, Resource.class, s -> ((Resource) s).getDescription(), "input stream source"));
     }
 }

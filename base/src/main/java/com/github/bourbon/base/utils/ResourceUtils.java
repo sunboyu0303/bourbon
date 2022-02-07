@@ -95,13 +95,13 @@ public final class ResourceUtils {
     }
 
     public static URL getResource(String resourceName, Class<?> referrer) {
-        return ObjectUtils.defaultIfNull(resourceName, name -> BooleanUtils.defaultSupplierIfPredicate(
+        return ObjectUtils.defaultIfNullElseFunction(resourceName, name -> BooleanUtils.defaultSupplierIfPredicate(
                 ClassLoaderUtils.getReferrerClassLoader(referrer), ObjectUtils::nonNull, cl -> cl.getResource(name), () -> ResourceUtils.class.getClassLoader().getResource(name)
         ));
     }
 
     public static URL getResource(String resourceName, ClassLoader classLoader) {
-        return ObjectUtils.defaultIfNull(resourceName, name -> ObjectUtils.defaultSupplierIfNull(
+        return ObjectUtils.defaultIfNullElseFunction(resourceName, name -> ObjectUtils.defaultSupplierIfNullElseFunction(
                 classLoader, cl -> cl.getResource(name), () -> ResourceUtils.class.getClassLoader().getResource(name)
         ));
     }

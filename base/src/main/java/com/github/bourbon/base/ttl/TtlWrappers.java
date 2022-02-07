@@ -17,7 +17,7 @@ public final class TtlWrappers {
 
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> wrap(Supplier<T> s) {
-        return ObjectUtils.defaultIfNull(s, supplier -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(s, supplier -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 supplier, TtlEnhanced.class, t -> t, () -> new TtlSupplier<>(supplier)
         ));
     }
@@ -62,7 +62,7 @@ public final class TtlWrappers {
     }
 
     public static <T> Consumer<T> wrap(Consumer<T> c) {
-        return ObjectUtils.defaultIfNull(c, consumer -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(c, consumer -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 consumer, TtlEnhanced.class, t -> t, () -> new TtlConsumer<>(consumer)
         ));
     }
@@ -107,7 +107,7 @@ public final class TtlWrappers {
     }
 
     public static <T, U> BiConsumer<T, U> wrap(BiConsumer<T, U> bc) {
-        return ObjectUtils.defaultIfNull(bc, biConsumer -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(bc, biConsumer -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 biConsumer, TtlEnhanced.class, t -> t, () -> new TtlBiConsumer<>(biConsumer)
         ));
     }
@@ -152,7 +152,7 @@ public final class TtlWrappers {
     }
 
     public static <T, R> Function<T, R> wrap(Function<T, R> f) {
-        return ObjectUtils.defaultIfNull(f, function -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(f, function -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 function, TtlEnhanced.class, t -> t, () -> new TtlFunction<>(function)
         ));
     }
@@ -197,7 +197,7 @@ public final class TtlWrappers {
     }
 
     public static <T, U, R> BiFunction<T, U, R> wrap(BiFunction<T, U, R> bf) {
-        return ObjectUtils.defaultIfNull(bf, biFunction -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(bf, biFunction -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 biFunction, TtlEnhanced.class, t -> t, () -> new TtlBiFunction<>(biFunction)
         ));
     }

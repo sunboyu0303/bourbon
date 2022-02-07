@@ -33,7 +33,7 @@ public final class PropertiesBeanUtils implements InitializingBean {
     }
 
     public String getProperty(String key, String defaultValue) {
-        return ObjectUtils.defaultIfNull(prop.get(key), Object::toString, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(prop.get(key), Object::toString, defaultValue);
     }
 
     public Boolean getBoolean(String key) {
@@ -45,7 +45,7 @@ public final class PropertiesBeanUtils implements InitializingBean {
     }
 
     public Integer getInteger(String key, Integer defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Integer::parseInt, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Integer::parseInt, defaultValue);
     }
 
     public Long getLong(String key) {
@@ -53,7 +53,7 @@ public final class PropertiesBeanUtils implements InitializingBean {
     }
 
     public Long getLong(String key, Long defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Long::parseLong, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Long::parseLong, defaultValue);
     }
 
     public Double getDouble(String key) {
@@ -61,7 +61,7 @@ public final class PropertiesBeanUtils implements InitializingBean {
     }
 
     public Double getDouble(String key, Double defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Double::parseDouble, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Double::parseDouble, defaultValue);
     }
 
     @Override

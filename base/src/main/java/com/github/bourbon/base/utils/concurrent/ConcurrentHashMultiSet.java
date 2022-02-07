@@ -16,7 +16,7 @@ public class ConcurrentHashMultiSet<E> {
     private final Map<E, AtomicInteger> map = new ConcurrentHashMap<>();
 
     public int add(E e) {
-        return ObjectUtils.defaultIfNull(e, k -> map.computeIfAbsent(k, o -> new AtomicInteger()).incrementAndGet(), 0);
+        return ObjectUtils.defaultIfNullElseFunction(e, k -> map.computeIfAbsent(k, o -> new AtomicInteger()).incrementAndGet(), 0);
     }
 
     public int remove(E e) {

@@ -25,6 +25,6 @@ public class IgnoreErrorsBindHandler extends AbstractBindHandler {
 
     @Override
     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) {
-        return ObjectUtils.defaultIfNull(target.getValue(), Supplier::get);
+        return ObjectUtils.defaultIfNullElseFunction(target.getValue(), Supplier::get);
     }
 }

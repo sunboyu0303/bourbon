@@ -30,7 +30,7 @@ public class GenericConversionService implements ConversionService, ConverterReg
     @SuppressWarnings("unchecked")
     public <T> T convert(Object source, Class<T> targetType) {
         Class<?> sourceType = source.getClass();
-        return ObjectUtils.defaultIfNull(getConverter(sourceType, targetType), c -> (T) c.convert(source, sourceType, targetType));
+        return ObjectUtils.defaultIfNullElseFunction(getConverter(sourceType, targetType), c -> (T) c.convert(source, sourceType, targetType));
     }
 
     @Override

@@ -37,7 +37,7 @@ final class DelimitedStringToCollectionConverter implements ConditionalGenericCo
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return ObjectUtils.defaultIfNull(source, s -> convert((String) s, sourceType, targetType));
+        return ObjectUtils.defaultIfNullElseFunction(source, s -> convert((String) s, sourceType, targetType));
     }
 
     private Object convert(String source, TypeDescriptor sourceType, TypeDescriptor targetType) {
@@ -53,6 +53,6 @@ final class DelimitedStringToCollectionConverter implements ConditionalGenericCo
     }
 
     private Collection<Object> createCollection(TypeDescriptor targetType, TypeDescriptor elementDescriptor, int length) {
-        return CollectionFactory.createCollection(targetType.getType(), ObjectUtils.defaultIfNull(elementDescriptor, TypeDescriptor::getType), length);
+        return CollectionFactory.createCollection(targetType.getType(), ObjectUtils.defaultIfNullElseFunction(elementDescriptor, TypeDescriptor::getType), length);
     }
 }

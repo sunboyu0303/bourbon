@@ -50,7 +50,7 @@ public abstract class AbstractConfigSource implements ConfigSource {
 
     @SuppressWarnings("unchecked")
     private <T> T changeValueType(String value, T defaultValue) {
-        return ObjectUtils.defaultIfNull(value, v -> (T) DefaultConverter.getInstance().convert(v, defaultValue));
+        return ObjectUtils.defaultIfNullElseFunction(value, v -> (T) DefaultConverter.getInstance().convert(v, defaultValue));
     }
 
     public abstract String doGetConfig(String key);

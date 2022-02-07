@@ -63,7 +63,7 @@ public final class ApplicationContextUtils {
     }
 
     public static String getProperty(String key, String defaultValue) {
-        return ObjectUtils.defaultIfNull(environment.getProperty(key), Function.identity(), defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(environment.getProperty(key), Function.identity(), defaultValue);
     }
 
     public static Boolean getBoolean(String key) {
@@ -75,7 +75,7 @@ public final class ApplicationContextUtils {
     }
 
     public static Integer getInteger(String key, Integer defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Integer::parseInt, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Integer::parseInt, defaultValue);
     }
 
     public static Long getLong(String key) {
@@ -83,7 +83,7 @@ public final class ApplicationContextUtils {
     }
 
     public static Long getLong(String key, Long defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Long::parseLong, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Long::parseLong, defaultValue);
     }
 
     public static Double getDouble(String key) {
@@ -91,13 +91,13 @@ public final class ApplicationContextUtils {
     }
 
     public static Double getDouble(String key, Double defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Double::parseDouble, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Double::parseDouble, defaultValue);
     }
 
     static void init(BeanDefinitionRegistry registry) {
         if (initialized.compareAndSet(false, true)) {
             ac = BooleanUtils.defaultIfAssignableFrom(registry, ConfigurableApplicationContext.class, ConfigurableApplicationContext.class::cast);
-            environment = ObjectUtils.defaultIfNull(ac, EnvironmentCapable::getEnvironment);
+            environment = ObjectUtils.defaultIfNullElseFunction(ac, EnvironmentCapable::getEnvironment);
         }
     }
 

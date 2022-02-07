@@ -170,7 +170,7 @@ public final class ConditionMessage {
         }
 
         public ConditionMessage items(Style style, Object... items) {
-            return items(style, ObjectUtils.defaultIfNull(items, Arrays::asList, (Collection<?>) null));
+            return items(style, ObjectUtils.defaultIfNullElseFunction(items, Arrays::asList, (Collection<?>) null));
         }
 
         public ConditionMessage items(Collection<?> items) {
@@ -193,7 +193,7 @@ public final class ConditionMessage {
                 sb.append(StringConstants.SPACE).append(CollectionUtils.toDelimitedString(items, StringConstants.COMMA_SPACE));
             }
 
-            return ObjectUtils.defaultSupplierIfNull(condition, c -> c.because(sb.toString()), () -> new ConditionMessage(sb.toString()));
+            return ObjectUtils.defaultSupplierIfNullElseFunction(condition, c -> c.because(sb.toString()), () -> new ConditionMessage(sb.toString()));
         }
     }
 
@@ -207,12 +207,12 @@ public final class ConditionMessage {
         QUOTE {
             @Override
             protected String applyToItem(Object item) {
-                return ObjectUtils.defaultIfNull(item, i -> StringConstants.SINGLE_QUOTE + i + StringConstants.SINGLE_QUOTE);
+                return ObjectUtils.defaultIfNullElseFunction(item, i -> StringConstants.SINGLE_QUOTE + i + StringConstants.SINGLE_QUOTE);
             }
         };
 
         public Collection<?> applyTo(Collection<?> items) {
-            return ObjectUtils.defaultIfNull(items, i -> i.stream().map(this::applyToItem).collect(Collectors.toList()));
+            return ObjectUtils.defaultIfNullElseFunction(items, i -> i.stream().map(this::applyToItem).collect(Collectors.toList()));
         }
 
         protected abstract Object applyToItem(Object item);

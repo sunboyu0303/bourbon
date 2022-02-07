@@ -90,7 +90,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     }
 
     public static TtlRunnable get(Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        return ObjectUtils.defaultIfNull(runnable, t -> BooleanUtils.defaultSupplierIfAssignableFrom(t, TtlEnhanced.class, r -> {
+        return ObjectUtils.defaultIfNullElseFunction(runnable, t -> BooleanUtils.defaultSupplierIfAssignableFrom(t, TtlEnhanced.class, r -> {
             if (idempotent) {
                 return (TtlRunnable) r;
             }

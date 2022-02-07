@@ -63,7 +63,7 @@ class ImportAutoConfigurationImportSelector extends AutoConfigurationImportSelec
         Set<String> exclusions = new LinkedHashSet<>();
         Class<?> source = ClassUtils.resolveClassName(metadata.getClassName());
         for (String name : ANNOTATION_NAMES) {
-            Class<?>[] exclude = ObjectUtils.defaultIfNull(AnnotatedElementUtils.getMergedAnnotationAttributes(source, name), m -> m.getClassArray("exclude"));
+            Class<?>[] exclude = ObjectUtils.defaultIfNullElseFunction(AnnotatedElementUtils.getMergedAnnotationAttributes(source, name), m -> m.getClassArray("exclude"));
             if (ArrayUtils.isNotEmpty(exclude)) {
                 exclusions.addAll(Arrays.stream(exclude).map(Class::getName).collect(Collectors.toList()));
             }

@@ -42,11 +42,11 @@ public class MutableObject<T> implements Mutable<T> {
 
     @Override
     public int hashCode() {
-        return ObjectUtils.defaultIfNull(value, Object::hashCode, 0);
+        return ObjectUtils.defaultIfNullElseFunction(value, Object::hashCode, 0);
     }
 
     @Override
     public String toString() {
-        return ObjectUtils.defaultIfNull(value, Object::toString, StringConstants.NULL);
+        return ObjectUtils.defaultIfNullElseFunction(value, Object::toString, StringConstants.NULL);
     }
 }

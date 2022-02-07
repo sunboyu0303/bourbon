@@ -18,10 +18,10 @@ public interface ExtensionAccessor {
     }
 
     default <T> T getExtension(Class<T> type, String name) {
-        return ObjectUtils.defaultIfNull(getExtensionLoader(type), e -> e.getExtension(name));
+        return ObjectUtils.defaultIfNullElseFunction(getExtensionLoader(type), e -> e.getExtension(name));
     }
 
     default <T> T getDefaultExtension(Class<T> type) {
-        return ObjectUtils.defaultIfNull(getExtensionLoader(type), ExtensionLoader::getDefaultExtension);
+        return ObjectUtils.defaultIfNullElseFunction(getExtensionLoader(type), ExtensionLoader::getDefaultExtension);
     }
 }

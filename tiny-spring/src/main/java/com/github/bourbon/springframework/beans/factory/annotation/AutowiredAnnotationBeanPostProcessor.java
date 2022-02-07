@@ -69,7 +69,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
     }
 
     private void setFieldValue(Object bean, Field field) {
-        BeanUtil.setFieldValue(bean, field.getName(), ObjectUtils.defaultSupplierIfNull(field.getAnnotation(Qualifier.class), q -> beanFactory.getBean(q.value(), field.getType()), () -> beanFactory.getBean(field.getType())));
+        BeanUtil.setFieldValue(bean, field.getName(), ObjectUtils.defaultSupplierIfNullElseFunction(field.getAnnotation(Qualifier.class), q -> beanFactory.getBean(q.value(), field.getType()), () -> beanFactory.getBean(field.getType())));
     }
 
     @Override

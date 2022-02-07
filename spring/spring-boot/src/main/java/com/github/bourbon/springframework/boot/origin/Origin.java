@@ -34,7 +34,7 @@ public interface Origin {
     }
 
     static List<Origin> parentsFrom(Object source) {
-        return ObjectUtils.defaultSupplierIfNull(from(source), origin -> {
+        return ObjectUtils.defaultSupplierIfNullElseFunction(from(source), origin -> {
             Set<Origin> parents = new LinkedHashSet<>();
             origin = origin.getParent();
             while (origin != null && !parents.contains(origin)) {

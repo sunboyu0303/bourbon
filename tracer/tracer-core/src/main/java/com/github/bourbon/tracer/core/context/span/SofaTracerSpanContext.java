@@ -33,11 +33,11 @@ public class SofaTracerSpanContext implements SpanContext {
 
     private static final String SYS_BAGGAGE_PREFIX_KEY = "_sys_";
 
-    private String traceId;
+    private final String traceId;
 
-    private String spanId;
+    private final String spanId;
 
-    private String parentId;
+    private final String parentId;
 
     private boolean isSampled;
 
@@ -211,17 +211,8 @@ public class SofaTracerSpanContext implements SpanContext {
         return CharSequenceUtils.isBlank(spanId) || spanId.lastIndexOf(RPC_ID_SEPARATOR) < 0 ? StringConstants.EMPTY : spanId.substring(0, spanId.lastIndexOf(RPC_ID_SEPARATOR));
     }
 
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
-    }
-
     public String getTraceId() {
         return BooleanUtils.defaultIfPredicate(traceId, CharSequenceUtils::isNotBlank, t -> t, StringConstants.EMPTY);
-    }
-
-    public void setSpanId(String spanId) {
-        this.spanId = spanId;
-        this.parentId = genParentSpanId(spanId);
     }
 
     public String getSpanId() {

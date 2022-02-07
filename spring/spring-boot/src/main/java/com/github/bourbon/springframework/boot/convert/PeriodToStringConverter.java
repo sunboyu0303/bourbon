@@ -28,7 +28,7 @@ final class PeriodToStringConverter implements GenericConverter {
     }
 
     private PeriodStyle getPeriodStyle(TypeDescriptor sourceType) {
-        return ObjectUtils.defaultIfNull(sourceType.getAnnotation(PeriodFormat.class), PeriodFormat::value);
+        return ObjectUtils.defaultIfNullElseFunction(sourceType.getAnnotation(PeriodFormat.class), PeriodFormat::value);
     }
 
     private String convert(Period source, PeriodStyle style, ChronoUnit unit) {
@@ -36,6 +36,6 @@ final class PeriodToStringConverter implements GenericConverter {
     }
 
     private ChronoUnit getPeriodUnit(TypeDescriptor sourceType) {
-        return ObjectUtils.defaultIfNull(sourceType.getAnnotation(PeriodUnit.class), PeriodUnit::value);
+        return ObjectUtils.defaultIfNullElseFunction(sourceType.getAnnotation(PeriodUnit.class), PeriodUnit::value);
     }
 }

@@ -23,7 +23,7 @@ public abstract class ScopeModel implements ExtensionAccessor {
 
     protected ScopeModel(ScopeModel parent, ExtensionScope scope) {
         this.parent = parent;
-        this.extensionDirector = new ExtensionDirector(ObjectUtils.defaultIfNull(parent, ScopeModel::getExtensionDirector), scope, this);
+        this.extensionDirector = new ExtensionDirector(ObjectUtils.defaultIfNullElseFunction(parent, ScopeModel::getExtensionDirector), scope, this);
         this.scopeModelAccessor = new SimpleScopeModelAccessor(this);
         this.addClassLoader(getClass().getClassLoader());
     }

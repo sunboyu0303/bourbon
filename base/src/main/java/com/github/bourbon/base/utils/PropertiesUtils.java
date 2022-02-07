@@ -27,7 +27,7 @@ public final class PropertiesUtils {
 
     public static Properties getProperties(ClassLoader cl, String location) {
         Properties properties = new Properties();
-        URL url = ObjectUtils.defaultSupplierIfNull(cl, c -> c.getResource(location), () -> ClassLoader.getSystemResource(location));
+        URL url = ObjectUtils.defaultSupplierIfNullElseFunction(cl, c -> c.getResource(location), () -> ClassLoader.getSystemResource(location));
         if (url != null) {
             try (InputStream is = url.openStream()) {
                 properties.load(is);
@@ -46,7 +46,7 @@ public final class PropertiesUtils {
 
     public static Properties getAllProperties(ClassLoader cl, String location) {
         Properties properties = new Properties();
-        Enumeration<URL> urls = ObjectUtils.defaultSupplierIfNull(cl,
+        Enumeration<URL> urls = ObjectUtils.defaultSupplierIfNullElseFunction(cl,
                 c -> {
                     try {
                         return c.getResources(location);

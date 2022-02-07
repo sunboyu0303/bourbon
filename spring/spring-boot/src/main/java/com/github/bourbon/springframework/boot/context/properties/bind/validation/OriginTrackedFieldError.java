@@ -16,10 +16,8 @@ final class OriginTrackedFieldError extends FieldError implements OriginProvider
 
     private final transient Origin origin;
 
-    private OriginTrackedFieldError(FieldError fieldError, Origin origin) {
-        super(fieldError.getObjectName(), fieldError.getField(), fieldError.getRejectedValue(),
-                fieldError.isBindingFailure(), fieldError.getCodes(), fieldError.getArguments(),
-                fieldError.getDefaultMessage());
+    private OriginTrackedFieldError(FieldError e, Origin origin) {
+        super(e.getObjectName(), e.getField(), e.getRejectedValue(), e.isBindingFailure(), e.getCodes(), e.getArguments(), e.getDefaultMessage());
         this.origin = origin;
     }
 
@@ -30,7 +28,7 @@ final class OriginTrackedFieldError extends FieldError implements OriginProvider
 
     @Override
     public String toString() {
-        return ObjectUtils.defaultSupplierIfNull(origin, o -> super.toString() + "; origin " + o, super::toString);
+        return ObjectUtils.defaultSupplierIfNullElseFunction(origin, o -> super.toString() + "; origin " + o, super::toString);
     }
 
     static FieldError of(FieldError fieldError, Origin origin) {

@@ -40,7 +40,7 @@ public final class PropertiesUtils {
     }
 
     public static String getProperty(String key, String defaultValue) {
-        return ObjectUtils.defaultIfNull(PROP.get(key), Object::toString, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(PROP.get(key), Object::toString, defaultValue);
     }
 
     public static Boolean getBoolean(String key) {
@@ -48,7 +48,7 @@ public final class PropertiesUtils {
     }
 
     public static Boolean getBoolean(String key, Boolean defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Boolean::valueOf, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Boolean::valueOf, defaultValue);
     }
 
     public static Integer getInteger(String key) {
@@ -56,7 +56,7 @@ public final class PropertiesUtils {
     }
 
     public static Integer getInteger(String key, Integer defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Integer::parseInt, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Integer::parseInt, defaultValue);
     }
 
     public static Long getLong(String key) {
@@ -64,7 +64,7 @@ public final class PropertiesUtils {
     }
 
     public static Long getLong(String key, Long defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Long::parseLong, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Long::parseLong, defaultValue);
     }
 
     public static Double getDouble(String key) {
@@ -72,7 +72,7 @@ public final class PropertiesUtils {
     }
 
     public static Double getDouble(String key, Double defaultValue) {
-        return ObjectUtils.defaultIfNull(getProperty(key), Double::parseDouble, defaultValue);
+        return ObjectUtils.defaultIfNullElseFunction(getProperty(key), Double::parseDouble, defaultValue);
     }
 
     public static Properties getProperties() {

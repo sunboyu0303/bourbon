@@ -71,7 +71,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     protected abstract boolean containsBeanDefinition(String beanName);
 
     protected Object doGetBean(final String beanName, final Object[] args) {
-        return ObjectUtils.defaultSupplierIfNull(getSingleton(beanName), sharedInstance -> getObjectForBeanInstance(sharedInstance, beanName), () -> getObjectForBeanInstance(createBean(beanName, getBeanDefinition(beanName), args), beanName));
+        return ObjectUtils.defaultSupplierIfNullElseFunction(getSingleton(beanName), i -> getObjectForBeanInstance(i, beanName), () -> getObjectForBeanInstance(createBean(beanName, getBeanDefinition(beanName), args), beanName));
     }
 
     private Object getObjectForBeanInstance(Object beanInstance, String beanName) {

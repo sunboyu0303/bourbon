@@ -83,7 +83,7 @@ public class ConditionOutcome {
 
     @Override
     public String toString() {
-        return ObjectUtils.defaultIfNull(message, ConditionMessage::toString, StringConstants.EMPTY);
+        return ObjectUtils.defaultIfNullElseFunction(message, ConditionMessage::toString, StringConstants.EMPTY);
     }
 
     public static ConditionOutcome of(boolean match, String message) {

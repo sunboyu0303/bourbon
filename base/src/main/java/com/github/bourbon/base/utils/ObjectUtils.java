@@ -4,6 +4,7 @@ import com.github.bourbon.base.constant.StringConstants;
 import com.github.bourbon.base.utils.function.ThrowableSupplier;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -36,7 +37,7 @@ public interface ObjectUtils {
     }
 
     static int nullSafeHashCode(Object object) {
-        return defaultIfNull(object, o -> BooleanUtils.defaultSupplierIfFalse(o.getClass().isArray(), () -> ArrayUtils.nullSafeHashCode(o), o::hashCode), 0);
+        return defaultIfNullElseFunction(object, o -> BooleanUtils.defaultSupplierIfFalse(o.getClass().isArray(), () -> ArrayUtils.nullSafeHashCode(o), o::hashCode), 0);
     }
 
     static <T> int compare(T a, T b, Comparator<? super T> c) {
@@ -48,7 +49,7 @@ public interface ObjectUtils {
     }
 
     static String nullSafeToString(Object object) {
-        return defaultIfNull(object, o -> BooleanUtils.defaultSupplierIfAssignableFrom(o, String.class, String.class::cast,
+        return defaultIfNullElseFunction(object, o -> BooleanUtils.defaultSupplierIfAssignableFrom(o, String.class, String.class::cast,
                 () -> BooleanUtils.defaultSupplierIfFalse(
                         o.getClass().isArray(), () -> ArrayUtils.nullSafeToString(o), () -> defaultIfNull(o.toString(), StringConstants.EMPTY)
                 )
@@ -56,7 +57,7 @@ public interface ObjectUtils {
     }
 
     static String toString(Object o, String s) {
-        return defaultIfNull(o, Object::toString, s);
+        return defaultIfNullElseFunction(o, Object::toString, s);
     }
 
     static boolean isNull(Object o) {
@@ -89,6 +90,12 @@ public interface ObjectUtils {
         return o != null;
     }
 
+    static <T> void nonNullConsumer(T t, Consumer<T> c) {
+        if (nonNull(t)) {
+            c.accept(t);
+        }
+    }
+
     static <T> T defaultIfNull(T t, T defaultValue) {
         return nonNull(t) ? t : defaultValue;
     }
@@ -97,19 +104,19 @@ public interface ObjectUtils {
         return nonNull(t) ? t : s.get();
     }
 
-    static <T, R> R defaultIfNull(T t, Function<T, R> f) {
-        return defaultIfNull(t, f, null);
+    static <T, R> R defaultIfNullElseFunction(T t, Function<T, R> f) {
+        return defaultIfNullElseFunction(t, f, null);
     }
 
-    static <T, R> R defaultIfNull(T t, Function<T, R> f, R r) {
+    static <T, R> R defaultIfNullElseFunction(T t, Function<T, R> f, R r) {
         return nonNull(t) ? f.apply(t) : r;
     }
 
-    static <T, R> R defaultSupplierIfNull(T t, Function<T, R> f) {
-        return defaultSupplierIfNull(t, f, () -> null);
+    static <T, R> R defaultSupplierIfNullElseFunction(T t, Function<T, R> f) {
+        return defaultSupplierIfNullElseFunction(t, f, () -> null);
     }
 
-    static <T, R> R defaultSupplierIfNull(T t, Function<T, R> f, Supplier<R> s) {
+    static <T, R> R defaultSupplierIfNullElseFunction(T t, Function<T, R> f, Supplier<R> s) {
         return nonNull(t) ? f.apply(t) : s.get();
     }
 

@@ -24,11 +24,11 @@ final class DurationToNumberConverter implements GenericConverter {
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return ObjectUtils.defaultIfNull(source, s -> convert((Duration) s, getDurationUnit(sourceType), targetType.getObjectType()));
+        return ObjectUtils.defaultIfNullElseFunction(source, s -> convert((Duration) s, getDurationUnit(sourceType), targetType.getObjectType()));
     }
 
     private ChronoUnit getDurationUnit(TypeDescriptor sourceType) {
-        return ObjectUtils.defaultIfNull(sourceType.getAnnotation(DurationUnit.class), DurationUnit::value);
+        return ObjectUtils.defaultIfNullElseFunction(sourceType.getAnnotation(DurationUnit.class), DurationUnit::value);
     }
 
     private Object convert(Duration source, ChronoUnit unit, Class<?> type) {

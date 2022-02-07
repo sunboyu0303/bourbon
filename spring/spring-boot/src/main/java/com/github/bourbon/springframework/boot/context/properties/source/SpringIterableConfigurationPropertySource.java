@@ -218,7 +218,7 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
         }
 
         private <K, V> Map<K, V> cloneOrCreate(Map<K, V> source, int size) {
-            return ObjectUtils.defaultSupplierIfNull(source, LinkedHashMap::new, () -> new LinkedHashMap<>(size));
+            return ObjectUtils.defaultSupplierIfNullElseFunction(source, LinkedHashMap::new, () -> new LinkedHashMap<>(size));
         }
 
         private void addParents(Map<ConfigurationPropertyName, Set<ConfigurationPropertyName>> descendants, ConfigurationPropertyName name) {

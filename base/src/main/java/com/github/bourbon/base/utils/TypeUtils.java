@@ -48,7 +48,7 @@ public interface TypeUtils {
     }
 
     static Type getType(Field field) {
-        return ObjectUtils.defaultIfNull(field, Field::getGenericType);
+        return ObjectUtils.defaultIfNullElseFunction(field, Field::getGenericType);
     }
 
     static Type getType(Class<?> c, String s) {
@@ -56,7 +56,7 @@ public interface TypeUtils {
     }
 
     static Class<?> getClass(Field field) {
-        return ObjectUtils.defaultIfNull(field, Field::getType);
+        return ObjectUtils.defaultIfNullElseFunction(field, Field::getType);
     }
 
     static Class<?> getClass(Class<?> c, String s) {
@@ -72,7 +72,7 @@ public interface TypeUtils {
     }
 
     static Type[] getParamTypes(Method method) {
-        return ObjectUtils.defaultIfNull(method, Method::getGenericParameterTypes);
+        return ObjectUtils.defaultIfNullElseFunction(method, Method::getGenericParameterTypes);
     }
 
     static Class<?> getFirstParamClass(Method m) {
@@ -84,15 +84,15 @@ public interface TypeUtils {
     }
 
     static Class<?>[] getParamClasses(Method method) {
-        return ObjectUtils.defaultIfNull(method, Method::getParameterTypes);
+        return ObjectUtils.defaultIfNullElseFunction(method, Method::getParameterTypes);
     }
 
     static Type getReturnType(Method method) {
-        return ObjectUtils.defaultIfNull(method, Method::getGenericReturnType);
+        return ObjectUtils.defaultIfNullElseFunction(method, Method::getGenericReturnType);
     }
 
     static Class<?> getReturnClass(Method method) {
-        return ObjectUtils.defaultIfNull(method, Method::getReturnType);
+        return ObjectUtils.defaultIfNullElseFunction(method, Method::getReturnType);
     }
 
     static Type getTypeArgument(Type t) {
@@ -104,7 +104,7 @@ public interface TypeUtils {
     }
 
     static Type[] getTypeArguments(Type type) {
-        return ObjectUtils.defaultIfNull(type, t -> ObjectUtils.defaultIfNull(toParameterizedType(t), ParameterizedType::getActualTypeArguments));
+        return ObjectUtils.defaultIfNullElseFunction(type, t -> ObjectUtils.defaultIfNullElseFunction(toParameterizedType(t), ParameterizedType::getActualTypeArguments));
     }
 
     static ParameterizedType toParameterizedType(Type type) {

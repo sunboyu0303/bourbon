@@ -164,18 +164,18 @@ class AutoConfigurationSorter {
         private int getOrder() {
             return BooleanUtils.defaultSupplierIfFalse(wasProcessed(),
                     () -> autoConfigurationMetadata.getInteger(className, AutoConfigureOrder.class.getSimpleName(), AutoConfigureOrder.DEFAULT_ORDER),
-                    () -> ObjectUtils.defaultIfNull(AnnotationHelperUtils.getAnnotationAttributes(getAnnotationMetadata(), AutoConfigureOrder.class),
+                    () -> ObjectUtils.defaultIfNullElseFunction(AnnotationHelperUtils.getAnnotationAttributes(getAnnotationMetadata(), AutoConfigureOrder.class),
                             annotationAttributes -> annotationAttributes.getNumber("value"), AutoConfigureOrder.DEFAULT_ORDER
                     )
             );
         }
 
         private boolean wasProcessed() {
-            return ObjectUtils.defaultIfNull(autoConfigurationMetadata, metadata -> metadata.wasProcessed(className), false);
+            return ObjectUtils.defaultIfNullElseFunction(autoConfigurationMetadata, metadata -> metadata.wasProcessed(className), false);
         }
 
         private Set<String> getAnnotationValue(Class<? extends Annotation> annotation) {
-            return ObjectUtils.defaultIfNull(AnnotationHelperUtils.getAnnotationAttributes(getAnnotationMetadata(), annotation, true), attributes -> {
+            return ObjectUtils.defaultIfNullElseFunction(AnnotationHelperUtils.getAnnotationAttributes(getAnnotationMetadata(), annotation, true), attributes -> {
                 Set<String> value = SetUtils.newLinkedHashSet();
                 Collections.addAll(value, attributes.getStringArray("value"));
                 Collections.addAll(value, attributes.getStringArray("name"));

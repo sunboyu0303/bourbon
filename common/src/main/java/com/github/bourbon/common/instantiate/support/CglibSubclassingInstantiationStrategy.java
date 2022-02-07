@@ -29,6 +29,6 @@ public class CglibSubclassingInstantiationStrategy implements InstantiationStrat
                 return super.equals(obj);
             }
         });
-        return ObjectUtils.defaultSupplierIfNull(ctor, c -> enhancer.create(c.getParameterTypes(), args), enhancer::create);
+        return ObjectUtils.defaultSupplierIfNullElseFunction(ctor, c -> enhancer.create(c.getParameterTypes(), args), enhancer::create);
     }
 }

@@ -19,19 +19,19 @@ public interface ListUtils {
     }
 
     static <T> List<T> newList(boolean isLinked, T... values) {
-        return ObjectUtils.defaultSupplierIfNull(values, v -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
+        return ObjectUtils.defaultSupplierIfNullElseFunction(values, v -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
     }
 
     static <T> List<T> newList(boolean isLinked, Collection<T> collection) {
-        return ObjectUtils.defaultSupplierIfNull(collection, c -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
+        return ObjectUtils.defaultSupplierIfNullElseFunction(collection, c -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
     }
 
     static <T> List<T> newList(boolean isLinked, Iterable<T> iterable) {
-        return ObjectUtils.defaultSupplierIfNull(iterable, i -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
+        return ObjectUtils.defaultSupplierIfNullElseFunction(iterable, i -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
     }
 
     static <T> List<T> newList(boolean isLinked, Iterator<T> iterator) {
-        return ObjectUtils.defaultSupplierIfNull(iterator, i -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
+        return ObjectUtils.defaultSupplierIfNullElseFunction(iterator, i -> BooleanUtils.defaultSupplierIfFalse(isLinked, ListUtils::newLinkedList, ListUtils::newArrayList), () -> newList(isLinked));
     }
 
     static <T> List<T> of(T... elements) {

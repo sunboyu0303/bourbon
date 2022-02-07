@@ -135,9 +135,9 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
     }
 
     protected List<String> getExcludeAutoConfigurationsProperty() {
-        return ObjectUtils.defaultSupplierIfNull(getEnvironment(), environment -> BooleanUtils.defaultSupplierIfAssignableFrom(environment, ConfigurableEnvironment.class,
+        return ObjectUtils.defaultSupplierIfNullElseFunction(getEnvironment(), environment -> BooleanUtils.defaultSupplierIfAssignableFrom(environment, ConfigurableEnvironment.class,
                 e -> Binder.get(e).bind(PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE, String[].class).map(ListUtils::newArrayList).orElse(Collections.emptyList()),
-                () -> ObjectUtils.defaultSupplierIfNull(environment.getProperty(PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE, String[].class), ListUtils::newArrayList, Collections::emptyList)
+                () -> ObjectUtils.defaultSupplierIfNullElseFunction(environment.getProperty(PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE, String[].class), ListUtils::newArrayList, Collections::emptyList)
         ), Collections::emptyList);
     }
 

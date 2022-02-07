@@ -14,14 +14,14 @@ import java.time.temporal.ChronoUnit;
 interface GenericConverter extends org.springframework.core.convert.converter.GenericConverter {
 
     default DurationStyle getDurationStyle(TypeDescriptor type) {
-        return ObjectUtils.defaultIfNull(type.getAnnotation(DurationFormat.class), DurationFormat::value);
+        return ObjectUtils.defaultIfNullElseFunction(type.getAnnotation(DurationFormat.class), DurationFormat::value);
     }
 
     default ChronoUnit getChronoUnit(TypeDescriptor type) {
-        return ObjectUtils.defaultIfNull(type.getAnnotation(DurationUnit.class), DurationUnit::value);
+        return ObjectUtils.defaultIfNullElseFunction(type.getAnnotation(DurationUnit.class), DurationUnit::value);
     }
 
     default DataUnit getDataUnit(TypeDescriptor type) {
-        return ObjectUtils.defaultIfNull(type.getAnnotation(DataSizeUnit.class), DataSizeUnit::value);
+        return ObjectUtils.defaultIfNullElseFunction(type.getAnnotation(DataSizeUnit.class), DataSizeUnit::value);
     }
 }

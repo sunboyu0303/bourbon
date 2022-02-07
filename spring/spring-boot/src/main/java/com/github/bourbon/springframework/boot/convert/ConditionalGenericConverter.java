@@ -18,6 +18,6 @@ interface ConditionalGenericConverter extends org.springframework.core.convert.c
     }
 
     default String getDelimiter(TypeDescriptor type) {
-        return ObjectUtils.defaultIfNull(type.getAnnotation(Delimiter.class), Delimiter::value, StringConstants.COMMA);
+        return ObjectUtils.defaultIfNullElseFunction(type.getAnnotation(Delimiter.class), Delimiter::value, StringConstants.COMMA);
     }
 }

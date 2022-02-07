@@ -35,7 +35,7 @@ class JavaBeanBinder implements DataObjectBinder {
 
     @Override
     public <T> T bind(ConfigurationPropertyName name, Bindable<T> target, Binder.Context context, DataObjectPropertyBinder propertyBinder) {
-        return ObjectUtils.defaultIfNull(Bean.get(target, target.getValue() != null && hasKnownBindableProperties(name, context)), bean -> {
+        return ObjectUtils.defaultIfNullElseFunction(Bean.get(target, target.getValue() != null && hasKnownBindableProperties(name, context)), bean -> {
             BeanSupplier<T> beanSupplier = bean.getSupplier(target);
             return BooleanUtils.defaultIfFalse(bind(propertyBinder, bean, beanSupplier, context), beanSupplier);
         });
@@ -44,7 +44,7 @@ class JavaBeanBinder implements DataObjectBinder {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T create(Bindable<T> target, Binder.Context context) {
-        return ObjectUtils.defaultIfNull((Class<T>) target.getType().resolve(), BeanUtils::instantiateClass);
+        return ObjectUtils.defaultIfNullElseFunction((Class<T>) target.getType().resolve(), BeanUtils::instantiateClass);
     }
 
     private boolean hasKnownBindableProperties(ConfigurationPropertyName name, Binder.Context context) {
@@ -70,7 +70,7 @@ class JavaBeanBinder implements DataObjectBinder {
         ResolvableType type = property.getType();
         Supplier<Object> value = property.getValue(beanSupplier);
         Annotation[] annotations = property.getAnnotations();
-        return ObjectUtils.defaultIfNull(propertyBinder.bindProperty(propertyName, Bindable.of(type).withSuppliedValue(value).withAnnotations(annotations)), bound -> {
+        return ObjectUtils.defaultIfNullElseFunction(propertyBinder.bindProperty(propertyName, Bindable.of(type).withSuppliedValue(value).withAnnotations(annotations)), bound -> {
             if (property.isSettable()) {
                 property.setValue(beanSupplier, bound);
             } else if (value == null || !bound.equals(value.get())) {
@@ -178,7 +178,7 @@ class JavaBeanBinder implements DataObjectBinder {
             T instance = null;
             if (canCallGetValue && value != null) {
                 instance = value.get();
-                resolvedType = ObjectUtils.defaultIfNull(instance, T::getClass, resolvedType);
+                resolvedType = ObjectUtils.defaultIfNullElseFunction(instance, T::getClass, resolvedType);
             }
             if (instance == null && !isInstantiable(resolvedType)) {
                 return null;
@@ -275,7 +275,7 @@ class JavaBeanBinder implements DataObjectBinder {
         }
 
         ResolvableType getType() {
-            return ObjectUtils.defaultSupplierIfNull(setter,
+            return ObjectUtils.defaultSupplierIfNullElseFunction(setter,
                     s -> ResolvableType.forMethodParameter(new MethodParameter(s, 0), declaringClassType),
                     () -> ResolvableType.forMethodParameter(new MethodParameter(getter, -1), declaringClassType)
             );
@@ -283,14 +283,14 @@ class JavaBeanBinder implements DataObjectBinder {
 
         Annotation[] getAnnotations() {
             try {
-                return ObjectUtils.defaultIfNull(field, Field::getDeclaredAnnotations);
+                return ObjectUtils.defaultIfNullElseFunction(field, Field::getDeclaredAnnotations);
             } catch (Exception ex) {
                 return null;
             }
         }
 
         Supplier<Object> getValue(Supplier<?> instance) {
-            return ObjectUtils.defaultIfNull(getter, g -> () -> {
+            return ObjectUtils.defaultIfNullElseFunction(getter, g -> () -> {
                 try {
                     ReflectionUtils.makeAccessible(g);
                     return g.invoke(instance.get());

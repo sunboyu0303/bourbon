@@ -338,7 +338,7 @@ public final class NumberUtils {
     }
 
     public static BigInteger toBigInteger(Number number) {
-        return ObjectUtils.defaultIfNull(number, n -> BooleanUtils.defaultSupplierIfAssignableFrom(
+        return ObjectUtils.defaultIfNullElseFunction(number, n -> BooleanUtils.defaultSupplierIfAssignableFrom(
                 n, BigInteger.class, BigInteger.class::cast, () -> BooleanUtils.defaultSupplierIfAssignableFrom(
                         n, Long.class, l -> BigInteger.valueOf((Long) l), () -> toBigInteger(n.longValue())
                 )

@@ -63,7 +63,7 @@ class MapBinder extends AggregateBinder<Map<Object, Object>> {
 
     @Override
     protected Map<Object, Object> merge(Supplier<Map<Object, Object>> existing, Map<Object, Object> additional) {
-        return ObjectUtils.defaultIfNull(getExistingIfPossible(existing), m -> {
+        return ObjectUtils.defaultIfNullElseFunction(getExistingIfPossible(existing), m -> {
             try {
                 m.putAll(additional);
                 return copyIfPossible(m);
@@ -155,7 +155,7 @@ class MapBinder extends AggregateBinder<Map<Object, Object>> {
             if (!resolved.getName().startsWith("java.lang") && !resolved.isEnum()) {
                 return false;
             }
-            return ObjectUtils.defaultIfNull(source.getConfigurationProperty(name), p -> getContext().getConverter().canConvert(
+            return ObjectUtils.defaultIfNullElseFunction(source.getConfigurationProperty(name), p -> getContext().getConverter().canConvert(
                     getContext().getPlaceholdersResolver().resolvePlaceholders(p.getValue()), valueType
             ), false);
         }

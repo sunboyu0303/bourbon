@@ -65,7 +65,7 @@ public class ThreadPoolMonitorRunner implements Runnable {
             for (StackTraceElement e : task.getThread().getStackTrace()) {
                 sb.append(StringConstants.SPACE_SPACE_SPACE_SPACE).append(e).append(CharConstants.LF);
             }
-            String traceId = ObjectUtils.defaultIfNull(TracerIdAdapter.getInstance().traceIdSafari(task.getThread()), id -> " with traceId " + id, StringConstants.EMPTY);
+            String traceId = ObjectUtils.defaultIfNullElseFunction(TracerIdAdapter.getInstance().traceIdSafari(task.getThread()), id -> " with traceId " + id, StringConstants.EMPTY);
             ThreadLogger.warn("Task {} in thread pool {} started on {}{} exceeds the limit of {} execution time with stack trace:\n    {}", task, config.getIdentity(), DATE_FORMAT.format(Instant.ofEpochMilli(task.getDequeueTime())), traceId, config.getTaskTimeout() + config.getTimeUnit().toString(), sb.toString().trim());
         }
     }

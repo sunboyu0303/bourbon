@@ -37,7 +37,7 @@ class CollectionBinder extends IndexedElementsBinder<Collection<Object>> {
 
     @Override
     protected Collection<Object> merge(Supplier<Collection<Object>> existing, Collection<Object> additional) {
-        return ObjectUtils.defaultIfNull(getExistingIfPossible(existing), c -> {
+        return ObjectUtils.defaultIfNullElseFunction(getExistingIfPossible(existing), c -> {
             try {
                 c.clear();
                 c.addAll(additional);

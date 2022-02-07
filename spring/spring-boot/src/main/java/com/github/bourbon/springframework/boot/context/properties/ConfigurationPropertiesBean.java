@@ -167,9 +167,9 @@ public final class ConfigurationPropertiesBean {
     }
 
     private static ConfigurationPropertiesBean create(String name, Object instance, Class<?> type, Method factory) {
-        return ObjectUtils.defaultIfNull(findAnnotation(instance, type, factory, ConfigurationProperties.class), a -> {
-            Bindable<Object> bindTarget = Bindable.of(ObjectUtils.defaultSupplierIfNull(factory, ResolvableType::forMethodReturnType, () -> ResolvableType.forClass(type)))
-                    .withAnnotations(ObjectUtils.defaultSupplierIfNull(findAnnotation(instance, type, factory, Validated.class), v -> new Annotation[]{a, v}, () -> new Annotation[]{a}));
+        return ObjectUtils.defaultIfNullElseFunction(findAnnotation(instance, type, factory, ConfigurationProperties.class), a -> {
+            Bindable<Object> bindTarget = Bindable.of(ObjectUtils.defaultSupplierIfNullElseFunction(factory, ResolvableType::forMethodReturnType, () -> ResolvableType.forClass(type)))
+                    .withAnnotations(ObjectUtils.defaultSupplierIfNullElseFunction(findAnnotation(instance, type, factory, Validated.class), v -> new Annotation[]{a, v}, () -> new Annotation[]{a}));
             if (instance != null) {
                 bindTarget = bindTarget.withExistingValue(instance);
             }
@@ -178,7 +178,7 @@ public final class ConfigurationPropertiesBean {
     }
 
     private static <A extends Annotation> A findAnnotation(Object instance, Class<?> type, Method factory, Class<A> annotationType) {
-        MergedAnnotation<A> annotation = ObjectUtils.defaultIfNull(factory, f -> findMergedAnnotation(f, annotationType), MergedAnnotation.missing());
+        MergedAnnotation<A> annotation = ObjectUtils.defaultIfNullElseFunction(factory, f -> findMergedAnnotation(f, annotationType), MergedAnnotation.missing());
 
         if (!annotation.isPresent()) {
             annotation = findMergedAnnotation(type, annotationType);
@@ -190,7 +190,7 @@ public final class ConfigurationPropertiesBean {
     }
 
     private static <A extends Annotation> MergedAnnotation<A> findMergedAnnotation(AnnotatedElement element, Class<A> annotationType) {
-        return ObjectUtils.defaultIfNull(element, e -> MergedAnnotations.from(e, MergedAnnotations.SearchStrategy.TYPE_HIERARCHY).get(annotationType), MergedAnnotation.missing());
+        return ObjectUtils.defaultIfNullElseFunction(element, e -> MergedAnnotations.from(e, MergedAnnotations.SearchStrategy.TYPE_HIERARCHY).get(annotationType), MergedAnnotation.missing());
     }
 
     public enum BindMethod {

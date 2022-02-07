@@ -118,7 +118,7 @@ public class ApplicationConversionService extends FormattingConversionService {
     }
 
     public boolean isConvertViaObjectSourceType(TypeDescriptor sourceType, TypeDescriptor targetType) {
-        Set<GenericConverter.ConvertiblePair> pairs = ObjectUtils.defaultIfNull(getConverter(sourceType, targetType), GenericConverter::getConvertibleTypes);
+        Set<GenericConverter.ConvertiblePair> pairs = ObjectUtils.defaultIfNullElseFunction(getConverter(sourceType, targetType), GenericConverter::getConvertibleTypes);
         if (pairs != null) {
             for (GenericConverter.ConvertiblePair pair : pairs) {
                 if (Object.class.equals(pair.getSourceType())) {

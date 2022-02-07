@@ -29,7 +29,7 @@ public class NamedThreadFactory implements ThreadFactory {
 
     public NamedThreadFactory(String prefix, boolean daemon) {
         this(
-                ObjectUtils.defaultSupplierIfNull(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup()),
+                ObjectUtils.defaultSupplierIfNullElseFunction(System.getSecurityManager(), SecurityManager::getThreadGroup, () -> Thread.currentThread().getThreadGroup()),
                 prefix + StringConstants.HYPHEN + POOL_NUMBER.getAndIncrement() + "-thread-",
                 daemon
         );

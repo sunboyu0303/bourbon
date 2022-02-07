@@ -30,30 +30,26 @@ public final class AopUtils extends org.springframework.aop.support.AopUtils {
     }
 
     private static Object getCglibProxyTargetObject(Object o) {
-        return ObjectUtils.defaultIfNull(getField(o.getClass(), "CGLIB$CALLBACK_0"), h -> ObjectUtils.defaultIfNull(
-                getFieldTarget(o, h), i -> ObjectUtils.defaultIfNull(getField(i.getClass(), "advised"),
-                        a -> ObjectUtils.defaultIfNull((AdvisedSupport) getFieldTarget(i, a), s -> {
-                            try {
-                                return s.getTargetSource().getTarget();
-                            } catch (Exception e) {
-                                return null;
-                            }
-                        })
-                )
+        return ObjectUtils.defaultIfNullElseFunction(getField(o.getClass(), "CGLIB$CALLBACK_0"), h -> ObjectUtils.defaultIfNullElseFunction(getFieldTarget(o, h),
+                i -> ObjectUtils.defaultIfNullElseFunction(getField(i.getClass(), "advised"), a -> ObjectUtils.defaultIfNullElseFunction((AdvisedSupport) getFieldTarget(i, a), s -> {
+                    try {
+                        return s.getTargetSource().getTarget();
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }))
         ));
     }
 
     private static Object getJdkDynamicProxyTargetObject(Object o) {
-        return ObjectUtils.defaultIfNull(getField(o.getClass().getSuperclass(), StringConstants.SMALL_H), h -> ObjectUtils.defaultIfNull(
-                getFieldTarget(o, h), aop -> ObjectUtils.defaultIfNull(getField(aop.getClass(), "advised"),
-                        a -> ObjectUtils.defaultIfNull((AdvisedSupport) getFieldTarget(aop, a), s -> {
-                            try {
-                                return s.getTargetSource().getTarget();
-                            } catch (Exception e) {
-                                return null;
-                            }
-                        })
-                )
+        return ObjectUtils.defaultIfNullElseFunction(getField(o.getClass().getSuperclass(), StringConstants.SMALL_H), h -> ObjectUtils.defaultIfNullElseFunction(getFieldTarget(o, h),
+                i -> ObjectUtils.defaultIfNullElseFunction(getField(i.getClass(), "advised"), a -> ObjectUtils.defaultIfNullElseFunction((AdvisedSupport) getFieldTarget(i, a), s -> {
+                    try {
+                        return s.getTargetSource().getTarget();
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }))
         ));
     }
 

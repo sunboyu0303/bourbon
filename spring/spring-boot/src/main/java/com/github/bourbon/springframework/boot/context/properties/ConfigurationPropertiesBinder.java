@@ -27,7 +27,6 @@ import org.springframework.core.env.PropertySources;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -100,7 +99,7 @@ class ConfigurationPropertiesBinder {
     }
 
     private IgnoreTopLevelConverterNotFoundBindHandler getHandler() {
-        return ObjectUtils.defaultSupplierIfNull(BoundConfigurationProperties.get(applicationContext),
+        return ObjectUtils.defaultSupplierIfNullElseFunction(BoundConfigurationProperties.get(applicationContext),
                 b -> new IgnoreTopLevelConverterNotFoundBindHandler(new BoundPropertiesTrackingBindHandler(b::add)),
                 IgnoreTopLevelConverterNotFoundBindHandler::new
         );
@@ -194,7 +193,7 @@ class ConfigurationPropertiesBinder {
         }
 
         private boolean isConfigurationProperties(Class<?> target) {
-            return ObjectUtils.defaultIfNull(target, clazz -> MergedAnnotations.from(clazz).isPresent(ConfigurationProperties.class), false);
+            return ObjectUtils.defaultIfNullElseFunction(target, clazz -> MergedAnnotations.from(clazz).isPresent(ConfigurationProperties.class), false);
         }
     }
 }

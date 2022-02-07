@@ -22,7 +22,7 @@ final class DurationToStringConverter implements GenericConverter {
 
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return ObjectUtils.defaultIfNull(source, s -> convert((Duration) s, getDurationStyle(sourceType), getChronoUnit(sourceType)));
+        return ObjectUtils.defaultIfNullElseFunction(source, s -> convert((Duration) s, getDurationStyle(sourceType), getChronoUnit(sourceType)));
     }
 
     private String convert(Duration source, DurationStyle style, ChronoUnit unit) {

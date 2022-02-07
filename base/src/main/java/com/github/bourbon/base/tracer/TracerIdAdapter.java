@@ -14,7 +14,7 @@ import java.util.ServiceLoader;
  */
 public final class TracerIdAdapter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TracerIdAdapter.class);
     private static final TracerIdAdapter INSTANCE = new TracerIdAdapter();
     private TracerIdRetriever tracerIdRetriever;
 
@@ -22,12 +22,12 @@ public final class TracerIdAdapter {
         Iterator<TracerIdRetriever> tracerIdAdapterIterator = ServiceLoader.load(TracerIdRetriever.class).iterator();
         if (tracerIdAdapterIterator.hasNext()) {
             tracerIdRetriever = tracerIdAdapterIterator.next();
-            if (logger.isInfoEnabled()) {
-                logger.info("TracerIdConverter use tracerIdAdapter '{}'", tracerIdRetriever.getClass().getName());
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("TracerIdConverter use tracerIdAdapter '{}'", tracerIdRetriever.getClass().getName());
             }
         } else {
-            if (logger.isWarnEnabled()) {
-                logger.warn("TracerIdConverter can not find any tracerIdAdapter");
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("TracerIdConverter can not find any tracerIdAdapter");
             }
         }
     }
@@ -37,7 +37,7 @@ public final class TracerIdAdapter {
     }
 
     public String traceIdSafari(Thread t) {
-        return ObjectUtils.defaultIfNull(tracerIdRetriever, r -> {
+        return ObjectUtils.defaultIfNullElseFunction(tracerIdRetriever, r -> {
             try {
                 return r.getTracerId(t);
             } catch (Exception e) {

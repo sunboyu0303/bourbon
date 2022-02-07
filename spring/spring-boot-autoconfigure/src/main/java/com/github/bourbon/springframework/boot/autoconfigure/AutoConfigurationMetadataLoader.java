@@ -63,7 +63,7 @@ final class AutoConfigurationMetadataLoader {
 
         @Override
         public Integer getInteger(String className, String key, Integer defaultValue) {
-            return ObjectUtils.defaultIfNull(get(className, key), Integer::valueOf, defaultValue);
+            return ObjectUtils.defaultIfNullElseFunction(get(className, key), Integer::valueOf, defaultValue);
         }
 
         @Override
@@ -73,7 +73,7 @@ final class AutoConfigurationMetadataLoader {
 
         @Override
         public Set<String> getSet(String className, String key, Set<String> defaultValue) {
-            return ObjectUtils.defaultIfNull(get(className, key), t -> SetUtils.newHashSet(CharSequenceUtils.commaDelimitedListToStringArray(t)), defaultValue);
+            return ObjectUtils.defaultIfNullElseFunction(get(className, key), t -> SetUtils.newHashSet(CharSequenceUtils.commaDelimitedListToStringArray(t)), defaultValue);
         }
 
         @Override
