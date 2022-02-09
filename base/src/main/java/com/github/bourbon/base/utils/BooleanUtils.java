@@ -3,6 +3,7 @@ package com.github.bourbon.base.utils;
 import com.github.bourbon.base.constant.BooleanConstants;
 
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -148,6 +149,12 @@ public final class BooleanUtils {
 
     public static <T, R> R defaultIfAssignableFrom(T t, Class<?> clazz, Function<T, R> f, R r) {
         return ObjectUtils.nonNull(t) && clazz.isAssignableFrom(t.getClass()) ? f.apply(t) : r;
+    }
+
+    public static <T> void defaultIfPredicateElseConsumer(T t, Predicate<T> predicate, Consumer<T> consumer) {
+        if (predicate.test(t)) {
+            consumer.accept(t);
+        }
     }
 
     public static <T, R> R defaultIfPredicate(T t, Predicate<T> predicate, Function<T, R> f) {

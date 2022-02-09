@@ -12,7 +12,6 @@ import com.github.bourbon.tracer.core.constants.SofaTracerConstants;
 import com.github.bourbon.tracer.core.context.span.SofaTracerSpanContext;
 import com.github.bourbon.tracer.core.extensions.SpanExtensionFactory;
 import com.github.bourbon.tracer.core.reporter.common.CommonTracerManager;
-import com.github.bourbon.tracer.core.reporter.facade.Reporter;
 import com.github.bourbon.tracer.core.tags.SpanTags;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
@@ -24,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author sunboyu
@@ -64,7 +61,7 @@ public class SofaTracerSpan implements Span {
     }
 
     public SofaTracerSpan(SofaTracer sofaTracer, long startTime, String operationName, SofaTracerSpanContext context, Map<String, ?> tags) {
-        this(sofaTracer, startTime, null, operationName, ObjectUtils.defaultSupplierIfNull(context, (Supplier<SofaTracerSpanContext>) SofaTracerSpanContext::rootStart), tags);
+        this(sofaTracer, startTime, null, operationName, ObjectUtils.defaultSupplierIfNull(context, SofaTracerSpanContext::rootStart), tags);
     }
 
     public SofaTracerSpan(SofaTracer sofaTracer, long startTime, List<SofaTracerSpanReferenceRelationship> spanReferences, String operationName, SofaTracerSpanContext context, Map<String, ?> tags) {
@@ -72,7 +69,7 @@ public class SofaTracerSpan implements Span {
         Assert.notNull(context);
         this.sofaTracer = sofaTracer;
         this.startTime = startTime;
-        this.spanReferences = ObjectUtils.defaultSupplierIfNull(spanReferences, (Function<List<SofaTracerSpanReferenceRelationship>, ArrayList<SofaTracerSpanReferenceRelationship>>) ArrayList::new);
+        this.spanReferences = ObjectUtils.defaultIfNullElseFunction(spanReferences, ArrayList::new);
         this.operationName = operationName;
         this.sofaTracerSpanContext = context;
         this.setTags(tags);
@@ -104,19 +101,12 @@ public class SofaTracerSpan implements Span {
 
     @Override
     public Span setTag(String key, String value) {
-        if (CharSequenceUtils.isBlank(key) || CharSequenceUtils.isBlank(value)) {
-            return this;
-        }
-        tagsWithStr.put(key, value);
-        if (isServer()) {
-            Reporter serverReporter = this.sofaTracer.getServerReporter();
-            if (serverReporter != null) {
-                this.setLogType(serverReporter.getReporterType());
-            }
-        } else if (isClient()) {
-            Reporter clientReporter = this.sofaTracer.getClientReporter();
-            if (clientReporter != null) {
-                this.setLogType(clientReporter.getReporterType());
+        if (CharSequenceUtils.isNotBlank(key) && CharSequenceUtils.isNotBlank(value)) {
+            tagsWithStr.put(key, value);
+            if (isServer()) {
+                ObjectUtils.nonNullConsumer(sofaTracer.getServerReporter(), r -> setLogType(r.getReporterType()));
+            } else if (isClient()) {
+                ObjectUtils.nonNullConsumer(sofaTracer.getClientReporter(), r -> setLogType(r.getReporterType()));
             }
         }
         return this;
@@ -124,15 +114,13 @@ public class SofaTracerSpan implements Span {
 
     @Override
     public Span setTag(String key, boolean value) {
-        this.tagsWithBool.put(key, value);
+        tagsWithBool.put(key, value);
         return this;
     }
 
     @Override
     public Span setTag(String key, Number number) {
-        if (number != null) {
-            tagsWithNumber.put(key, number);
-        }
+        ObjectUtils.nonNullConsumer(number, n -> tagsWithNumber.put(key, n));
         return this;
     }
 
@@ -148,9 +136,7 @@ public class SofaTracerSpan implements Span {
     }
 
     public Span log(LogData logData) {
-        if (logData != null) {
-            logs.add(logData);
-        }
+        ObjectUtils.nonNullConsumer(logData, logs::add);
         return this;
     }
 
@@ -210,7 +196,7 @@ public class SofaTracerSpan implements Span {
                 .addSlot(Thread.currentThread().getName()).addSlot(errorType)
                 .addSlot(ArrayUtils.toString(errorSources, CharConstants.ARRAY_SEPARATOR, StringConstants.EMPTY, StringConstants.EMPTY))
                 .addSlot(MapUtils.mapToString(context))
-                .addSlot(ObjectUtils.defaultIfNull(this.getSofaTracerSpanContext(), SofaTracerSpanContext::getBizSerializedBaggage, StringConstants.EMPTY));
+                .addSlot(ObjectUtils.defaultIfNullElseFunction(this.getSofaTracerSpanContext(), SofaTracerSpanContext::getBizSerializedBaggage, StringConstants.EMPTY));
 
         if (e == null) {
             commonLogSpan.addSlot(StringConstants.EMPTY);
@@ -233,16 +219,16 @@ public class SofaTracerSpan implements Span {
     }
 
     public SofaTracerSpan getThisAsParentWhenExceedLayer() {
-        if (CharSequenceUtils.countMatches(this.sofaTracerSpanContext.getSpanId(), CharConstants.DOT) + 1 > SofaTracerConstants.MAX_LAYER) {
+        if (CharSequenceUtils.countMatches(sofaTracerSpanContext.getSpanId(), CharConstants.DOT) + 1 > SofaTracerConstants.MAX_LAYER) {
             // Record in the log to prevent this from happening but not to know quickly
-            SelfLog.errorWithTraceId("OpenTracing Span layer exceed max layer limit " + SofaTracerConstants.MAX_LAYER, this.sofaTracerSpanContext.getTraceId());
-            return new SofaTracerSpan(this.sofaTracer, Clock.currentTimeMillis(), this.operationName, SofaTracerSpanContext.rootStart().addBizBaggage(MapUtils.newHashMap(this.sofaTracerSpanContext.getBizBaggage())), null);
+            SelfLog.errorWithTraceId("OpenTracing Span layer exceed max layer limit " + SofaTracerConstants.MAX_LAYER, sofaTracerSpanContext.getTraceId());
+            return new SofaTracerSpan(sofaTracer, Clock.currentTimeMillis(), operationName, SofaTracerSpanContext.rootStart().addBizBaggage(MapUtils.newHashMap(sofaTracerSpanContext.getBizBaggage())), null);
         }
         return this;
     }
 
     public List<SofaTracerSpanReferenceRelationship> getSpanReferences() {
-        return ObjectUtils.defaultSupplierIfNull(spanReferences, Collections::unmodifiableList, Collections::emptyList);
+        return ObjectUtils.defaultSupplierIfNullElseFunction(spanReferences, Collections::unmodifiableList, Collections::emptyList);
     }
 
     public SofaTracer getSofaTracer() {
@@ -300,7 +286,7 @@ public class SofaTracerSpan implements Span {
     }
 
     public SofaTracerSpan getParentSofaTracerSpan() {
-        return ObjectUtils.defaultIfNull(parentSofaTracerSpan, SofaTracerSpan::getThisAsParentWhenExceedLayer);
+        return ObjectUtils.defaultIfNullElseFunction(parentSofaTracerSpan, SofaTracerSpan::getThisAsParentWhenExceedLayer);
     }
 
     public SofaTracerSpan setParentSofaTracerSpan(SofaTracerSpan parentSofaTracerSpan) {

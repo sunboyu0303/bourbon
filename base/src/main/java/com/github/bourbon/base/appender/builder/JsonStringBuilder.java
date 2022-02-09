@@ -57,6 +57,26 @@ public class JsonStringBuilder {
         return this;
     }
 
+    public JsonStringBuilder appendEnd(String key, Object value) {
+        return this.appendEnd(key, value, true);
+    }
+
+    public JsonStringBuilder appendEnd(String key, Object value, boolean isNewLine) {
+        if (value == null) {
+            if (this.isValueNullCheck) {
+                return this.appendEnd(isNewLine);
+            } else {
+                this.append(key, null, CharConstants.RIGHT_BRACES);
+            }
+        } else {
+            this.append(key, value, CharConstants.RIGHT_BRACES);
+        }
+        if (isNewLine) {
+            this.sb.append(StringConstants.NEWLINE);
+        }
+        return this;
+    }
+
     private JsonStringBuilder append(String key, Object value, char endChar) {
         if (value == null) {
             sb.append(CharConstants.DOUBLE_QUOTES).append(key).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.COLON).append(CharConstants.DOUBLE_QUOTES).append(CharConstants.DOUBLE_QUOTES).append(endChar);

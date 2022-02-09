@@ -22,7 +22,7 @@ public final class StaticInfoLog {
 
     public static synchronized void logStaticInfo() {
         try {
-            APPENDER.append(PidUtils.pid() + CharConstants.COMMA + LocalHostUtils.ip() + CharConstants.COMMA + TracerUtils.getCurrentZone() + CharConstants.COMMA + TracerUtils.getDefaultTimeZone() + CharConstants.LF);
+            APPENDER.append(PidUtils.pid() + CharConstants.COMMA + LocalHostUtils.ip() + CharConstants.COMMA + TracerUtils.getCurrentZone() + CharConstants.COMMA + TracerUtils.getDefaultTimeZoneId() + CharConstants.LF);
             APPENDER.flush();
         } catch (IOException e) {
             SelfLog.error(StringConstants.EMPTY, e);

@@ -1,11 +1,17 @@
 package com.github.bourbon.tracer.core;
 
+import com.github.bourbon.base.code.LogCode2Description;
 import com.github.bourbon.base.constant.StringConstants;
+import com.github.bourbon.base.generator.TraceIdGenerator;
 import com.github.bourbon.base.lang.Assert;
 import com.github.bourbon.base.lang.Clock;
 import com.github.bourbon.base.utils.*;
+import com.github.bourbon.tracer.core.appender.self.SelfLog;
+import com.github.bourbon.tracer.core.constants.ComponentNameConstants;
+import com.github.bourbon.tracer.core.constants.SofaTracerConstants;
 import com.github.bourbon.tracer.core.context.span.SofaTracerSpanContext;
-import com.github.bourbon.tracer.core.registry.RegistryExtractorInjector;
+import com.github.bourbon.tracer.core.listener.SpanReportListenerHolder;
+import com.github.bourbon.tracer.core.registry.TracerFormatRegistry;
 import com.github.bourbon.tracer.core.reporter.facade.Reporter;
 import com.github.bourbon.tracer.core.samplers.Sampler;
 import com.github.bourbon.tracer.core.samplers.SamplerFactory;
@@ -18,7 +24,6 @@ import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,16 +34,12 @@ import java.util.Map;
  */
 public class SofaTracer implements Tracer {
 
-    public static final String ROOT_SPAN_ID = "0";
+    public static final String ROOT_SPAN_ID = StringConstants.ZERO;
 
     private final String tracerType;
-
     private final Reporter clientReporter;
-
     private final Reporter serverReporter;
-
     private final Map<String, Object> tracerTags = MapUtils.newConcurrentHashMap();
-
     private final Sampler sampler;
 
     protected SofaTracer(String tracerType, Reporter clientReporter, Reporter serverReporter, Sampler sampler, Map<String, Object> tracerTags) {
@@ -46,9 +47,7 @@ public class SofaTracer implements Tracer {
         this.clientReporter = clientReporter;
         this.serverReporter = serverReporter;
         this.sampler = sampler;
-        if (!MapUtils.isEmpty(tracerTags)) {
-            this.tracerTags.putAll(tracerTags);
-        }
+        BooleanUtils.defaultIfPredicateElseConsumer(tracerTags, MapUtils::isNotEmpty, this.tracerTags::putAll);
     }
 
     protected SofaTracer(String tracerType, Sampler sampler) {
@@ -70,11 +69,7 @@ public class SofaTracer implements Tracer {
 
     @Override
     public <C> SpanContext extract(Format<C> format, C carrier) {
-        RegistryExtractorInjector<C> registryExtractor = TracerFormatRegistry.getRegistry(format);
-        if (registryExtractor == null) {
-            throw new IllegalArgumentException("Unsupported extractor format: " + format);
-        }
-        return registryExtractor.extract(carrier);
+        return ObjectUtils.requireNonNull(TracerFormatRegistry.getRegistry(format), () -> new IllegalArgumentException("Unsupported extractor format: " + format)).extract(carrier);
     }
 
     public void reportSpan(SofaTracerSpan span) {
@@ -84,30 +79,20 @@ public class SofaTracer implements Tracer {
         if (sampler != null && span.getParentSofaTracerSpan() == null) {
             span.getSofaTracerSpanContext().setSampled(sampler.sample(span).isSampled());
         }
-        this.invokeReportListeners(span);
-        if (span.isClient() || this.getTracerType().equalsIgnoreCase(ComponentNameConstants.FLEXIBLE)) {
-            if (this.clientReporter != null) {
-                this.clientReporter.report(span);
-            }
+        invokeReportListeners(span);
+        if (span.isClient() || getTracerType().equalsIgnoreCase(ComponentNameConstants.FLEXIBLE)) {
+            ObjectUtils.nonNullConsumer(clientReporter, r -> r.report(span));
         } else if (span.isServer()) {
-            if (this.serverReporter != null) {
-                this.serverReporter.report(span);
-            }
+            ObjectUtils.nonNullConsumer(serverReporter, r -> r.report(span));
         } else {
             SelfLog.warn("Span reported neither client nor server.Ignore!");
         }
     }
 
     public void close() {
-        if (this.clientReporter != null) {
-            this.clientReporter.close();
-        }
-        if (this.serverReporter != null) {
-            this.serverReporter.close();
-        }
-        if (sampler != null) {
-            this.sampler.close();
-        }
+        ObjectUtils.nonNullConsumer(clientReporter, Reporter::close);
+        ObjectUtils.nonNullConsumer(serverReporter, Reporter::close);
+        ObjectUtils.nonNullConsumer(sampler, Sampler::close);
     }
 
     public String getTracerType() {
@@ -132,23 +117,20 @@ public class SofaTracer implements Tracer {
 
     @Override
     public String toString() {
-        return "SofaTracer{" + "tracerType='" + tracerType + '}';
+        return "SofaTracer{tracerType='" + tracerType + "'}";
     }
 
     protected void invokeReportListeners(SofaTracerSpan sofaTracerSpan) {
-        List<SpanReportListener> listeners = SpanReportListenerHolder.getSpanReportListenersHolder();
-        if (listeners != null && listeners.size() > 0) {
-            listeners.forEach(listener -> listener.onSpanReport(sofaTracerSpan));
-        }
+        BooleanUtils.defaultIfPredicateElseConsumer(SpanReportListenerHolder.getSpanReportListenersHolder(), CollectionUtils::isNotEmpty, list -> list.forEach(listener -> listener.onSpanReport(sofaTracerSpan)));
     }
 
-    public class SofaTracerSpanBuilder implements io.opentracing.Tracer.SpanBuilder {
+    public class SofaTracerSpanBuilder implements SpanBuilder {
 
-        private String operationName;
+        private final String operationName;
 
-        private long startTime = -1;
+        private volatile long startTime = -1;
 
-        private List<SofaTracerSpanReferenceRelationship> references = Collections.emptyList();
+        private final List<SofaTracerSpanReferenceRelationship> references = ListUtils.newArrayList();
 
         private final Map<String, Object> tags = MapUtils.newHashMap();
 
@@ -163,7 +145,7 @@ public class SofaTracer implements Tracer {
 
         @Override
         public Tracer.SpanBuilder asChildOf(Span parentSpan) {
-            return ObjectUtils.defaultSupplierIfNull(parentSpan, span -> addReference(References.CHILD_OF, span.context()), () -> this);
+            return ObjectUtils.defaultIfNullElseFunction(parentSpan, s -> addReference(References.CHILD_OF, s.context()), this);
         }
 
         @Override
@@ -177,14 +159,7 @@ public class SofaTracer implements Tracer {
             if (!References.CHILD_OF.equals(referenceType) && !References.FOLLOWS_FROM.equals(referenceType)) {
                 return this;
             }
-            if (references.isEmpty()) {
-                references = Collections.singletonList(new SofaTracerSpanReferenceRelationship((SofaTracerSpanContext) referencedContext, referenceType));
-            } else {
-                if (references.size() == 1) {
-                    references = ListUtils.newArrayList(references);
-                }
-                references.add(new SofaTracerSpanReferenceRelationship((SofaTracerSpanContext) referencedContext, referenceType));
-            }
+            references.add(new SofaTracerSpanReferenceRelationship((SofaTracerSpanContext) referencedContext, referenceType));
             return this;
         }
 
@@ -214,23 +189,22 @@ public class SofaTracer implements Tracer {
 
         @Override
         public Span start() {
-            SofaTracerSpanContext sofaTracerSpanContext = BooleanUtils.defaultSupplierIfFalse(!CollectionUtils.isEmpty(this.references), this::createChildContext, this::createRootSpanContext);
-            long begin = this.startTime > 0 ? this.startTime : Clock.currentTimeMillis();
-            SofaTracerSpan sofaTracerSpan = new SofaTracerSpan(SofaTracer.this, begin, this.references, this.operationName, sofaTracerSpanContext, this.tags);
+            SofaTracerSpanContext sofaTracerSpanContext = BooleanUtils.defaultSupplierIfFalse(CollectionUtils.isNotEmpty(references), this::createChildContext, this::createRootSpanContext);
+            SofaTracerSpan sofaTracerSpan = new SofaTracerSpan(SofaTracer.this, startTime > 0 ? startTime : Clock.currentTimeMillis(), references, operationName, sofaTracerSpanContext, tags);
             sofaTracerSpanContext.setSampled(calculateSampler(sofaTracerSpan));
             return sofaTracerSpan;
         }
 
         private boolean calculateSampler(SofaTracerSpan sofaTracerSpan) {
             boolean isSampled = false;
-            if (!CollectionUtils.isEmpty(this.references)) {
+            if (CollectionUtils.isNotEmpty(references)) {
                 isSampled = preferredReference().isSampled();
             } else {
                 if (sampler != null) {
                     SamplingStatus samplingStatus = sampler.sample(sofaTracerSpan);
                     if (samplingStatus.isSampled()) {
                         isSampled = true;
-                        this.tags.putAll(samplingStatus.getTags());
+                        tags.putAll(samplingStatus.getTags());
                     }
                 }
             }
@@ -238,12 +212,12 @@ public class SofaTracer implements Tracer {
         }
 
         private SofaTracerSpanContext createRootSpanContext() {
-            return new SofaTracerSpanContext(TraceIdGenerator.generate(), ROOT_SPAN_ID, StringConstants.EMPTY);
+            return new SofaTracerSpanContext(TraceIdGenerator.getTraceId(), ROOT_SPAN_ID, StringConstants.EMPTY);
         }
 
         private SofaTracerSpanContext createChildContext() {
             SofaTracerSpanContext context = preferredReference();
-            return new SofaTracerSpanContext(context.getTraceId(), context.nextChildContextId(), context.getSpanId(), context.isSampled()).addBizBaggage(this.createChildBaggage(true)).addSysBaggage(this.createChildBaggage(false));
+            return new SofaTracerSpanContext(context.getTraceId(), context.nextChildContextId(), context.getSpanId(), context.isSampled()).addBizBaggage(createChildBaggage(true)).addSysBaggage(createChildBaggage(false));
         }
 
         private Map<String, String> createChildBaggage(boolean isBiz) {
@@ -251,16 +225,10 @@ public class SofaTracer implements Tracer {
                 SofaTracerSpanContext context = references.get(0).getSofaTracerSpanContext();
                 return BooleanUtils.defaultSupplierIfFalse(isBiz, context::getBizBaggage, context::getSysBaggage);
             }
-            Map<String, String> baggage = null;
+            Map<String, String> baggage = MapUtils.newHashMap();
             for (SofaTracerSpanReferenceRelationship reference : references) {
                 SofaTracerSpanContext context = reference.getSofaTracerSpanContext();
-                Map<String, String> referenceBaggage = BooleanUtils.defaultSupplierIfFalse(isBiz, context::getBizBaggage, context::getSysBaggage);
-                if (!MapUtils.isEmpty(referenceBaggage)) {
-                    if (baggage == null) {
-                        baggage = MapUtils.newHashMap();
-                    }
-                    baggage.putAll(referenceBaggage);
-                }
+                BooleanUtils.defaultIfPredicateElseConsumer(BooleanUtils.defaultSupplierIfFalse(isBiz, context::getBizBaggage, context::getSysBaggage), MapUtils::isNotEmpty, baggage::putAll);
             }
             return baggage;
         }
@@ -285,12 +253,12 @@ public class SofaTracer implements Tracer {
 
         private Reporter serverReporter;
 
-        private Map<String, Object> tracerTags = MapUtils.newHashMap();
+        private final Map<String, Object> tracerTags = MapUtils.newHashMap();
 
         private Sampler sampler;
 
         public Builder(String tracerType) {
-            Assert.notBlank(tracerType, "tracerType must be not empty");
+            Assert.notNull(tracerType, "tracerType must be not empty");
             this.tracerType = tracerType;
         }
 
@@ -325,26 +293,22 @@ public class SofaTracer implements Tracer {
         }
 
         public Builder withTags(Map<String, ?> tags) {
-            if (MapUtils.isEmpty(tags)) {
-                return this;
-            }
-            for (Map.Entry<String, ?> entry : tags.entrySet()) {
-                String key = entry.getKey();
-                if (CharSequenceUtils.isBlank(key)) {
-                    continue;
-                }
-                Object value = entry.getValue();
-                if (value == null) {
-                    continue;
-                }
-                if (value instanceof String) {
-                    this.withTag(key, (String) value);
-                } else if (value instanceof Boolean) {
-                    this.withTag(key, (Boolean) value);
-                } else if (value instanceof Number) {
-                    this.withTag(key, (Number) value);
-                } else {
-                    SelfLog.error(String.format(LogCode2Description.convert(SPACE_ID, "01-00003"), value.getClass().toString()));
+            if (MapUtils.isNotEmpty(tags)) {
+                for (Map.Entry<String, ?> entry : tags.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    if (CharSequenceUtils.isBlank(key) || value == null) {
+                        continue;
+                    }
+                    if (value instanceof String) {
+                        this.withTag(key, (String) value);
+                    } else if (value instanceof Boolean) {
+                        this.withTag(key, (Boolean) value);
+                    } else if (value instanceof Number) {
+                        this.withTag(key, (Number) value);
+                    } else {
+                        SelfLog.error(String.format(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00003"), value.getClass().toString()));
+                    }
                 }
             }
             return this;
@@ -354,9 +318,9 @@ public class SofaTracer implements Tracer {
             try {
                 sampler = SamplerFactory.getSampler();
             } catch (Exception e) {
-                SelfLog.error(LogCode2Description.convert(SPACE_ID, "01-00002"));
+                SelfLog.error(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00002"));
             }
-            return new SofaTracer(this.tracerType, this.clientReporter, this.serverReporter, this.sampler, this.tracerTags);
+            return new SofaTracer(tracerType, clientReporter, serverReporter, sampler, tracerTags);
         }
     }
 }
