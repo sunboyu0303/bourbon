@@ -23,6 +23,6 @@ public class PrimitiveArrayUtilsTest {
 
         boolean[] booleans = {true, false, true, false, false, true, false, false, false};
         Boolean[] booleanWrappers = PrimitiveArrayUtils.wrap(booleans);
-        System.out.println(ListUtils.newArrayList(booleanWrappers));
+        logger.info(ListUtils.newArrayList(booleanWrappers));
     }
 }

@@ -1,8 +1,7 @@
 package com.github.bourbon.base.logger;
 
-import com.github.bourbon.base.constant.DateConstants;
 import com.github.bourbon.base.utils.ClassUtils;
-import com.github.bourbon.base.utils.LocalDateTimeUtils;
+import com.github.bourbon.base.utils.Timestamp;
 
 /**
  * @author sunboyu
@@ -183,9 +182,8 @@ public class SystemLogger implements Logger {
 
     private String getMessage(Level level, Object o) {
         // 2021-12-02 11:03:44.177 [Thread-19] INFO c.j.o.p.c.c.s.i.NetServiceImpl 240 -
-        final Thread t = Thread.currentThread();
+        Thread t = Thread.currentThread();
         StackTraceElement e = t.getStackTrace()[4];
-        return String.format(FORMAT, LocalDateTimeUtils.localDateTimeNowFormat(DateConstants.DEFAULT_FORMATTER), t.getName(),
-                level.name(), ClassUtils.getShortClassName(e.getClassName()), e.getLineNumber(), o);
+        return String.format(FORMAT, Timestamp.currentTime(), t.getName(), level.name(), ClassUtils.getShortClassName(e.getClassName()), e.getLineNumber(), o);
     }
 }

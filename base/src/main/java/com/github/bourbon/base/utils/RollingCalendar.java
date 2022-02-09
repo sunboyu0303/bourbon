@@ -20,8 +20,9 @@ public class RollingCalendar extends GregorianCalendar {
         super(tz, locale);
     }
 
-    public void setType(RollingCalendarType type) {
+    public RollingCalendar setType(RollingCalendarType type) {
         this.type = type;
+        return this;
     }
 
     public long getNextCheckMillis(Date now) {
