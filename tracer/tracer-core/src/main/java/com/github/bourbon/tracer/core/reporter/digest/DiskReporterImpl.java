@@ -68,12 +68,12 @@ public class DiskReporterImpl extends AbstractDiskReporter {
 
     @Override
     public String getDigestReporterType() {
-        return this.digestLogType;
+        return digestLogType;
     }
 
     @Override
     public String getStatReporterType() {
-        return ObjectUtils.defaultIfNull(statReporter, SofaTracerStatisticReporter::getStatTracerName, StringConstants.EMPTY);
+        return ObjectUtils.defaultIfNullElseFunction(statReporter, SofaTracerStatisticReporter::getStatTracerName, StringConstants.EMPTY);
     }
 
     @Override
@@ -93,9 +93,7 @@ public class DiskReporterImpl extends AbstractDiskReporter {
 
     @Override
     public void statisticReport(SofaTracerSpan span) {
-        if (statReporter != null) {
-            statReporter.reportStat(span);
-        }
+        ObjectUtils.nonNullConsumer(statReporter, r -> r.reportStat(span));
     }
 
     public AtomicBoolean getIsDigestFileInited() {
@@ -135,9 +133,9 @@ public class DiskReporterImpl extends AbstractDiskReporter {
             }
         }
         // registry digest
-        AsyncCommonDigestAppenderManager asyncDigestManager = SofaTracerDigestReporterAsyncManager.getSofaTracerDigestReporterAsyncManager();
-        if (!asyncDigestManager.isAppenderAndEncoderExist(digestLogType)) {
-            asyncDigestManager.addAppender(digestLogType, LoadTestAwareAppender.createLoadTestAwareTimedRollingFileAppender(this.digestLogType, this.digestRollingPolicy, this.digestLogReserveConfig), this.contextEncoder);
+        AsyncCommonDigestAppenderManager manager = SofaTracerDigestReporterAsyncManager.getSofaTracerDigestReporterAsyncManager();
+        if (!manager.isAppenderAndEncoderExist(digestLogType)) {
+            manager.addAppender(digestLogType, LoadTestAwareAppender.createLoadTestAwareTimedRollingFileAppender(digestLogType, digestRollingPolicy, digestLogReserveConfig), contextEncoder);
         }
         // Already exists or created for the first time
         isDigestFileInited.set(true);

@@ -78,7 +78,13 @@ public final class StringConstants {
      * {@code "B"}
      */
     public static final String B = valueOf(CharConstants.B);
+    /**
+     * {@code "C"}
+     */
     public static final String C = valueOf(CharConstants.C);
+    /**
+     * {@code "D"}
+     */
     public static final String D = valueOf(CharConstants.D);
     /**
      * {@code "E"}
@@ -88,8 +94,13 @@ public final class StringConstants {
      * {@code "F"}
      */
     public static final String F = valueOf(CharConstants.F);
+    /**
+     * {@code "G"}
+     */
     public static final String G = valueOf(CharConstants.G);
-
+    /**
+     * {@code "H"}
+     */
     public static final String H = valueOf(CharConstants.H);
     public static final String I = valueOf(CharConstants.I);
     public static final String J = valueOf(CharConstants.J);

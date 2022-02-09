@@ -198,6 +198,117 @@ public final class ByteUtils {
         return longToBytes(Double.doubleToLongBits(v), byteOrder);
     }
 
+    public static int indexOf(byte[] org, byte[] search) {
+        return indexOf(org, search, 0);
+    }
+
+    public static int indexOf(byte[] org, byte[] search, int startIndex) {
+        KMPMatcher kmpMatcher = new KMPMatcher();
+        kmpMatcher.computeFailure4Byte(search);
+        return kmpMatcher.indexOf(org, startIndex);
+    }
+
+    private static class KMPMatcher {
+
+        private int[] failure;
+        private int matchPoint;
+        private byte[] bytePattern;
+
+        private int indexOf(byte[] text, int startIndex) {
+            int j = 0;
+            if (text.length == 0 || startIndex > text.length) {
+                return -1;
+            }
+            for (int i = startIndex; i < text.length; i++) {
+                while (j > 0 && bytePattern[j] != text[i]) {
+                    j = failure[j - 1];
+                }
+                if (bytePattern[j] == text[i]) {
+                    j++;
+                }
+                if (j == bytePattern.length) {
+                    matchPoint = i - bytePattern.length + 1;
+                    return matchPoint;
+                }
+            }
+            return -1;
+
+        }
+
+        private int lastIndexOf(byte[] text, int startIndex) {
+            matchPoint = -1;
+            int j = 0;
+            if (text.length == 0 || startIndex > text.length) {
+                return -1;
+            }
+            int end = text.length;
+            for (int i = startIndex; i < end; i++) {
+                while (j > 0 && bytePattern[j] != text[i]) {
+                    j = failure[j - 1];
+                }
+                if (bytePattern[j] == text[i]) {
+                    j++;
+                }
+                if (j == bytePattern.length) {
+                    matchPoint = i - bytePattern.length + 1;
+                    if ((text.length - i) > bytePattern.length) {
+                        j = 0;
+                        continue;
+                    }
+                    return matchPoint;
+                }
+                // If you find it from a position in the middle, if you don’t find it at the end, then start looking for it again.
+                if (startIndex != 0 && i + 1 == end) {
+                    end = startIndex;
+                    i = -1;
+                    startIndex = 0;
+                }
+            }
+            return matchPoint;
+        }
+
+        private int lastIndexOfWithNoLoop(byte[] text, int startIndex) {
+            matchPoint = -1;
+            int j = 0;
+            if (text.length == 0 || startIndex > text.length) {
+                return -1;
+            }
+            for (int i = startIndex; i < text.length; i++) {
+                while (j > 0 && bytePattern[j] != text[i]) {
+                    j = failure[j - 1];
+                }
+                if (bytePattern[j] == text[i]) {
+                    j++;
+                }
+                if (j == bytePattern.length) {
+                    matchPoint = i - bytePattern.length + 1;
+                    if ((text.length - i) > bytePattern.length) {
+                        j = 0;
+                        continue;
+                    }
+                    return matchPoint;
+                }
+            }
+            return matchPoint;
+        }
+
+        private void computeFailure4Byte(byte[] patternStr) {
+            bytePattern = patternStr;
+            int j = 0;
+            int len = bytePattern.length;
+            failure = new int[len];
+            for (int i = 1; i < len; i++) {
+                while (j > 0 && bytePattern[j] != bytePattern[i]) {
+                    j = failure[j - 1];
+                }
+                if (bytePattern[j] == bytePattern[i]) {
+                    j++;
+                }
+                failure[i] = j;
+            }
+        }
+    }
+
     private ByteUtils() {
     }
 }

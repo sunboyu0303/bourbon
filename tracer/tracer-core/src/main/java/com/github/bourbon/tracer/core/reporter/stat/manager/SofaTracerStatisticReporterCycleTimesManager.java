@@ -11,7 +11,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2022/2/9 09:51
  */
-public class SofaTracerStatisticReporterCycleTimesManager {
+public final class SofaTracerStatisticReporterCycleTimesManager {
 
     private static final Map<Long, SofaTracerStatisticReporterManager> cycleTimesManager = MapUtils.newConcurrentHashMap();
 
@@ -26,10 +26,13 @@ public class SofaTracerStatisticReporterCycleTimesManager {
     /**
      * The timed task uses this as the entry: Get the scheduled task with the specified cycle time
      */
-    public static SofaTracerStatisticReporterManager getSofaTracerStatisticReporterManager(Long cycleTime) {
-        if (cycleTime == null || cycleTime <= 0) {
+    public static SofaTracerStatisticReporterManager getSofaTracerStatisticReporterManager(long cycleTime) {
+        if (cycleTime <= 0) {
             return null;
         }
         return cycleTimesManager.computeIfAbsent(cycleTime, SofaTracerStatisticReporterManager::new);
+    }
+
+    private SofaTracerStatisticReporterCycleTimesManager() {
     }
 }
