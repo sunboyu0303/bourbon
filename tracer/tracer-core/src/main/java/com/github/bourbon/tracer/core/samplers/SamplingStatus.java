@@ -28,7 +28,8 @@ public class SamplingStatus {
         return tags;
     }
 
-    public void setTags(Map<String, Object> tags) {
+    public SamplingStatus setTags(Map<String, Object> tags) {
         this.tags = tags;
+        return this;
     }
 }

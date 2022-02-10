@@ -76,11 +76,11 @@ public class SofaTracer implements Tracer {
         if (span == null) {
             return;
         }
-        if (sampler != null && span.getParentSofaTracerSpan() == null) {
+        if (ObjectUtils.nonNull(sampler) && ObjectUtils.isNull(span.getParentSofaTracerSpan())) {
             span.getSofaTracerSpanContext().setSampled(sampler.sample(span).isSampled());
         }
         invokeReportListeners(span);
-        if (span.isClient() || getTracerType().equalsIgnoreCase(ComponentNameConstants.FLEXIBLE)) {
+        if (span.isClient() || ComponentNameConstants.FLEXIBLE.equalsIgnoreCase(getTracerType())) {
             ObjectUtils.nonNullConsumer(clientReporter, r -> r.report(span));
         } else if (span.isServer()) {
             ObjectUtils.nonNullConsumer(serverReporter, r -> r.report(span));
@@ -165,34 +165,34 @@ public class SofaTracer implements Tracer {
 
         @Override
         public Tracer.SpanBuilder withTag(String key, String value) {
-            this.tags.put(key, value);
+            tags.put(key, value);
             return this;
         }
 
         @Override
         public Tracer.SpanBuilder withTag(String key, boolean value) {
-            this.tags.put(key, value);
+            tags.put(key, value);
             return this;
         }
 
         @Override
         public Tracer.SpanBuilder withTag(String key, Number value) {
-            this.tags.put(key, value);
+            tags.put(key, value);
             return this;
         }
 
         @Override
         public Tracer.SpanBuilder withStartTimestamp(long microseconds) {
-            this.startTime = microseconds;
+            startTime = microseconds;
             return this;
         }
 
         @Override
         public Span start() {
-            SofaTracerSpanContext sofaTracerSpanContext = BooleanUtils.defaultSupplierIfFalse(CollectionUtils.isNotEmpty(references), this::createChildContext, this::createRootSpanContext);
-            SofaTracerSpan sofaTracerSpan = new SofaTracerSpan(SofaTracer.this, startTime > 0 ? startTime : Clock.currentTimeMillis(), references, operationName, sofaTracerSpanContext, tags);
-            sofaTracerSpanContext.setSampled(calculateSampler(sofaTracerSpan));
-            return sofaTracerSpan;
+            SofaTracerSpanContext context = BooleanUtils.defaultSupplierIfFalse(CollectionUtils.isNotEmpty(references), this::createChildContext, this::createRootSpanContext);
+            SofaTracerSpan span = new SofaTracerSpan(SofaTracer.this, startTime > 0 ? startTime : Clock.currentTimeMillis(), references, operationName, context, tags);
+            context.setSampled(calculateSampler(span));
+            return span;
         }
 
         private boolean calculateSampler(SofaTracerSpan sofaTracerSpan) {
@@ -234,11 +234,10 @@ public class SofaTracer implements Tracer {
         }
 
         private SofaTracerSpanContext preferredReference() {
-            SofaTracerSpanReferenceRelationship preferredReference = references.get(0);
+            final SofaTracerSpanReferenceRelationship preferredReference = references.get(0);
             for (SofaTracerSpanReferenceRelationship reference : references) {
                 if (References.CHILD_OF.equals(reference.getReferenceType()) && !References.CHILD_OF.equals(preferredReference.getReferenceType())) {
-                    preferredReference = reference;
-                    break;
+                    return reference.getSofaTracerSpanContext();
                 }
             }
             return preferredReference.getSofaTracerSpanContext();
@@ -301,11 +300,11 @@ public class SofaTracer implements Tracer {
                         continue;
                     }
                     if (value instanceof String) {
-                        this.withTag(key, (String) value);
+                        withTag(key, (String) value);
                     } else if (value instanceof Boolean) {
-                        this.withTag(key, (Boolean) value);
+                        withTag(key, (Boolean) value);
                     } else if (value instanceof Number) {
-                        this.withTag(key, (Number) value);
+                        withTag(key, (Number) value);
                     } else {
                         SelfLog.error(String.format(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00003"), value.getClass().toString()));
                     }

@@ -2,6 +2,7 @@ package com.github.bourbon.tracer.core.reporter.common;
 
 import com.github.bourbon.base.code.LogCode2Description;
 import com.github.bourbon.base.utils.CharSequenceUtils;
+import com.github.bourbon.base.utils.ObjectUtils;
 import com.github.bourbon.tracer.core.appender.encoder.SpanEncoder;
 import com.github.bourbon.tracer.core.appender.file.LoadTestAwareAppender;
 import com.github.bourbon.tracer.core.appender.manager.AsyncCommonDigestAppenderManager;
@@ -20,7 +21,7 @@ public class CommonTracerManager {
 
     private static final AsyncCommonDigestAppenderManager commonReporterAsyncManager = new AsyncCommonDigestAppenderManager(1024);
 
-    private static final SpanEncoder commonSpanEncoder = new CommonSpanEncoder();
+    private static final SpanEncoder<CommonLogSpan> commonSpanEncoder = new CommonSpanEncoder();
 
     static {
         String logName = TracerSystemLogEnum.MIDDLEWARE_ERROR.getDefaultLogName();
@@ -42,33 +43,27 @@ public class CommonTracerManager {
         commonReporterAsyncManager.addAppender(logFileName, LoadTestAwareAppender.createLoadTestAwareTimedRollingFileAppender(logFileName, rollingPolicy, logReserveDay), commonSpanEncoder);
     }
 
-    /**
-     * Note: The logType of this {@link CommonLogSpan} must be set, otherwise it will not print.
-     *
-     * @param commonLogSpan The span will be printed
-     */
     public static void reportCommonSpan(CommonLogSpan commonLogSpan) {
-        if (commonLogSpan != null) {
-            String logType = commonLogSpan.getLogType();
-            if (CharSequenceUtils.isBlank(logType)) {
+        ObjectUtils.nonNullConsumer(commonLogSpan, span -> {
+            if (CharSequenceUtils.isBlank(span.getLogType())) {
                 SelfLog.error(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00011"));
                 return;
             }
-            commonReporterAsyncManager.append(commonLogSpan);
-        }
+            commonReporterAsyncManager.append(span);
+        });
     }
 
     public static void reportProfile(CommonLogSpan sofaTracerSpan) {
-        if (sofaTracerSpan != null) {
-            sofaTracerSpan.setLogType(TracerSystemLogEnum.RPC_PROFILE.getDefaultLogName());
-            commonReporterAsyncManager.append(sofaTracerSpan);
-        }
+        ObjectUtils.nonNullConsumer(sofaTracerSpan, span -> {
+            span.setLogType(TracerSystemLogEnum.RPC_PROFILE.getDefaultLogName());
+            commonReporterAsyncManager.append(span);
+        });
     }
 
     public static void reportError(CommonLogSpan sofaTracerSpan) {
-        if (sofaTracerSpan != null) {
-            sofaTracerSpan.setLogType(TracerSystemLogEnum.MIDDLEWARE_ERROR.getDefaultLogName());
-            commonReporterAsyncManager.append(sofaTracerSpan);
-        }
+        ObjectUtils.nonNullConsumer(sofaTracerSpan, span -> {
+            span.setLogType(TracerSystemLogEnum.MIDDLEWARE_ERROR.getDefaultLogName());
+            commonReporterAsyncManager.append(span);
+        });
     }
 }

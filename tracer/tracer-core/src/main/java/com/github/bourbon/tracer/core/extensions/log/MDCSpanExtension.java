@@ -1,7 +1,7 @@
 package com.github.bourbon.tracer.core.extensions.log;
 
+import com.github.bourbon.base.utils.ObjectUtils;
 import com.github.bourbon.tracer.core.constants.MDCKeyConstants;
-import com.github.bourbon.tracer.core.context.span.SofaTracerSpanContext;
 import com.github.bourbon.tracer.core.extensions.SpanExtension;
 import com.github.bourbon.tracer.core.span.SofaTracerSpan;
 import io.opentracing.Span;
@@ -16,31 +16,20 @@ public final class MDCSpanExtension implements SpanExtension {
 
     @Override
     public void logStartedSpan(Span currentSpan) {
-        if (currentSpan != null) {
-            SofaTracerSpan span = (SofaTracerSpan) currentSpan;
-            SofaTracerSpanContext sofaTracerSpanContext = span.getSofaTracerSpanContext();
-            if (sofaTracerSpanContext != null) {
-                MDC.put(MDCKeyConstants.MDC_TRACE_ID, sofaTracerSpanContext.getTraceId());
-                MDC.put(MDCKeyConstants.MDC_SPAN_ID, sofaTracerSpanContext.getSpanId());
-            }
-        }
+        ObjectUtils.nonNullConsumer(currentSpan, s -> ObjectUtils.nonNullConsumer(((SofaTracerSpan) s).getSofaTracerSpanContext(), c -> {
+            MDC.put(MDCKeyConstants.MDC_TRACE_ID, c.getTraceId());
+            MDC.put(MDCKeyConstants.MDC_SPAN_ID, c.getSpanId());
+        }));
     }
 
     @Override
     public void logStoppedSpan(Span currentSpan) {
         MDC.remove(MDCKeyConstants.MDC_TRACE_ID);
         MDC.remove(MDCKeyConstants.MDC_SPAN_ID);
-        if (currentSpan != null) {
-            SofaTracerSpan span = (SofaTracerSpan) currentSpan;
-            SofaTracerSpan parentSpan = span.getParentSofaTracerSpan();
-            if (parentSpan != null) {
-                SofaTracerSpanContext sofaTracerSpanContext = parentSpan.getSofaTracerSpanContext();
-                if (sofaTracerSpanContext != null) {
-                    MDC.put(MDCKeyConstants.MDC_TRACE_ID, sofaTracerSpanContext.getTraceId());
-                    MDC.put(MDCKeyConstants.MDC_SPAN_ID, sofaTracerSpanContext.getSpanId());
-                }
-            }
-        }
+        ObjectUtils.nonNullConsumer(currentSpan, s -> ObjectUtils.nonNullConsumer(((SofaTracerSpan) s).getParentSofaTracerSpan(), p -> ObjectUtils.nonNullConsumer(p.getSofaTracerSpanContext(), c -> {
+            MDC.put(MDCKeyConstants.MDC_TRACE_ID, c.getTraceId());
+            MDC.put(MDCKeyConstants.MDC_SPAN_ID, c.getSpanId());
+        })));
     }
 
     @Override

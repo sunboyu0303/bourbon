@@ -23,6 +23,7 @@ public class ConstantTest {
         Assert.assertEquals("'{", StringConstants.SINGLE_QUOTE_LEFT_BRACES);
         Assert.assertEquals("}'", StringConstants.RIGHT_BRACES_SINGLE_QUOTE);
         Assert.assertEquals("[0]", StringConstants.LEFT_BRACKETS_ZERO_RIGHT_BRACKETS);
+        Assert.assertEquals("true", BooleanConstants.TRUE.toString());
     }
 
     @Test

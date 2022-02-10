@@ -7,23 +7,19 @@ package com.github.bourbon.tracer.core.samplers;
  */
 public class SamplerProperties {
 
-    private float percentage = 100;
+    private final float percentage;
+    private final String ruleClassName;
 
-    private String ruleClassName;
+    public SamplerProperties(float percentage, String ruleClassName) {
+        this.percentage = percentage;
+        this.ruleClassName = ruleClassName;
+    }
 
     public float getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(float percentage) {
-        this.percentage = percentage;
-    }
-
     public String getRuleClassName() {
         return ruleClassName;
-    }
-
-    public void setRuleClassName(String ruleClassName) {
-        this.ruleClassName = ruleClassName;
     }
 }

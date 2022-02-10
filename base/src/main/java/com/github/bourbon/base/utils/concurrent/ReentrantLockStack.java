@@ -16,8 +16,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public void push(E e) {
+        lock.lock();
         try {
-            lock.lock();
             super.push(e);
         } finally {
             lock.unlock();
@@ -26,8 +26,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public E pop() {
+        lock.lock();
         try {
-            lock.lock();
             return super.pop();
         } finally {
             lock.unlock();
@@ -36,8 +36,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public E peek() {
+        lock.lock();
         try {
-            lock.lock();
             return super.peek();
         } finally {
             lock.unlock();
@@ -46,8 +46,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public E get(int index) {
+        lock.lock();
         try {
-            lock.lock();
             return super.get(index);
         } finally {
             lock.unlock();
@@ -56,8 +56,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public E set(int index, E value) {
+        lock.lock();
         try {
-            lock.lock();
             return super.set(index, value);
         } finally {
             lock.unlock();
@@ -66,8 +66,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public E remove(int index) {
+        lock.lock();
         try {
-            lock.lock();
             return super.remove(index);
         } finally {
             lock.unlock();
@@ -76,8 +76,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public int size() {
+        lock.lock();
         try {
-            lock.lock();
             return super.size();
         } finally {
             lock.unlock();
@@ -86,8 +86,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public boolean isEmpty() {
+        lock.lock();
         try {
-            lock.lock();
             return super.isEmpty();
         } finally {
             lock.unlock();
@@ -96,8 +96,8 @@ public class ReentrantLockStack<E> extends Stack<E> {
 
     @Override
     public void clear() {
+        lock.lock();
         try {
-            lock.lock();
             super.clear();
         } finally {
             lock.unlock();

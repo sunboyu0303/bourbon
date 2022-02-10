@@ -11,8 +11,8 @@ import java.io.IOException;
  */
 public final class LoadTestAwareAppender implements TraceAppender {
 
-    private TraceAppender nonLoadTestTraceAppender;
-    private TraceAppender loadTestTraceAppender;
+    private final TraceAppender nonLoadTestTraceAppender;
+    private final TraceAppender loadTestTraceAppender;
 
     private LoadTestAwareAppender(TraceAppender nonLoadTestTraceAppender, TraceAppender loadTestTraceAppender) {
         this.nonLoadTestTraceAppender = nonLoadTestTraceAppender;

@@ -53,10 +53,10 @@ public class SofaTracerSpan implements Span {
         tags.putAll(tagsWithNumber);
 
         SofaTracerSpan cloneSpan = new SofaTracerSpan(sofaTracer, startTime, spanReferences, operationName, sofaTracerSpanContext.cloneInstance(), tags);
-        if (logs.size() > 0) {
+        if (!logs.isEmpty()) {
             logs.forEach(cloneSpan::log);
         }
-        cloneSpan.setEndTime(this.endTime).setLogType(this.logType).setParentSofaTracerSpan(this.parentSofaTracerSpan);
+        cloneSpan.setEndTime(endTime).setLogType(logType).setParentSofaTracerSpan(parentSofaTracerSpan);
         return cloneSpan;
     }
 
@@ -91,6 +91,7 @@ public class SofaTracerSpan implements Span {
     public void finish(long endTime) {
         setEndTime(endTime);
         sofaTracer.reportSpan(this);
+
         SpanExtensionFactory.logStoppedSpan(this);
     }
 
@@ -192,11 +193,12 @@ public class SofaTracerSpan implements Span {
         tags.putAll(getTagsWithBool());
         tags.putAll(getTagsWithNumber());
 
-        CommonLogSpan commonLogSpan = new CommonLogSpan(this.sofaTracer, Clock.currentTimeMillis(), this.getOperationName(), this.getSofaTracerSpanContext(), tags)
-                .addSlot(Thread.currentThread().getName()).addSlot(errorType)
+        CommonLogSpan commonLogSpan = new CommonLogSpan(sofaTracer, Clock.currentTimeMillis(), getOperationName(), getSofaTracerSpanContext(), tags)
+                .addSlot(Thread.currentThread().getName())
+                .addSlot(errorType)
                 .addSlot(ArrayUtils.toString(errorSources, CharConstants.ARRAY_SEPARATOR, StringConstants.EMPTY, StringConstants.EMPTY))
                 .addSlot(MapUtils.mapToString(context))
-                .addSlot(ObjectUtils.defaultIfNullElseFunction(this.getSofaTracerSpanContext(), SofaTracerSpanContext::getBizSerializedBaggage, StringConstants.EMPTY));
+                .addSlot(ObjectUtils.defaultIfNullElseFunction(getSofaTracerSpanContext(), SofaTracerSpanContext::getBizSerializedBaggage, StringConstants.EMPTY));
 
         if (e == null) {
             commonLogSpan.addSlot(StringConstants.EMPTY);
@@ -215,7 +217,7 @@ public class SofaTracerSpan implements Span {
         tags.putAll(getTagsWithBool());
         tags.putAll(getTagsWithNumber());
 
-        CommonTracerManager.reportProfile(new CommonLogSpan(this.sofaTracer, Clock.currentTimeMillis(), this.getOperationName(), this.getSofaTracerSpanContext(), tags).addSlot(protocolType).addSlot(profileMessage));
+        CommonTracerManager.reportProfile(new CommonLogSpan(sofaTracer, Clock.currentTimeMillis(), getOperationName(), getSofaTracerSpanContext(), tags).addSlot(protocolType).addSlot(profileMessage));
     }
 
     public SofaTracerSpan getThisAsParentWhenExceedLayer() {
@@ -311,11 +313,11 @@ public class SofaTracerSpan implements Span {
                     continue;
                 }
                 if (value instanceof String) {
-                    this.setTag(key, (String) value);
+                    setTag(key, (String) value);
                 } else if (value instanceof Boolean) {
-                    this.setTag(key, (Boolean) value);
+                    setTag(key, (Boolean) value);
                 } else if (value instanceof Number) {
-                    this.setTag(key, (Number) value);
+                    setTag(key, (Number) value);
                 } else {
                     SelfLog.error(String.format(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00012"), value.getClass()));
                 }

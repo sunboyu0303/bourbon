@@ -53,6 +53,8 @@ public final class CharConstants {
     public static final char LEFT_PARENTHESES = '(';
     public static final char RIGHT_PARENTHESES = ')';
 
+    public static final char STAR = '*';
+
     public static final char SMALL_A = 'a';
     public static final char SMALL_B = 'b';
     public static final char SMALL_C = 'c';

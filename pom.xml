@@ -26,6 +26,7 @@
         <module>config</module>
         <module>dependencies-bom</module>
         <module>mybatis-plus</module>
+        <module>pfinder</module>
         <module>rpc</module>
         <module>serialization</module>
         <module>spring</module>
@@ -46,25 +47,7 @@
 
             <dependency>
                 <groupId>com.github.bourbon</groupId>
-                <artifactId>byte-code</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
-                <artifactId>cache</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
                 <artifactId>common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
-                <artifactId>config</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -84,49 +67,13 @@
 
             <dependency>
                 <groupId>com.github.bourbon</groupId>
-                <artifactId>rpc</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
-                <artifactId>serialization</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
-                <artifactId>spring</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
                 <artifactId>tiny-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.bourbon</groupId>
-                <artifactId>tracer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
                 <artifactId>ump</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.bourbon</groupId>
-                <artifactId>uuid</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2021/11/14 10:47
  */
-public interface ReflectUtils {
+public final class ReflectUtils {
 
-    SimpleCache<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new SimpleCache<>();
-    SimpleCache<Class<?>, Field[]> FIELDS_CACHE = new SimpleCache<>();
-    SimpleCache<Class<?>, Method[]> METHODS_CACHE = new SimpleCache<>();
+    private static final SimpleCache<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new SimpleCache<>();
+    private static final SimpleCache<Class<?>, Field[]> FIELDS_CACHE = new SimpleCache<>();
+    private static final SimpleCache<Class<?>, Method[]> METHODS_CACHE = new SimpleCache<>();
 
     @SuppressWarnings("unchecked")
-    static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
+    public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
         if (null != clazz) {
             for (Constructor<?> c : getConstructors(clazz)) {
                 if (ClassUtils.isAllAssignableFrom(c.getParameterTypes(), parameterTypes)) {
@@ -37,7 +37,7 @@ public interface ReflectUtils {
         return null;
     }
 
-    static <T extends AccessibleObject> T setAccessible(T t) {
+    public static <T extends AccessibleObject> T setAccessible(T t) {
         if (ObjectUtils.nonNull(t) && !t.isAccessible()) {
             t.setAccessible(true);
         }
@@ -45,28 +45,28 @@ public interface ReflectUtils {
     }
 
     @SuppressWarnings("unchecked")
-    static <T> Constructor<T>[] getConstructors(Class<T> c) {
+    public static <T> Constructor<T>[] getConstructors(Class<T> c) {
         return (Constructor[]) CONSTRUCTORS_CACHE.computeIfAbsent(c, o -> getConstructorsDirectly(c));
     }
 
     @SuppressWarnings("unchecked")
-    static <T> Constructor<T>[] getConstructorsDirectly(Class<T> c) {
+    public static <T> Constructor<T>[] getConstructorsDirectly(Class<T> c) {
         return (Constructor<T>[]) c.getDeclaredConstructors();
     }
 
-    static String getFieldName(Field f) {
+    public static String getFieldName(Field f) {
         return ObjectUtils.defaultIfNullElseFunction(f, Field::getName);
     }
 
-    static Field getField(Class<?> c, String name) {
+    public static Field getField(Class<?> c, String name) {
         return ArrayUtils.firstMatch(f -> name.equals(getFieldName(f)), getFields(c));
     }
 
-    static Field[] getFields(Class<?> c) {
+    public static Field[] getFields(Class<?> c) {
         return FIELDS_CACHE.computeIfAbsent(c, o -> getFieldsDirectly(c, true));
     }
 
-    static Field[] getFieldsDirectly(Class<?> c, boolean withSuper) {
+    public static Field[] getFieldsDirectly(Class<?> c, boolean withSuper) {
         Field[] allFields = null;
         for (Class<?> tmp = ObjectUtils.requireNonNull(c); tmp != null; tmp = withSuper ? tmp.getSuperclass() : null) {
             allFields = ObjectUtils.isNull(allFields) ? tmp.getDeclaredFields() : ArrayUtils.append(allFields, tmp.getDeclaredFields());
@@ -74,15 +74,15 @@ public interface ReflectUtils {
         return allFields;
     }
 
-    static Map<String, Field> getFieldMap(Class<?> beanClass) {
+    public static Map<String, Field> getFieldMap(Class<?> beanClass) {
         return Arrays.stream(getFields(beanClass)).collect(Collectors.toMap(Field::getName, f -> f));
     }
 
-    static Object getStaticFieldValue(Field field) throws IllegalAccessException {
+    public static Object getStaticFieldValue(Field field) throws IllegalAccessException {
         return getFieldValue(null, field);
     }
 
-    static Object getFieldValue(Object obj, Field field) throws IllegalAccessException {
+    public static Object getFieldValue(Object obj, Field field) throws IllegalAccessException {
         if (null == field) {
             return null;
         }
@@ -93,7 +93,7 @@ public interface ReflectUtils {
         return field.get(obj);
     }
 
-    static Object[] getFieldsValue(Object obj) throws IllegalAccessException {
+    public static Object[] getFieldsValue(Object obj) throws IllegalAccessException {
         if (ObjectUtils.nonNull(obj)) {
             Field[] fields = getFields(BooleanUtils.defaultSupplierIfAssignableFrom(obj, Class.class, Class.class::cast, obj::getClass));
             if (ArrayUtils.isNotEmpty(fields)) {
@@ -108,31 +108,31 @@ public interface ReflectUtils {
         return null;
     }
 
-    static Set<String> getPublicMethodNames(Class<?> clazz) {
+    public static Set<String> getPublicMethodNames(Class<?> clazz) {
         return BooleanUtils.defaultSupplierIfPredicate(getPublicMethods(clazz), ArrayUtils::isNotEmpty, a -> Arrays.stream(a).map(Method::getName).collect(Collectors.toSet()), SetUtils::newHashSet);
     }
 
-    static Method[] getPublicMethods(Class<?> clazz) {
+    public static Method[] getPublicMethods(Class<?> clazz) {
         return ObjectUtils.defaultIfNullElseFunction(clazz, Class::getMethods);
     }
 
-    static List<Method> getPublicMethods(Class<?> clazz, Predicate<Method> predicate) {
+    public static List<Method> getPublicMethods(Class<?> clazz, Predicate<Method> predicate) {
         return ObjectUtils.defaultIfNullElseFunction(clazz, c -> BooleanUtils.defaultIfPredicate(getPublicMethods(c), ArrayUtils::isNotEmpty, m -> ObjectUtils.defaultSupplierIfNullElseFunction(
                 predicate, p -> Arrays.stream(m).filter(p).collect(Collectors.toList()), () -> ListUtils.newArrayList(m)
         )));
     }
 
-    static List<Method> getPublicMethods(Class<?> clazz, Method[] excludeMethods) {
+    public static List<Method> getPublicMethods(Class<?> clazz, Method[] excludeMethods) {
         Set<Method> excludeMethodSet = SetUtils.newHashSet(excludeMethods);
         return getPublicMethods(clazz, m -> !excludeMethodSet.contains(m));
     }
 
-    static List<Method> getPublicMethods(Class<?> clazz, String[] excludeMethodNames) {
+    public static List<Method> getPublicMethods(Class<?> clazz, String[] excludeMethodNames) {
         Set<String> excludeMethodNameSet = SetUtils.newHashSet(excludeMethodNames);
         return getPublicMethods(clazz, m -> !excludeMethodNameSet.contains(m.getName()));
     }
 
-    static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+    public static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
         try {
             return clazz.getMethod(methodName, paramTypes);
         } catch (NoSuchMethodException e) {
@@ -140,15 +140,15 @@ public interface ReflectUtils {
         }
     }
 
-    static Method getMethodIgnoreCase(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+    public static Method getMethodIgnoreCase(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
         return getMethod(clazz, true, methodName, paramTypes);
     }
 
-    static Method getMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
+    public static Method getMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
         return getMethod(clazz, false, methodName, paramTypes);
     }
 
-    static Method getMethod(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) {
+    public static Method getMethod(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) {
         if (null != clazz && !CharSequenceUtils.isBlank(methodName)) {
             Method[] methods = getMethods(clazz);
             if (ArrayUtils.isNotEmpty(methods)) {
@@ -163,15 +163,15 @@ public interface ReflectUtils {
         return null;
     }
 
-    static Method getMethodByNameIgnoreCase(Class<?> clazz, String methodName) {
+    public static Method getMethodByNameIgnoreCase(Class<?> clazz, String methodName) {
         return getMethodByName(clazz, true, methodName);
     }
 
-    static Method getMethodByName(Class<?> clazz, String methodName) {
+    public static Method getMethodByName(Class<?> clazz, String methodName) {
         return getMethodByName(clazz, false, methodName);
     }
 
-    static Method getMethodByName(Class<?> clazz, boolean ignoreCase, String methodName) {
+    public static Method getMethodByName(Class<?> clazz, boolean ignoreCase, String methodName) {
         if (null != clazz && !CharSequenceUtils.isBlank(methodName)) {
             Method[] methods = getMethods(clazz);
             if (ArrayUtils.isNotEmpty(methods)) {
@@ -185,15 +185,15 @@ public interface ReflectUtils {
         return null;
     }
 
-    static Set<String> getMethodNames(Class<?> c) {
+    public static Set<String> getMethodNames(Class<?> c) {
         return Arrays.stream(getMethods(c)).map(Method::getName).collect(Collectors.toSet());
     }
 
-    static Method[] getMethods(Class<?> c) {
+    public static Method[] getMethods(Class<?> c) {
         return METHODS_CACHE.computeIfAbsent(c, o -> getMethodsDirectly(c, true));
     }
 
-    static Method[] getMethodsDirectly(Class<?> c, boolean withSuper) {
+    public static Method[] getMethodsDirectly(Class<?> c, boolean withSuper) {
         Method[] allMethods = null;
         for (Class<?> tmp = c; tmp != null; tmp = withSuper ? tmp.getSuperclass() : null) {
             allMethods = ObjectUtils.isNull(allMethods) ? tmp.getDeclaredMethods() : ArrayUtils.append(allMethods, tmp.getDeclaredMethods());
@@ -201,7 +201,7 @@ public interface ReflectUtils {
         return allMethods;
     }
 
-    static Method findMethod(Class<?> clazz, String name) {
+    public static Method findMethod(Class<?> clazz, String name) {
         Class<?> searchType = clazz;
         while (searchType != null) {
             Method[] methods = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
@@ -215,7 +215,7 @@ public interface ReflectUtils {
         return null;
     }
 
-    static Method findMethod(Class<?> clazz, String name, Class<?>... paramTypes) {
+    public static Method findMethod(Class<?> clazz, String name, Class<?>... paramTypes) {
         Class<?> searchType = clazz;
         while (searchType != null) {
             try {
@@ -228,7 +228,7 @@ public interface ReflectUtils {
     }
 
     @SuppressWarnings("unchecked")
-    static <T> T newInstance(String clazz) {
+    public static <T> T newInstance(String clazz) {
         try {
             return (T) Class.forName(clazz).newInstance();
         } catch (Exception e) {
@@ -236,7 +236,7 @@ public interface ReflectUtils {
         }
     }
 
-    static <T> T newInstance(Class<T> clazz, Object[] params) {
+    public static <T> T newInstance(Class<T> clazz, Object[] params) {
         if (ArrayUtils.isEmpty(params)) {
             try {
                 return getConstructor(clazz).newInstance();
@@ -257,7 +257,36 @@ public interface ReflectUtils {
         }
     }
 
-    static String instanceClassErrorMSG(Object obj) {
+    private static String instanceClassErrorMSG(Object obj) {
         return "Instance class [" + obj + "] error!";
+    }
+
+    public static Set<Class<?>> getAllInterface(Class<?> type) {
+        return getAllInterfaceAndClass(type).stream().filter(Class::isInterface).collect(Collectors.toSet());
+    }
+
+    public static Set<Class<?>> getAllInterfaceAndClass(Class<?> type) {
+        Set<Class<?>> result = SetUtils.newHashSet(type);
+        findAllInterfaceAndSuperClass(type, result);
+        return result;
+    }
+
+    private static void findAllInterfaceAndSuperClass(Class<?> type, Set<Class<?>> result) {
+        Class[] interfaces = type.getInterfaces();
+        if (interfaces != null && interfaces.length > 0) {
+            for (Class<?> anInterface : interfaces) {
+                if (result.add(anInterface)) {
+                    findAllInterfaceAndSuperClass(anInterface, result);
+                }
+            }
+        }
+
+        if (!type.isInterface()) {
+            Class<?> superclass = type.getSuperclass();
+            if (superclass != null && !Object.class.equals(superclass)) {
+                result.add(superclass);
+                findAllInterfaceAndSuperClass(superclass, result);
+            }
+        }
     }
 }

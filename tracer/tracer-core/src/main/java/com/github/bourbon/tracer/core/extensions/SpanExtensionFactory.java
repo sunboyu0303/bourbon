@@ -11,9 +11,9 @@ import java.util.Set;
  * @version 1.0
  * @date 2022/1/24 14:40
  */
-public class SpanExtensionFactory {
+public final class SpanExtensionFactory {
 
-    private static Set<SpanExtension> spanExtensions = SetUtils.newHashSet(ServiceLoader.load(SpanExtension.class));
+    private static final Set<SpanExtension> spanExtensions = SetUtils.newHashSet(ServiceLoader.load(SpanExtension.class));
 
     public static void logStartedSpan(Span currentSpan) {
         if (!spanExtensions.isEmpty() && currentSpan != null) {
@@ -31,5 +31,8 @@ public class SpanExtensionFactory {
         if (!spanExtensions.isEmpty() && currentSpan != null) {
             spanExtensions.forEach(e -> e.logStoppedSpanInRunnable(currentSpan));
         }
+    }
+
+    private SpanExtensionFactory() {
     }
 }

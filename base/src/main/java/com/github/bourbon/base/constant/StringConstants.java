@@ -221,6 +221,10 @@ public final class StringConstants {
      */
     public static final String COLON = valueOf(CharConstants.COLON);
     /**
+     * {@code "::"}
+     */
+    public static final String COLONS = COLON + COLON;
+    /**
      * {@code "?"}
      */
     public static final String QUESTION_MASK = valueOf(CharConstants.QUESTION_MASK);
@@ -228,6 +232,10 @@ public final class StringConstants {
      * {@code "/"}
      */
     public static final String SLASH = valueOf(CharConstants.SLASH);
+    /**
+     * {@code "./"}
+     */
+    public static final String DOT_SLASH = DOT + SLASH;
     /**
      * {@code "\"}
      */
@@ -348,6 +356,14 @@ public final class StringConstants {
     public static final String LEFT_BRACKETS_ZERO_RIGHT_BRACKETS = LEFT_BRACKETS + ZERO + RIGHT_BRACKETS;
 
     public static final String C64 = new String(CharConstants.BASE64);
+    /**
+     * {@code "*"}
+     */
+    public static final String STAR = valueOf(CharConstants.STAR);
+    /**
+     * {@code "*:"}
+     */
+    public static final String STAR_COLON = STAR + COLON;
 
     private StringConstants() {
     }
