@@ -1,5 +1,7 @@
 package com.github.bourbon.base.appender.config;
 
+import com.github.bourbon.base.appender.builder.JsonStringBuilder;
+
 /**
  * @author sunboyu
  * @version 1.0
@@ -22,5 +24,10 @@ public class LogReserveConfig {
 
     public int getHour() {
         return hour;
+    }
+
+    @Override
+    public String toString() {
+        return new JsonStringBuilder().appendBegin().append("day", day).append("hour", hour).appendEnd().toString();
     }
 }

@@ -3,13 +3,13 @@ package com.github.bourbon.base.ttl;
 import com.github.bourbon.base.logger.Logger;
 import com.github.bourbon.base.logger.LoggerFactory;
 import com.github.bourbon.base.ttl.threadpool.TtlExecutors;
+import com.github.bourbon.base.utils.TimeUnitUtils;
 import com.github.bourbon.base.utils.concurrent.NamedThreadFactory;
 import com.github.bourbon.base.utils.concurrent.ThreadPoolExecutorFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author sunboyu
@@ -207,10 +207,6 @@ public class TransmittableThreadLocalTest {
     }
 
     private void sleep(long time) {
-        try {
-            TimeUnit.SECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        TimeUnitUtils.sleepSeconds(time);
     }
 }
