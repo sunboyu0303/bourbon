@@ -27,7 +27,7 @@ public class TimedRollingFileAppenderTest {
     @Test
     public void test() throws IOException {
         TracerDaemon.start();
-        TimedRollingFileAppender appender = new TimedRollingFileAppender("/test.log", TimedRollingFileAppender.HOURLY_ROLLING_PATTERN);
+        TimedRollingFileAppender appender = new TimedRollingFileAppender("/test.log", TimedRollingFileAppender.DAILY_ROLLING_PATTERN, "7");
         appender.cleanup();
         for (int i = 0; i < 3600; i++) {
             appender.append(ThreadLocalRandom.current().nextInt(1231231231) + StringConstants.NEWLINE);

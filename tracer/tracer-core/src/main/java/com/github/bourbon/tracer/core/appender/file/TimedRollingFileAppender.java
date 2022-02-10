@@ -115,15 +115,12 @@ public class TimedRollingFileAppender extends AbstractRollingFileAppender {
                     continue;
                 }
 
-                SimpleDateFormat dailyRollingSdf = new SimpleDateFormat(DAILY_ROLLING_PATTERN);
-                SimpleDateFormat hourlyRollingSdf = new SimpleDateFormat(HOURLY_ROLLING_PATTERN);
-
                 Date date = null;
                 try {
-                    date = hourlyRollingSdf.parse(logTime);
+                    date = new SimpleDateFormat(HOURLY_ROLLING_PATTERN).parse(logTime);
                 } catch (ParseException e) {
                     try {
-                        date = dailyRollingSdf.parse(logTime);
+                        date = new SimpleDateFormat(DAILY_ROLLING_PATTERN).parse(logTime);
                     } catch (ParseException pe) {
                         SelfLog.error(String.format(LogCode2Description.convert(SofaTracerConstants.SPACE_ID, "01-00004"), logFileName, pe.getMessage()));
                     }
