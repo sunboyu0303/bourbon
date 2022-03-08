@@ -9,72 +9,121 @@ import java.util.StringJoiner;
 import java.util.function.Supplier;
 
 /**
+ * 原始类数组工具类
+ *
  * @author sunboyu
  * @version 1.0
  * @date 2021/11/13 09:20
  */
 public interface PrimitiveArrayUtils {
-
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(boolean[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(char[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(float[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(double[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(byte[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(short[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(int[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否为空
+     */
     static boolean isEmpty(long[] array) {
         return array == null || array.length == 0;
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(boolean[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(char[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(float[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(double[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(byte[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(short[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(int[] array) {
         return !isEmpty(array);
     }
 
+    /**
+     * 数组是否不为空
+     */
     static boolean isNotEmpty(long[] array) {
         return !isEmpty(array);
     }
@@ -144,7 +193,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(boolean[] array, boolean value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (BooleanUtils.equals(array[i], value)) {
@@ -156,7 +205,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(char[] array, char value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (CharUtils.equals(array[i], value)) {
@@ -168,7 +217,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(float[] array, float value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (FloatUtils.equals(array[i], value)) {
@@ -180,7 +229,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(double[] array, double value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (DoubleUtils.equals(array[i], value)) {
@@ -192,7 +241,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(byte[] array, byte value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (ByteUtils.equals(array[i], value)) {
@@ -204,7 +253,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(short[] array, short value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (ShortUtils.equals(array[i], value)) {
@@ -216,7 +265,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(int[] array, int value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (IntUtils.equals(array[i], value)) {
@@ -228,7 +277,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int indexOf(long[] array, long value, int beginIndex) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             int len = array.length;
             for (int i = beginIndex; i < len; ++i) {
                 if (LongUtils.equals(array[i], value)) {
@@ -240,7 +289,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(boolean[] array, boolean value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (BooleanUtils.equals(array[i], value)) {
                     return i;
@@ -251,7 +300,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(char[] array, char value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (CharUtils.equals(array[i], value)) {
                     return i;
@@ -262,7 +311,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(float[] array, float value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (FloatUtils.equals(array[i], value)) {
                     return i;
@@ -273,7 +322,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(double[] array, double value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (DoubleUtils.equals(array[i], value)) {
                     return i;
@@ -284,7 +333,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(byte[] array, byte value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (ByteUtils.equals(array[i], value)) {
                     return i;
@@ -295,7 +344,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(short[] array, short value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (ShortUtils.equals(array[i], value)) {
                     return i;
@@ -306,7 +355,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(int[] array, int value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (IntUtils.equals(array[i], value)) {
                     return i;
@@ -317,7 +366,7 @@ public interface PrimitiveArrayUtils {
     }
 
     static int lastIndexOf(long[] array, long value) {
-        if (!isEmpty(array)) {
+        if (isNotEmpty(array)) {
             for (int i = array.length - 1; i >= 0; --i) {
                 if (LongUtils.equals(array[i], value)) {
                     return i;
@@ -426,7 +475,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (boolean[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -438,7 +487,7 @@ public interface PrimitiveArrayUtils {
         boolean[] result = new boolean[length];
         length = 0;
         for (boolean[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -458,7 +507,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (char[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -470,7 +519,7 @@ public interface PrimitiveArrayUtils {
         char[] result = new char[length];
         length = 0;
         for (char[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -490,7 +539,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (float[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -502,7 +551,7 @@ public interface PrimitiveArrayUtils {
         float[] result = new float[length];
         length = 0;
         for (float[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -522,7 +571,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (double[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -534,7 +583,7 @@ public interface PrimitiveArrayUtils {
         double[] result = new double[length];
         length = 0;
         for (double[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -554,7 +603,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (byte[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -566,7 +615,7 @@ public interface PrimitiveArrayUtils {
         byte[] result = new byte[length];
         length = 0;
         for (byte[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -586,7 +635,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (short[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -598,7 +647,7 @@ public interface PrimitiveArrayUtils {
         short[] result = new short[length];
         length = 0;
         for (short[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -618,7 +667,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (int[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -630,7 +679,7 @@ public interface PrimitiveArrayUtils {
         int[] result = new int[length];
         length = 0;
         for (int[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }
@@ -650,7 +699,7 @@ public interface PrimitiveArrayUtils {
 
         int length = 0;
         for (long[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 length += array.length;
             }
         }
@@ -662,7 +711,7 @@ public interface PrimitiveArrayUtils {
         long[] result = new long[length];
         length = 0;
         for (long[] array : arrays) {
-            if (!isEmpty(array)) {
+            if (isNotEmpty(array)) {
                 System.arraycopy(array, 0, result, length, array.length);
                 length += array.length;
             }

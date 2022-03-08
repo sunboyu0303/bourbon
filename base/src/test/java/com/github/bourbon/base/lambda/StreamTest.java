@@ -171,6 +171,25 @@ public class StreamTest {
         logger.info("skip：{}", Stream.iterate(1, x -> x + 2).skip(1).limit(5).collect(Collectors.toList()));
     }
 
+    @Test
+    public void testSum() {
+        byte[][] byteArr = new byte[4][];
+        byteArr[0] = new byte[]{0};
+        byteArr[1] = new byte[]{1, 2};
+        byteArr[2] = new byte[]{3, 4, 5};
+        byteArr[3] = new byte[]{6, 7, 8, 9};
+
+        int len = 0;
+        for (byte[] bytes : byteArr) {
+            len += bytes.length;
+        }
+        logger.info("len: {}", len);
+        logger.info("stream len: {}", Arrays.stream(byteArr).map(bytes -> bytes.length).reduce(Integer::sum).get());
+        logger.info("stream summarizingInt len: {}", Arrays.stream(byteArr).collect(Collectors.summarizingInt(bytes -> bytes.length)).getSum());
+        logger.info("stream summingInt len: {}", Arrays.stream(byteArr).collect(Collectors.summingInt(bytes -> bytes.length)));
+        logger.info("stream mapToInt sum len: {}", Arrays.stream(byteArr).mapToInt(bytes -> bytes.length).sum());
+    }
+
     @AllArgsConstructor
     @Data
     private static class Person {

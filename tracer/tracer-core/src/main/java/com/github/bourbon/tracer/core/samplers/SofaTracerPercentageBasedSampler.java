@@ -23,23 +23,22 @@ public class SofaTracerPercentageBasedSampler implements Sampler {
     private final SamplerProperties configuration;
 
     public SofaTracerPercentageBasedSampler(SamplerProperties configuration) {
-        this.sampleDecisions = randomBitSet((int) (configuration.getPercentage()));
         this.configuration = configuration;
+        this.sampleDecisions = randomBitSet((int) (configuration.getPercentage()));
     }
 
     @Override
     public SamplingStatus sample(SofaTracerSpan sofaTracerSpan) {
-        SamplingStatus samplingStatus = new SamplingStatus();
         Pair<String, Object> typePair = Pair.of(SofaTracerConstants.SAMPLER_TYPE_TAG_KEY, TYPE);
         Pair<String, Object> paramPair = Pair.of(SofaTracerConstants.SAMPLER_PARAM_TAG_KEY, configuration.getPercentage());
-        samplingStatus.setTags(MapUtils.unmodifiableMap(MapUtils.ofPair(typePair, paramPair)));
-        if (this.configuration.getPercentage() == 0) {
+        SamplingStatus samplingStatus = new SamplingStatus().setTags(MapUtils.ofPair(typePair, paramPair));
+        if (configuration.getPercentage() == 0) {
             return samplingStatus.setSampled(false);
         }
-        if (this.configuration.getPercentage() == 100) {
+        if (configuration.getPercentage() == 100) {
             return samplingStatus.setSampled(true);
         }
-        return samplingStatus.setSampled(this.sampleDecisions.get((int) (this.counter.getAndIncrement() % 100)));
+        return samplingStatus.setSampled(sampleDecisions.get((int) (counter.getAndIncrement() % 100)));
     }
 
     @Override
